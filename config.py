@@ -21,16 +21,23 @@ class Production(Config):
     DEBUG = False
 
 
-class StagingConfig(Config):
+class Staging(Config):
     DEVELOPMENT = True
     DEBUG = True
+    HOST = "0.0.0.0"
+    PORT = 5000
+    ALLOWED_HOSTS = "*"
+    CONFIRMATION_ENDPOINT = "https://nexure-react.herokuapp.com/confirm"
 
 
 class Development(Config):
     DEVELOPMENT = True
     DEBUG = True
+    HOST = "0.0.0.0"
+    PORT = 5000
     ALLOWED_HOSTS = "*"
     CONFIRMATION_ENDPOINT = "https://nexure-react.herokuapp.com/confirm"
+
 
 class Testing(Config):
     TESTING = True
