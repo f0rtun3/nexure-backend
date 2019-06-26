@@ -29,6 +29,7 @@ class StagingConfig(Config):
 class Development(Config):
     DEVELOPMENT = True
     DEBUG = True
+    ALLOWED_HOSTS = "*"
     CONFIRMATION_ENDPOINT = "https://nexure-react.herokuapp.com/confirm"
 
 class Testing(Config):

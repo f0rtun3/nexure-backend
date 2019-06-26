@@ -1,5 +1,6 @@
 from flask import Flask, make_response, jsonify
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from flask_mail import Mail
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
@@ -16,6 +17,7 @@ load_dotenv()
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+CORS(app, resources={r"/*": {"origins": app.config['ALLOWED_HOSTS']}})
 db = SQLAlchemy(app)
 api = Api(app)
 jwt = JWTManager(app)
