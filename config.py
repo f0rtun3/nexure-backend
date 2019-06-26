@@ -6,8 +6,8 @@ class Config(object):
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
-    SECRET_KEY = 'Jsv0#XY^ri'
-    JWT_SECRET_KEY = "secret"
+    SECRET_KEY = os.environ['SECRET_KEY']
+    JWT_SECRET_KEY = os.environ['JWT_SECRET_KEY']
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
