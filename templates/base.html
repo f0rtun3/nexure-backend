@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      {% block head %}
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <meta name="viewport" content="width=device-width" />
+      <!-- NOTE: external links are for testing only -->
+      <link href="//cdn.muicss.com/mui-0.9.42/email/mui-email-styletag.css" rel="stylesheet" />
+      <link href="//cdn.muicss.com/mui-0.9.42/email/mui-email-inline.css" rel="stylesheet" />
+      {% endblock %}
+  </head>
+  <body>
+    <table class="mui-body" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td>
+          {% block email %}
+
+          {% endblock %}
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
