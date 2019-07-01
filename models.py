@@ -1,5 +1,6 @@
 from app import db
 from sqlalchemy.dialects.postgresql import UUID
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model):
@@ -21,13 +22,23 @@ class User(db.Model):
     # through an email sent
     is_active = db.Column(db.Boolean, default=False)
 
+    # define the relationship to user_profile as a child table
+    # this allows us access the generated user uuid for exposure
+    user_profile = db.relationship("UserProfile", backref="user")
+
     def __init__(self, user_id, email, password):
         self.user_id = user_id
         self.email = email
-        self.password = password
+        self.password = generate_password_hash(password)
 
     def __repr__(self):
         return f"{self.email}"
+
+    def generate_password_hash(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password_hash(self, password):
+        return check_password_hash(self.password, password)
 
     def serialize(self):
         return {
@@ -121,7 +132,7 @@ class UserProfile(db.Model):
 
     def serialize(self):
         return {
-           "user_id": self.user_id,
+           "user_id": self.user.user_id,
            "first_name": self.first_name,
            "last_name": self.last_name,
            "gender": self.gender,
@@ -161,33 +172,6 @@ class UserProfile(db.Model):
 
     @classmethod
     def get_all_profiles(cls):
-        """
-        profiles = cls.query.all()
-        all_profiles = [{
-            "user_id": user.user_id,
-            "first_name": user.first_name,
-            "last_name": user.last_name,
-            "gender": user.gender,
-            "phone": user.phone,
-            "avatar_url": user.avatar_url,
-            "occupation": user.occupation,
-            "id_passport": user.id_passport,
-            "kra_pin": user.kra_pin,
-            "birth_date": user.birth_date,
-            "address_line_1": user.address_line_1,
-            "address_line_2": user.address_line_2,
-            "postal_code": user.postal_code,
-            "postal_town": user.postal_town,
-            "county": user.county,
-            "constituency": user.constituency,
-            "ward": user.ward,
-            "facebook": user.facebook,
-            "twitter": user.twitter,
-            "instagram": user.instagram,
-            "created_on": user.created_on,
-            "updated_on": user.updated_on
-        } for user in profiles]
-        """
         all_profiles = [user.serialize() for user in cls.query.all()]
         return all_profiles
 

@@ -8,13 +8,11 @@ from models import Roles
 from models import UserRolePlacement
 from flask import make_response
 from flask_restful import Resource, reqparse
-from app import app
 # get the utility file
 import helpers.helpers as helper
 import helpers.tokens as token_handler
 
 import uuid
-import os
 
 user_parser = reqparse.RequestParser()
 user_parser.add_argument(
@@ -60,7 +58,7 @@ class UserRegister(Resource):
         new_user_authentication = User(
             user_id,
             user_details['email'],
-            helper.generate_hash(user_details['password'])
+            user_details['password']
         )
         new_user_authentication.save()
 
@@ -77,12 +75,16 @@ class UserRegister(Resource):
             Roles.fetch_role_by_name(user_details['role'])
         )
         new_user_role.save()
-
-        # we need to generate a code for user to use for confirmation code
-        confirmation_code = token_handler.user_account_confirmation_token(new_user_authentication.id)
-        email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'], confirmation_code)
-        subject = "Please confirm your account"
-        #helper.send_email(user_details['email'], subject, email_template)
+        """
+        Account confirmation email generation
+        #   we need to generate a code for user to use for confirmation code
+        #   confirmation_code = token_handler.user_account_confirmation_token(new_user_authentication.id)
+        #   email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+        #                                                          confirmation_code)
+        #   subject = "Please confirm your account"
+        #   helper.send_email(user_details['email'], subject, email_template)
+        """
+        #   ToDo: Configure email server and uncomment the above section
         success_msg = "You have been registered. Kindly check your email to confirm account"
         response = helper.make_rest_success_response(success_msg)
 
@@ -91,7 +93,7 @@ class UserRegister(Resource):
     def get(self):
         """
         get user profile details
-        """
+
         user_profile_row = UserProfile.get_all_profiles()
         if not user_profile_row:
             response = helper.make_rest_fail_response("No user was found")
@@ -99,6 +101,11 @@ class UserRegister(Resource):
 
         response = helper.make_rest_success_response(None, user_profile_row)
         return make_response(response, 200)
+        """
+
+
+class UserAccountConfirmation:
+    pass
 
 
 class UserLogin(Resource):
@@ -112,11 +119,16 @@ class UserLogin(Resource):
             return make_response(response, 404)
 
         # user exists, let's go ahead and authenticate the user
-        if helper.confirm_user_password(user_db_row.password, user_details['password']):
-            # generate an access token for the user
-            auth_tokens = token_handler.create_user_token(user_db_row.id)
-            response = helper.make_rest_success_response("Successfully logged in", auth_tokens)
-            return make_response(response, 200)
+        # we also need to check whether the user account is verified or not
+        if user_db_row.check_password_hash(user_details['password']):
+            if user_db_row.is_active:
+                # generate an access token for the user
+                auth_tokens = token_handler.create_user_token(user_db_row.id)
+                response = helper.make_rest_success_response("Successfully logged in", auth_tokens)
+                return make_response(response, 200)
+            else:
+                response = helper.make_rest_fail_response("Please confirm your account before signing in.")
+                return make_response(response, 401)
         else:
             response = helper.make_rest_fail_response("Wrong credentials passed, please try again")
             return make_response(response, 401)
