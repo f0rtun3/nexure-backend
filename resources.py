@@ -3,9 +3,11 @@ User resource
 Handles user related actions
 """
 from models import User
-from models import UserProfile
+from models import UserProfile, IndependentAgent, TiedAgents, Broker
 from models import Roles
 from models import UserRolePlacement
+from models import InsuranceCompany
+from models import IndividualCustomer
 from flask import make_response
 from flask_restful import Resource, reqparse
 # get the utility file
@@ -41,6 +43,18 @@ user_parser.add_argument(
 user_parser.add_argument(
     "role",
     type=str
+)
+user_parser.add_argument(
+    "agency_name",
+    type=str
+)
+user_parser.add_argument(
+    "agency_email",
+    type=str
+)
+user_parser.add_argument(
+    "agency_phone",
+    type=int
 )
 
 
@@ -78,10 +92,16 @@ class UserRegister(Resource):
             Roles.fetch_role_by_name(user_details['role'])
         )
         new_user_role.save()
+
         confirmation_code = token_handler.user_account_confirmation_token(new_user_authentication.id)
         # Account confirmation email generation
-        #   we need to generate a code for user to use for confirmation code
+        # Save extra user details depending on their role
+        role = user_details["role"]
+        self.onboard_client(role, new_user_authentication.id, user_details)
+
         """
+        Account confirmation email generation
+        #   we need to generate a code for user to use for confirmation code    
         email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                   confirmation_code)
         subject = "Please confirm your account"
@@ -107,23 +127,71 @@ class UserRegister(Resource):
         return make_response(response, 200)
         """
 
+    def onboard_client(self, role, user_id, user_details):
+        # Use user's role to determine where the details will be stored
+        if role == "IA":
+            # If it's an independent agency
+            new_independent_agency = IndependentAgent(
+                user_details["agency_name"],
+                user_details["agency_email"],
+                user_details["agency_phone"],
+                user_id,
+                user_details["first_name"],
+                user_details["last_name"],
+                user_details["mob"]
+            )
+            new_independent_agency.save()
+
+        elif role == "IC":
+            # if it's an insurance company
+            new_insurance_company = InsuranceCompany(
+                user_details["company_name"],
+                user_details["company_email"],
+                user_details["company_phone"],
+                user_id,
+                user_details["contact_phone"],
+                user_details["contact_first_name"],
+                user_details["contact_last_name"]
+            )
+            new_insurance_company.save()
+
+        elif role == "TA":
+            # If it's a tied agent
+            # You only need a user_id to create a Tied agent object.
+            new_tied_agent = TiedAgents(user_id)
+            new_tied_agent.save()
+
+        elif role == "IN":
+            # If it's an individual/direct customer
+            new_individual_customer = IndividualCustomer(user_id)
+            new_individual_customer.save()
+
+        elif role == "BR":
+            # if it's a broker
+            new_broker = Broker(
+                user_details["broker_name"],
+                user_id,
+                user_details["broker_phone_number"],
+                user_details["broker_email"],
+            )
+            new_broker.save()
+
 
 class UserAccountConfirmation(Resource):
     @jwt_required
     def put(self):
         """
-        authenticaiton token is sent here for confirmation
+        authentication token is sent here for confirmation
         token must be valid for account to be activated
         """
         # the user id is needed to needed to know the user whose account we are activating
         user_id =  get_jwt_identity()
         user_row = User.get_user_by_id(user_id)
         if user_row:
-            if user_row.is_active == True:
+            if user_row.is_active:
                 response = helper.make_rest_success_response("Your account is already active, please login")
                 return make_response(response, 200)    
-            data = {}
-            data['is_active'] = True
+            data = {'is_active': True}
             user_row.update(data)
             response = helper.make_rest_success_response("Your account has been activated, you can now log in")
             return make_response(response, 200)
@@ -161,7 +229,8 @@ class UserLogin(Resource):
         user_db_row = User.get_user_by_email(user_details['email'])
 
         if not user_db_row:
-            response = helper.make_rest_fail_response("User email does not exist")
+            response = helper.make_rest_fail_response(
+                "User email does not exist")
             return make_response(response, 404)
 
         # user exists, let's go ahead and authenticate the user
@@ -170,11 +239,14 @@ class UserLogin(Resource):
             if user_db_row.is_active:
                 # generate an access token for the user
                 auth_tokens = token_handler.create_user_token(user_db_row.id)
-                response = helper.make_rest_success_response("Successfully logged in", auth_tokens)
+                response = helper.make_rest_success_response(
+                    "Successfully logged in", auth_tokens)
                 return make_response(response, 200)
             else:
-                response = helper.make_rest_fail_response("Please confirm your account before signing in.")
+                response = helper.make_rest_fail_response(
+                    "Please confirm your account before signing in.")
                 return make_response(response, 401)
         else:
-            response = helper.make_rest_fail_response("Wrong credentials passed, please try again")
+            response = helper.make_rest_fail_response(
+                "Wrong credentials passed, please try again")
             return make_response(response, 401)
