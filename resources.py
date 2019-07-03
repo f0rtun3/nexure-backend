@@ -54,6 +54,96 @@ user_parser.add_argument(
     type=int
 )
 
+customer_parser = reqparse.RequestParser()
+customer_parser.add_argument(
+    # Individual or organization
+    "type",
+    type=str
+)
+customer_parser.add_argument(
+    # If organization
+    "org_type",
+    type=str
+)
+# For individuals
+customer_parser.add_argument(
+    "first_name",
+    type=str
+)
+customer_parser.add_argument(
+    "last_name",
+    type=str
+)
+customer_parser.add_argument(
+    "phone",
+    type=int
+)
+customer_parser.add_argument(
+    "email",
+    type=str
+)
+customer_parser.add_argument(
+    "birth_date",
+    type=str
+)
+customer_parser.add_argument(
+    "gender",
+    type=str
+)
+customer_parser.add_argument(
+    "address_line_1",
+    type=str
+)
+customer_parser.add_argument(
+    "address_line_2",
+    type=str
+)
+customer_parser.add_argument(
+    "postal_code",
+    type=str
+)
+customer_parser.add_argument(
+    "postal_town",
+    type=str
+)
+customer_parser.add_argument(
+    "county",
+    type=str
+)
+customer_parser.add_argument(
+    "constituency",
+    type=str
+)
+customer_parser.add_argument(
+    "ward",
+    type=str
+)
+customer_parser.add_argument(
+    "id_passport",
+    type=str
+)
+customer_parser.add_argument(
+    "kra_pin",
+    type=str
+)
+customer_parser.add_argument(
+    "occupation",
+    type=str
+)
+customer_parser.add_argument(
+    "facebook",
+    type=str
+)
+customer_parser.add_argument(
+    "twitter",
+    type=str
+)
+customer_parser.add_argument(
+    "instagram",
+    type=str
+)
+
+
 class UserRegister(Resource):
     def post(self):
         # get the user details from the request sent by the client
@@ -205,3 +295,22 @@ class UserLogin(Resource):
             response = helper.make_rest_fail_response(
                 "Wrong credentials passed, please try again")
             return make_response(response, 401)
+
+
+class CustomerOnboarding(Resource):
+    def post(self):
+        customer_details = customer_parser.parse_args()
+        # check whether customer exists
+        customer_row = User.get_user_by_email(customer_details['email'])
+        # If customer or organization contact person already created an account
+        if customer_row:
+            if customer_details["type"] == "Individual":
+                # Add his id to individual customers
+                new_individual_cust = IndividualCustomer(customer_row.id)
+                response = helper.make_rest_success_response(
+                    f"The customer had been onboarded successfully using details from an existing account.
+                    Kindly check profile information for account {customer_details['email']}")
+                return make_response(response, 200)
+            if customer_details["type"] == "Organization":
+                # create a new "organization" customer account
+                
