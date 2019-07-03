@@ -119,11 +119,10 @@ class UserAccountConfirmation(Resource):
         user_id =  get_jwt_identity()
         user_row = User.get_user_by_id(user_id)
         if user_row:
-            if user_row.is_active == True:
+            if user_row.is_active:
                 response = helper.make_rest_success_response("Your account is already active, please login")
                 return make_response(response, 200)    
-            data = {}
-            data['is_active'] = True
+            data = {'is_active': True}
             user_row.update(data)
             response = helper.make_rest_success_response("Your account has been activated, you can now log in")
             return make_response(response, 200)
