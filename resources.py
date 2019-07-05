@@ -480,3 +480,4 @@ class CustomerOnBoarding(Resource):
             Roles.fetch_role_by_name(role)
         )
         new_user_role.save()
+
