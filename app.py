@@ -67,10 +67,12 @@ def fresh_token_loader_handler():
 from resources import UserRegister
 from resources import UserLogin
 from resources import UserAccountConfirmation
+from resources import CustomerOnBoarding
 
 
 api.add_resource(UserRegister, '/register')
 api.add_resource(UserLogin, '/login')
+api.add_resource(CustomerOnBoarding, '/register_customer')
 api.add_resource(UserAccountConfirmation, '/confirm')
 
 

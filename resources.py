@@ -7,13 +7,13 @@ from models import UserProfile, IndependentAgent, TiedAgents, Broker
 from models import Roles
 from models import UserRolePlacement
 from models import InsuranceCompany
-from models import IndividualCustomer
+from models import IndividualCustomer, OrganizationCustomer
 from flask import make_response
 from flask_restful import Resource, reqparse
 # get the utility file
 import helpers.helpers as helper
 import helpers.tokens as token_handler
-#jwt token authentication library
+# jwt token authentication library
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # from app import app
@@ -55,6 +55,112 @@ user_parser.add_argument(
 user_parser.add_argument(
     "agency_phone",
     type=int
+)
+
+
+customer_parser = reqparse.RequestParser()
+customer_parser.add_argument(
+    # Individual or organization
+    "type",
+    type=str
+)
+customer_parser.add_argument(
+    # what type of organization is the customer registering as
+    "org_type",
+    type=str
+)
+# individual details
+customer_parser.add_argument(
+    "first_name",
+    type=str
+)
+customer_parser.add_argument(
+    "last_name",
+    type=str
+)
+customer_parser.add_argument(
+    "phone",
+    type=int
+)
+customer_parser.add_argument(
+    "email",
+    type=str
+)
+customer_parser.add_argument(
+    "birth_date",
+    type=str
+)
+customer_parser.add_argument(
+    "gender",
+    type=str
+)
+customer_parser.add_argument(
+    "physical_address",
+    type=str
+)
+customer_parser.add_argument(
+    "postal_code",
+    type=int
+)
+customer_parser.add_argument(
+    "postal_town",
+    type=str
+)
+customer_parser.add_argument(
+    "county",
+    type=str
+)
+customer_parser.add_argument(
+    "constituency",
+    type=str
+)
+customer_parser.add_argument(
+    "ward",
+    type=str
+)
+customer_parser.add_argument(
+    "id_passport",
+    type=str
+)
+customer_parser.add_argument(
+    "kra_pin",
+    type=str
+)
+customer_parser.add_argument(
+    "occupation",
+    type=str
+)
+customer_parser.add_argument(
+    "facebook",
+    type=str
+)
+customer_parser.add_argument(
+    "twitter",
+    type=str
+)
+customer_parser.add_argument(
+    "instagram",
+    type=str
+)
+customer_parser.add_argument(
+    "org_phone",
+    type=int
+)
+customer_parser.add_argument(
+    "org_name",
+    type=str
+)
+customer_parser.add_argument(
+    "org_email",
+    type=str
+)
+customer_parser.add_argument(
+    "reg_number",
+    type=str
+)
+customer_parser.add_argument(
+    "postal_address",
+    type=str
 )
 
 
@@ -100,8 +206,10 @@ class UserRegister(Resource):
         self.onboard_client(role, new_user_authentication.id, user_details)
 
         """
-        Account confirmation email generation
-        #   we need to generate a code for user to use for confirmation code    
+        Send a confirmation link to the user for account confirmation
+        confirmation_code = token_handler.user_account_confirmation_token(
+            new_user_authentication.id)
+        
         email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                   confirmation_code)
         subject = "Please confirm your account"
@@ -110,7 +218,8 @@ class UserRegister(Resource):
         #   ToDo: Configure email server and uncomment the above section
 
         success_msg = "You have been registered. Kindly check your email to confirm account"
-        response = helper.make_rest_success_response(success_msg, {"confirmation_token": confirmation_code})
+        response = helper.make_rest_success_response(
+            success_msg, {"confirmation_token": confirmation_code})
 
         return make_response(response, 200)
 
@@ -136,9 +245,9 @@ class UserRegister(Resource):
                 user_details["agency_email"],
                 user_details["agency_phone"],
                 user_id,
+                user_details["mob"],
                 user_details["first_name"],
-                user_details["last_name"],
-                user_details["mob"]
+                user_details["last_name"]
             )
             new_independent_agency.save()
 
@@ -149,9 +258,9 @@ class UserRegister(Resource):
                 user_details["company_email"],
                 user_details["company_phone"],
                 user_id,
-                user_details["contact_phone"],
                 user_details["contact_first_name"],
-                user_details["contact_last_name"]
+                user_details["contact_last_name"],
+                user_details["contact_phone"]
             )
             new_insurance_company.save()
 
@@ -185,15 +294,17 @@ class UserAccountConfirmation(Resource):
         token must be valid for account to be activated
         """
         # the user id is needed to needed to know the user whose account we are activating
-        user_id =  get_jwt_identity()
+        user_id = get_jwt_identity()
         user_row = User.get_user_by_id(user_id)
         if user_row:
             if user_row.is_active:
-                response = helper.make_rest_success_response("Your account is already active, please login")
-                return make_response(response, 200)    
+                response = helper.make_rest_success_response(
+                    "Your account is already active, please login")
+                return make_response(response, 200)
             data = {'is_active': True}
             user_row.update(data)
-            response = helper.make_rest_success_response("Your account has been activated, you can now log in")
+            response = helper.make_rest_success_response(
+                "Your account has been activated, you can now log in")
             return make_response(response, 200)
 
         # the user has not been found in the database
@@ -237,10 +348,12 @@ class UserLogin(Resource):
         # we also need to check whether the user account is verified or not
         if user_db_row.check_password_hash(user_details['password']):
             if user_db_row.is_active:
-                # generate an access token for the user
+                # generate an access token for the user, and also return the user role
+                # to redirect them to the correct page after logging in
+                role = self.get_user_role(user_db_row.id)
                 auth_tokens = token_handler.create_user_token(user_db_row.id)
                 response = helper.make_rest_success_response(
-                    "Successfully logged in", auth_tokens)
+                    "Successfully logged in", {"authentication": auth_tokens, "role": role})
                 return make_response(response, 200)
             else:
                 response = helper.make_rest_fail_response(
@@ -250,3 +363,120 @@ class UserLogin(Resource):
             response = helper.make_rest_fail_response(
                 "Wrong credentials passed, please try again")
             return make_response(response, 401)
+
+    @staticmethod
+    def get_user_role(user_id):
+        role_id = UserRolePlacement.fetch_role_by_user_id(user_id)
+        role_name = Roles.fetch_role_by_id(role_id)
+        return role_name
+
+
+class CustomerOnBoarding(Resource):
+    def post(self):
+        # check whether customer exists
+        customer_details = customer_parser.parse_args()
+        customer_row = User.get_user_by_email(customer_details['email'])
+        # If individual customer already created an account
+        if customer_details["type"] == "Individual":
+            if customer_row:
+                # Create an individual customer
+                self.create_individual_customer(customer_row.id)
+                
+                # assign role
+                self.role_placement(customer_row.id, "IND")
+
+            # if the individual customer. doesn't have an account, create a new one
+            else:
+                user_id = uuid.uuid4()
+                # Create temporary seven digit password
+                temporary_pass = helper.create_user_password()
+                # create new user
+                new_individual_cust = User(
+                    user_id,
+                    customer_details['email'],
+                    temporary_pass
+                )
+                new_individual_cust.save()
+
+                # create individual customer's profile
+                new_individual_profile = UserProfile(
+                    new_individual_cust.id,
+                    customer_details["first_name"],
+                    customer_details["last_name"],
+                    customer_details["phone"]
+
+                    # customer_details['physical_address'],
+                    # customer_details['postal_code'],
+                    # customer_details['postal_town'],
+                    # customer_details['county'],
+                    # customer_details['constituency'],
+                    # customer_details['ward'],
+                    # customer_details['facebook'],
+                    # customer_details['instagram'],
+                    # customer_details['twitter']
+                )
+                new_individual_profile.save()
+
+                # assign role
+                self.role_placement(new_individual_cust.id, "IND")
+
+                # Create individual customer
+                self.create_individual_customer(new_individual_cust.id)
+
+        # Customer on boarding for organizations
+        if customer_details["type"] == "Organization":
+            # create a new user account using the organization email
+            user_id = uuid.uuid4()
+            # Create temporary seven digit password
+            temporary_pass = helper.create_user_password()
+            # create new user
+            new_account = User(
+                user_id,
+                customer_details['org_email'],
+                temporary_pass
+            )
+            new_account.save()
+
+            # assign role
+            self.role_placement(new_account.id, "ORG")
+
+            # create a new "organization" customer account
+            new_org_cust = OrganizationCustomer(
+                customer_details['org_type'],
+                customer_details["org_name"],
+                customer_details['org_phone'],
+                customer_details['org_email'],
+                customer_details['org_reg_number'],
+                customer_details['physical_address'],
+                customer_details['postal_code'],
+                customer_details['postal_town'],
+                customer_details['county'],
+                customer_details['constituency'],
+                customer_details['ward'],
+                customer_details['facebook'],
+                customer_details['instagram'],
+                customer_details['twitter'],
+                customer_details["first_name"],
+                customer_details["last_name"],
+                customer_details["phone"],
+                customer_details["email"]
+            )
+            new_org_cust.save()        
+
+        # Send the user an email confirmation with their temporary password. Advice them to change it.
+        response = helper.make_rest_success_response(
+            f"Customer has been on boarded successfully. Please check your email for further instructions")
+        return make_response(response, 200)
+
+    @staticmethod
+    def create_individual_customer(cust_id):
+        new_individual_cust = IndividualCustomer(cust_id)
+        new_individual_cust.save()
+
+    @staticmethod
+    def role_placement(role_id, role):
+        new_user_role = UserRolePlacement(
+            role_id,
+            Roles.fetch_role_by_name(role)
+        )
+        new_user_role.save()

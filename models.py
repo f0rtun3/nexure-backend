@@ -87,8 +87,7 @@ class UserProfile(db.Model):
     id_passport = db.Column(db.String(30), unique=True)
     kra_pin = db.Column(db.String(15), unique=True)
     birth_date = db.Column(db.Date)
-    address_line_1 = db.Column(db.String(100))
-    address_line_2 = db.Column(db.String(100))
+    physical_address = db.Column(db.String(100))
     postal_code = db.Column(db.Integer)
     postal_town = db.Column(db.String(30))
     county = db.Column(db.String(30))
@@ -116,8 +115,7 @@ class UserProfile(db.Model):
         self.id_passport = id_passport
         self.kra_pin = kra_pin
         self.birth_date = birth_date
-        self.address_line_1 = address_line_1
-        self.address_line_2 = address_line_2
+        self.physical_address = physical_address
         self.postal_code = postal_code
         self.postal_town = postal_town
         self.county = county
@@ -143,8 +141,7 @@ class UserProfile(db.Model):
             "id_passport": self.id_passport,
             "kra_pin": self.kra_pin,
             "birth_date": self.birth_date,
-            "address_line_1": self.address_line_1,
-            "address_line_2": self.address_line_2,
+            "physical_address": self.physical_address,
             "postal_code": self.postal_code,
             "postal_town": self.postal_town,
             "county": self.county,
@@ -189,7 +186,7 @@ class Roles(db.Model):
 
     # the role name will help us know what permissions to grant the user
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    role_name = db.Column(db.String(2), nullable=False)
+    role_name = db.Column(db.String(3), nullable=False)
 
     def __init__(self, role_name):
         self.role_name = role_name
@@ -220,7 +217,14 @@ class Roles(db.Model):
         return roles
 
     @classmethod
+    def fetch_role_by_id(cls, name):
+        # Get user role by name
+        role_row = cls.query.filter_by(role_name=name).first()
+        return role_row.id
+
+    @classmethod
     def fetch_role_by_name(cls, name):
+        # Get user role by name
         role_row = cls.query.filter_by(role_name=name).first()
         return role_row.id
 
@@ -603,10 +607,11 @@ class OrganizationCustomer(db.Model):
     __tablename__ = 'organization_customer'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    org_customer_number = db.Column(db.String(50), unique=True)
+    org_type = db.Column(db.String(100), nullable=False)
+    org_customer_number = db.Column(db.String(50), unique=True, nullable=True)
     org_name = db.Column(db.String(100), unique=True)
     org_phone = db.Column(db.BIGINT)
-    email = db.Column(db.String(100))
+    org_email = db.Column(db.String(100))
     org_registration_number = db.Column(db.String(50))
     physical_address = db.Column(db.String(100))
     postal_code = db.Column(db.Integer)
@@ -616,15 +621,10 @@ class OrganizationCustomer(db.Model):
     ward = db.Column(db.String(30))
 
     # organization contact person details
-    """
     contact_first_name = db.Column(db.String(50))
     contact_last_name = db.Column(db.String(50))
-    contact_phone_number = db.column(db.Integer)
+    contact_phone_number = db.Column(db.BIGINT)
     contact_email = db.Column(db.String(100))
-    """
-    contact_person = db.Column(db.Integer, db.ForeignKey(
-        'user.id', ondelete='CASCADE', onupdate='CASCADE'))
-
     # social media handles
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
@@ -634,9 +634,10 @@ class OrganizationCustomer(db.Model):
     updated_on = db.Column(
         db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
-    def __init__(self, org_customer_number, org_name, org_phone, email, org_registration_number, physical_address,
-                 postal_code, postal_town, county, constituency, ward, contact_person, facebook, instagram, twitter):
-        self.org_customer_number = org_customer_number
+    def __init__(self, org_type, org_name, org_phone, email, org_registration_number, physical_address,
+                 postal_code, postal_town, county, facebook, instagram, twitter, constituency, ward, contact_first_name,
+                 contact_last_name, contact_phone_number, contact_email):
+        self.org_type = org_type
         self.org_name = org_name
         self.org_phone = org_phone
         self.email = email
@@ -647,16 +648,13 @@ class OrganizationCustomer(db.Model):
         self.county = county
         self.constituency = constituency
         self.ward = ward
-        """
+        self.facebook = facebook
+        self.instagram = instagram
+        self.twitter = twitter
         self.contact_first_name = contact_first_name
         self.contact_last_name = contact_last_name
         self.contact_phone_number = contact_phone_number
         self.contact_email = contact_email
-        """
-        self.contact_person = contact_person
-        self.facebook = facebook
-        self.instagram = instagram
-        self.twitter = twitter
 
     def __repr__(self):
         return f"{self.org_name}"
@@ -664,6 +662,7 @@ class OrganizationCustomer(db.Model):
     def serialize(self):
         return {
             "org_customer_number": self.org_customer_number,
+            "org_type": self.org_type,
             "org_name": self.org_name,
             "org_phone": self.org_phone,
             "email": self.email,

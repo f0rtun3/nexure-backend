@@ -1,7 +1,8 @@
 from flask import jsonify, render_template
 from flask_mail import Message
 from app import app, mail
-import hashlib
+import string
+import random
 
 
 def make_rest_fail_response(message):
@@ -32,13 +33,7 @@ def send_email(recipient, subject, template):
     mail.send(msg)
 
 
-"""
-def generate_hash(password):
-    return hashlib.sha256(password.encode("utf-8")).hexdigest()
-
-
-def confirm_user_password(db_pwd, user_pwd):
-    user_pwd_hash = generate_hash(user_pwd)
-
-    return user_pwd_hash == db_pwd
-"""
+def create_user_password():
+    string_length = 7
+    password = string.ascii_letters + string.digits
+    return ''.join(random.choice(password) for i in range(string_length))
