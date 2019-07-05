@@ -23,6 +23,13 @@ def generate_confirmation_template(url_endpoint, code):
     return html
 
 
+def generate_temporary_password_template(url_endpoint, code):
+    html = render_template('temp_password.html',
+                           url_endpoint=url_endpoint,
+                           temp_password=code)
+    return html
+
+
 def send_email(recipient, subject, template):
     msg = Message(
         subject,

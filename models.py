@@ -588,8 +588,10 @@ class IndividualCustomer(db.Model):
     def __repr__(self):
         return f"{self.user}"
 
-    def __init__(self, user):
+    def __init__(self, user, salutation, customer_number):
         self.user = user
+        self.salutation = salutation
+        self.customer_number = customer_number
 
     def save(self):
         db.session.add(self)
@@ -770,6 +772,6 @@ class OrganizationTypes(db.Model):
         db.session.commit()
 
     @classmethod
-    def get_organiztion_customer_types(cls):
+    def get_organization_customer_types(cls):
         all_types = [types.serialize() for types in cls.query.all()]
         return all_types

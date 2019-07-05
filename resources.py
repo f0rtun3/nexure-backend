@@ -13,6 +13,7 @@ from flask_restful import Resource, reqparse
 # get the utility file
 import helpers.helpers as helper
 import helpers.tokens as token_handler
+from helpers.CustomerNumber import CustomerNumber
 # jwt token authentication library
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -59,6 +60,10 @@ user_parser.add_argument(
 
 
 customer_parser = reqparse.RequestParser()
+customer_parser.add_argument(
+    "salutation",
+    type=str
+)
 customer_parser.add_argument(
     # Individual or organization
     "type",
@@ -270,11 +275,6 @@ class UserRegister(Resource):
             new_tied_agent = TiedAgents(user_id)
             new_tied_agent.save()
 
-        elif role == "IN":
-            # If it's an individual/direct customer
-            new_individual_customer = IndividualCustomer(user_id)
-            new_individual_customer.save()
-
         elif role == "BR":
             # if it's a broker
             new_broker = Broker(
@@ -284,6 +284,8 @@ class UserRegister(Resource):
                 user_details["broker_email"],
             )
             new_broker.save()
+        else:
+            return
 
 
 class UserAccountConfirmation(Resource):
@@ -380,11 +382,11 @@ class CustomerOnBoarding(Resource):
         if customer_details["type"] == "Individual":
             if customer_row:
                 # Create an individual customer
-                self.create_individual_customer(customer_row.id)
+                self.create_individual_customer(customer_row.id, customer_details['salutation'],
+                                                self.create_customer_number('IN', customer_row.id, 'KE'))
                 
                 # assign role
                 self.role_placement(customer_row.id, "IND")
-
             # if the individual customer. doesn't have an account, create a new one
             else:
                 user_id = uuid.uuid4()
@@ -421,8 +423,22 @@ class CustomerOnBoarding(Resource):
                 self.role_placement(new_individual_cust.id, "IND")
 
                 # Create individual customer
-                self.create_individual_customer(new_individual_cust.id)
-
+                self.create_individual_customer(new_individual_cust.id, customer_details['salutation'],
+                                                self.create_customer_number('IN', customer_row.id, 'KE'))
+                """ 
+                #  Send temporary password to user via email
+                email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+                                                                      temporary_pass)
+                subject = "Your Nexure Temporary Password"
+                helper.send_email(customer_details['email'], subject, email_template)
+                
+                #  Generate a user account activation email
+                confirmation_code = token_handler.user_account_confirmation_token(user_id)
+                email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+                                                                      confirmation_code)
+                subject = "Please confirm your account"
+                helper.send_email(customer_details['email'], subject, email_template)
+                """
         # Customer on boarding for organizations
         if customer_details["type"] == "Organization":
             # create a new user account using the organization email
@@ -446,7 +462,7 @@ class CustomerOnBoarding(Resource):
                 customer_details["org_name"],
                 customer_details['org_phone'],
                 customer_details['org_email'],
-                customer_details['org_reg_number'],
+                self.create_customer_number(customer_details['org_type'], customer_row.id, 'KE'),
                 customer_details['physical_address'],
                 customer_details['postal_code'],
                 customer_details['postal_town'],
@@ -461,16 +477,29 @@ class CustomerOnBoarding(Resource):
                 customer_details["phone"],
                 customer_details["email"]
             )
-            new_org_cust.save()        
+            new_org_cust.save()
+            """ 
+            #  Send temporary password to user via email
+            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+                                                                  temporary_pass)
+            subject = "Your Nexure Temporary Password"
+            helper.send_email(customer_details['org_email'], subject, email_template)
 
+            #  Generate a user account activation email
+            confirmation_code = token_handler.user_account_confirmation_token(user_id)
+            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+                                                                  confirmation_code)
+            subject = "Please confirm your account"
+            helper.send_email(customer_details['org_email'], subject, email_template)
+            """
         # Send the user an email confirmation with their temporary password. Advice them to change it.
         response = helper.make_rest_success_response(
             f"Customer has been on boarded successfully. Please check your email for further instructions")
         return make_response(response, 200)
 
     @staticmethod
-    def create_individual_customer(cust_id):
-        new_individual_cust = IndividualCustomer(cust_id)
+    def create_individual_customer(cust_id, salutation, customer_number):
+        new_individual_cust = IndividualCustomer(cust_id, salutation, customer_number)
         new_individual_cust.save()
 
     @staticmethod
@@ -480,4 +509,9 @@ class CustomerOnBoarding(Resource):
             Roles.fetch_role_by_name(role)
         )
         new_user_role.save()
+
+    @staticmethod
+    def create_customer_number(org_type, user_id, country):
+        customer_helper = CustomerNumber(org_type, user_id, country)
+        return customer_helper.generate_customer_number()
 
