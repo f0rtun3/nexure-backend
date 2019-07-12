@@ -124,6 +124,11 @@ user_parser.add_argument(
     type=str
 )
 
+# change password
+user_parser.add_argument(
+    "new_password",
+    type=str
+)
 
 """Contains customer details"""
 customer_parser = reqparse.RequestParser()
