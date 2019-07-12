@@ -517,4 +517,12 @@ class CustomerOnBoarding(Resource):
 
 class OrganizationType(Resource):
     def get(self):
-        return OrganizationTypes.get_organization_customer_types()
+        data = OrganizationTypes.get_organization_customer_types()
+        if data:
+            message = "Request successful"
+            response = helper.make_rest_success_response(message, data)
+            return make_response(response, 200)
+        
+        message = "No data was found"
+        response = helper.make_rest_fail_response(message, data)
+        return make_response(response, 404)
