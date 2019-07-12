@@ -7,7 +7,7 @@ from models import UserProfile, IndependentAgent, TiedAgents, Broker
 from models import Roles
 from models import UserRolePlacement
 from models import InsuranceCompany
-from models import IndividualCustomer, OrganizationCustomer
+from models import IndividualCustomer, OrganizationCustomer, OrganizationTypes
 from flask import make_response
 from flask_restful import Resource, reqparse
 # get the utility file
@@ -515,3 +515,6 @@ class CustomerOnBoarding(Resource):
         customer_helper = CustomerNumber(org_type, user_id, country)
         return customer_helper.generate_customer_number()
 
+class OrganizationType(Resource):
+    def get(self):
+        return OrganizationTypes.get_organization_customer_types()
