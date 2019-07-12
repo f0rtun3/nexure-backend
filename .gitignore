@@ -125,5 +125,4 @@ dmypy.json
 .pyre/
 
 .idea/
-.idea
-helpers/__pycache__/
+todos.py

@@ -751,11 +751,10 @@ class OrganizationTypes(db.Model):
         self.type_name = type_name
         self.type_acronym = type_acronym
 
-
     def serialize(self):
         return {
-            "type_name": self.type_name,
-            "type_acronym": self.type_acronym
+            "label": self.type_name,
+            "value": self.type_acronym
         }, 200
 
     def save(self):
