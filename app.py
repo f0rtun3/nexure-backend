@@ -68,14 +68,13 @@ from resources import UserRegister
 from resources import UserLogin
 from resources import UserAccountConfirmation
 from resources import CustomerOnboarding
-from resources import CompleteSignup
 
 
-api.add_resource(UserRegister, '/register')
+api.add_resource(UserRegister, '/user')
 api.add_resource(UserLogin, '/login')
 api.add_resource(CustomerOnboarding, '/onboardcustomer')
 api.add_resource(UserAccountConfirmation, '/confirm')
-api.add_resource(CompleteSignup, '/signup')
+
 
 if __name__ == '__main__':
     app.run(port=app.config['PORT'], debug=app.config['DEBUG'])

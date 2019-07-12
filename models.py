@@ -35,7 +35,7 @@ class User(db.Model):
         return f"{self.email}"
 
     def generate_password_hash(self, password):
-        self.password_hash = generate_password_hash(password)
+        return generate_password_hash(password)
 
     def check_password_hash(self, password):
         return check_password_hash(self.password, password)
@@ -53,6 +53,10 @@ class User(db.Model):
     def update(self, data):
         for key, item in data.items():
             setattr(self, key, item)
+        db.session.commit()
+    
+    def update_password(self, password):
+        setattr(self, "password", password)
         db.session.commit()
 
     def delete(self):
@@ -217,9 +221,9 @@ class Roles(db.Model):
         return roles
 
     @classmethod
-    def fetch_role_by_id(cls, name):
+    def fetch_role_by_id(cls, id):
         # Get user role by name
-        role_row = cls.query.filter_by(role_name=name).first()
+        role_row = cls.query.filter_by(id=id).first()
         return role_row.role_name
 
     @classmethod

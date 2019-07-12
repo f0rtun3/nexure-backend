@@ -130,7 +130,7 @@ class UserRegister(Resource):
                 # get broker by id
                 broker = Broker.get_broker_by_contact_id(user_id)
                 # update their account
-                broker.update(
+                data = {
                     "broker_name": user_details['org_name'],
                     "broker_phone_number": user_details['org_phone_number'],
                     "broker_email": user_details['org_email'],
@@ -141,14 +141,15 @@ class UserRegister(Resource):
                     "facebook": user_details['facebook'],
                     "instagram": user_details['twitter'],
                     "twitter": user_details['instagram']
-                )
+                }
+                broker.update(data)
             # for insurance companies
             elif role == 'IC':
                 # get insurance company
                 company = InsuranceCompany.get_company_by_contact_person(
                     user_id)
                 # update their account
-                company.update(
+                data = {
                     "company_name": user_details['org_name'],
                     "company_number": user_details['org_phone_number'],
                     "company_email": user_details['org_email'],
@@ -161,13 +162,14 @@ class UserRegister(Resource):
                     "facebook": user_details['facebook'],
                     "instagram": user_details['instagram'],
                     "twitter": user_details['twitter']
-                )
+                }
+                company.update(data)
+
             # for independent agents
             elif role == 'IA':
                 """One contact person only represents one entity. So, we fetch the agency using the contact person's id """
                 agency = IndependentAgent.get_agency_by_contact_person(user_id)
-
-                agency.update(
+                data = {
                     "agency_name": user_details['org_name'],
                     "agency_phone": user_details['org_phone_number'],
                     "agency_email": user_details['org_email'],
@@ -178,7 +180,8 @@ class UserRegister(Resource):
                     "facebook": user_details['facebook'],
                     "instagram": user_details['instagram'],
                     "twitter": user_details['twitter']
-                )
+                }
+                agency.update(data)
         else:
             # if user does not exist
             response = helper.make_rest_fail_response(
@@ -188,10 +191,8 @@ class UserRegister(Resource):
         # change password
         if user_details['new_password']:
             user = User.get_user_by_id(get_jwt_identity())
-            data = {
-                "password": user_details['new_password']
-            }
-            user.update(data)
+            password = user.generate_password_hash(user_details['new_password'])
+            user.update_password(password)
 
         # if update is successful
         response = helper.make_rest_success_response(
@@ -325,8 +326,8 @@ class UserLogin(Resource):
             return make_response(response, 401)
 
     def get_user_role(self, user_id):
-        role_id = UserRolePlacement.fetch_role_by_user_id(user_id)
-        role_name = Roles.fetch_role_by_id(role_id)
+        role = UserRolePlacement.fetch_role_by_user_id(user_id)
+        role_name = Roles.fetch_role_by_id(role.role_id)
         return role_name
 
 
