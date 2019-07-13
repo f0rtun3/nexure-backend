@@ -128,3 +128,4 @@ dmypy.json
 .idea/
 .vscode/
 helpers/__pycache__/
+migrations/
