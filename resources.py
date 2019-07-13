@@ -13,7 +13,10 @@ from flask_restful import Resource, reqparse
 # get the utility file
 import helpers.helpers as helper
 import helpers.tokens as token_handler
+#jwt token authentication library
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
+# from app import app
 import uuid
 
 user_parser = reqparse.RequestParser()
@@ -54,6 +57,7 @@ user_parser.add_argument(
     type=int
 )
 
+
 class UserRegister(Resource):
     def post(self):
         # get the user details from the request sent by the client
@@ -89,22 +93,24 @@ class UserRegister(Resource):
         )
         new_user_role.save()
 
+        confirmation_code = token_handler.user_account_confirmation_token(new_user_authentication.id)
+        # Account confirmation email generation
         # Save extra user details depending on their role
         role = user_details["role"]
         self.onboard_client(role, new_user_authentication.id, user_details)
 
         """
         Account confirmation email generation
-        #   we need to generate a code for user to use for confirmation code
-        #   confirmation_code = token_handler.user_account_confirmation_token(new_user_authentication.id)
-        #   email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
-        #                                                          confirmation_code)
-        #   subject = "Please confirm your account"
-        #   helper.send_email(user_details['email'], subject, email_template)
+        #   we need to generate a code for user to use for confirmation code    
+        email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+                                                                  confirmation_code)
+        subject = "Please confirm your account"
+        helper.send_email(user_details['email'], subject, email_template)
         """
         #   ToDo: Configure email server and uncomment the above section
+
         success_msg = "You have been registered. Kindly check your email to confirm account"
-        response = helper.make_rest_success_response(success_msg)
+        response = helper.make_rest_success_response(success_msg, {"confirmation_token": confirmation_code})
 
         return make_response(response, 200)
 
@@ -127,8 +133,8 @@ class UserRegister(Resource):
             # If it's an independent agency
             new_independent_agency = IndependentAgent(
                 user_details["agency_name"],
-                user_details["agency_phone"],
                 user_details["agency_email"],
+                user_details["agency_phone"],
                 user_id,
                 user_details["first_name"],
                 user_details["last_name"],
@@ -139,13 +145,13 @@ class UserRegister(Resource):
         elif role == "IC":
             # if it's an insurance company
             new_insurance_company = InsuranceCompany(
-                user_details["company_phone"],
                 user_details["company_name"],
                 user_details["company_email"],
+                user_details["company_phone"],
                 user_id,
+                user_details["contact_phone"],
                 user_details["contact_first_name"],
-                user_details["contact_last_name"],
-                user_details["contact_phone"]
+                user_details["contact_last_name"]
             )
             new_insurance_company.save()
 
@@ -164,17 +170,56 @@ class UserRegister(Resource):
             # if it's a broker
             new_broker = Broker(
                 user_details["broker_name"],
-                # Broker contact person(Foreign Key)
                 user_id,
                 user_details["broker_phone_number"],
                 user_details["broker_email"],
-                user_details["agency_name"]
             )
             new_broker.save()
 
 
-class UserAccountConfirmation:
-    pass
+class UserAccountConfirmation(Resource):
+    @jwt_required
+    def put(self):
+        """
+        authentication token is sent here for confirmation
+        token must be valid for account to be activated
+        """
+        # the user id is needed to needed to know the user whose account we are activating
+        user_id =  get_jwt_identity()
+        user_row = User.get_user_by_id(user_id)
+        if user_row:
+            if user_row.is_active:
+                response = helper.make_rest_success_response("Your account is already active, please login")
+                return make_response(response, 200)    
+            data = {'is_active': True}
+            user_row.update(data)
+            response = helper.make_rest_success_response("Your account has been activated, you can now log in")
+            return make_response(response, 200)
+
+        # the user has not been found in the database
+        response = helper.make_rest_fail_response("User does not exist")
+        return make_response(response, 404)
+
+    def get(self, user_id):
+        """
+        If the jwt token has expired
+        a user can request for another token here simple by passing in the user_id
+        """
+        """
+        user_row = User.get_user_by_id(user_id)
+        if user_row:
+            confirmation_code = token_handler.user_account_confirmation_token(user_id)
+            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+                                                                  confirmation_code)
+            subject = "Please confirm your account"
+            helper.send_email(user_row.email, subject, email_template)
+            response = helper.make_rest_success_response("Please check your email to confirm your account")
+            return make_response(response, 200)
+
+        response = helper.make_rest_fail_response("User was not found, please try again or register a new account")
+        return make_response(response, 404)
+        """
+        pass
 
 
 class UserLogin(Resource):
