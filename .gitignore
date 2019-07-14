@@ -125,5 +125,5 @@ dmypy.json
 .pyre/
 
 .idea/
-.idea
+migrations/
 helpers/__pycache__/
