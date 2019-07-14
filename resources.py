@@ -297,6 +297,8 @@ class UserAccountConfirmation(Resource):
                 response = helper.make_rest_success_response(
                     "Your account is already active, please login")
                 return make_response(response, 200)
+                response = helper.make_rest_success_response("Your account is already active, please login")
+                return make_response(response, 200)
             data = {'is_active': True}
             user_row.update(data)
             response = helper.make_rest_success_response(
