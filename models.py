@@ -626,7 +626,6 @@ class OrganizationCustomer(db.Model):
     county = db.Column(db.String(30))
     constituency = db.Column(db.String(30))
     ward = db.Column(db.String(30))
-
     # organization contact person details
     contact_first_name = db.Column(db.String(50))
     contact_last_name = db.Column(db.String(50))
