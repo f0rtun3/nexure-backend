@@ -123,7 +123,11 @@ user_parser.add_argument(
     "instagram",
     type=str
 )
-
+# change password
+user_parser.add_argument(
+    "new_password",
+    type=str
+)
 
 """Contains customer details"""
 customer_parser = reqparse.RequestParser()
@@ -189,6 +193,10 @@ customer_parser.add_argument(
 )
 customer_parser.add_argument(
     "ward",
+    type=str
+)
+customer_parser.add_argument(
+    "country",
     type=str
 )
 customer_parser.add_argument(

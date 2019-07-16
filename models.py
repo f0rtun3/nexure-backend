@@ -21,13 +21,21 @@ class User(db.Model):
     # an account, once created must be activated by the user
     # through an email sent
     is_active = db.Column(db.Boolean, default=False)
-
-    # define the relationship to user_profile as a child table
+    # define the relationship to user_profile
     # this allows us access the generated user uuid for exposure
     user_profile = db.relationship("UserProfile", backref="user")
-
     # define the relationship to the individual customer
     individual_customer = db.relationship("IndividualCustomer", backref="user")
+    # define the relationship to the organization customer
+    organization_customer = db.relationship("OrganizationCustomer", backref="user")
+    # define the relationship to the tied agent
+    tied_agent = db.relationship("TiedAgents", backref="user")
+    # define the relationship to the independent agent
+    independent_agent = db.relationship("IndependentAgent", backref="user")
+    # define the relationship to the insurance company
+    insurance_company = db.relationship("InsuranceCompany", backref="user")
+    # define the relationship to the broker
+    broker = db.relationship("Broker", backref="user")
 
     def __init__(self, user_id, email, password):
         self.user_id = user_id
@@ -37,8 +45,9 @@ class User(db.Model):
     def __repr__(self):
         return f"{self.email}"
 
-    def generate_password_hash(self, password):
-        self.password_hash = generate_password_hash(password)
+    @staticmethod
+    def generate_password_hash(password):
+        return generate_password_hash(password)
 
     def check_password_hash(self, password):
         return check_password_hash(self.password, password)
@@ -56,6 +65,10 @@ class User(db.Model):
     def update(self, data):
         for key, item in data.items():
             setattr(self, key, item)
+        db.session.commit()
+    
+    def update_password(self, password):
+        setattr(self, "password", password)
         db.session.commit()
 
     def delete(self):
@@ -103,15 +116,16 @@ class UserProfile(db.Model):
     twitter = db.Column(db.String(150))
 
     created_on = db.Column(db.DateTime, default=db.func.now())
-    updated_on = db.Column(
-        db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
-    def __init__(self, user_id, first_name, last_name, phone):
+    def __init__(self, user_id, first_name, last_name, phone, gender=None, avatar_url=None, occupation=None,
+                 id_passport=None, kra_pin=None, birth_date=None, physical_address=None, postal_code=None,
+                 postal_town=None, county=None, constituency=None, ward=None, facebook=None, twitter=None,
+                 instagram=None):
         self.user_id = user_id
         self.first_name = first_name
         self.last_name = last_name
         self.phone = phone
-        """
         self.gender = gender
         self.avatar_url = avatar_url
         self.occupation = occupation
@@ -127,7 +141,6 @@ class UserProfile(db.Model):
         self.facebook = facebook
         self.twitter = twitter
         self.instagram = instagram
-        """
 
     def __repr__(self):
         return f"{self.id_passport}"
@@ -190,6 +203,10 @@ class Roles(db.Model):
     # the role name will help us know what permissions to grant the user
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     role_name = db.Column(db.String(3), nullable=False)
+    # define the relationship to the user role placement
+    user_role = db.relationship("UserRolePlacement", backref="role")
+    # define the relationship to the customer affiliations
+    customer_affiliation = db.relationship("CustomerAffiliation", backref="role")
 
     def __init__(self, role_name):
         self.role_name = role_name
@@ -220,10 +237,10 @@ class Roles(db.Model):
         return roles
 
     @classmethod
-    def fetch_role_by_id(cls, name):
+    def fetch_role_by_id(cls, id):
         # Get user role by name
-        role_row = cls.query.filter_by(role_name=name).first()
-        return role_row.id
+        role_row = cls.query.filter_by(id=id).first()
+        return role_row.role_name
 
     @classmethod
     def fetch_role_by_name(cls, name):
@@ -274,14 +291,13 @@ class Broker(db.Model):
     broker_name = db.Column(db.String(100), unique=True, nullable=False)
     broker_phone_number = db.Column(db.BIGINT, nullable=False, unique=True)
     broker_email = db.Column(db.String(100), nullable=False, unique=True)
-    b_contact_person = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'),
-                                 nullable=False)
-    b_contact_number = db.Column(db.BIGINT, unique=True, nullable=False)
-    b_contact_email = db.Column(db.String(100), unique=True, nullable=False)
+    contact_person = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'),
+                               nullable=False)
     ira_registration_number = db.Column(db.String(15), unique=True)
     ira_license_number = db.Column(db.String(15), unique=True)
     kra_pin = db.Column(db.String(15), unique=True)
     website = db.Column(db.String(150), unique=True)
+    mpesa_paybill = db.Column(db.BIGINT, nullable=False)
 
     # social media handles
     facebook = db.Column(db.String(150))
@@ -289,17 +305,22 @@ class Broker(db.Model):
     twitter = db.Column(db.String(150))
     avatar_url = db.Column(db.String(150))
 
-    def __init__(self, broker_name, b_contact_person, broker_phone_number, broker_email):
+    def __init__(self, broker_name, broker_phone_number, broker_email, contact_person, ira_registration_number=None,
+                 ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
+                 avatar_url=None, mpesa_paybill=None):
         self.broker_name = broker_name
-        self.b_contact_person = b_contact_person
-        self.b_contact_number = broker_phone_number
-        self.b_contact_email = broker_email
-        """
+        self.broker_email = broker_email
+        self.broker_phone_number = broker_phone_number
+        self.contact_person = contact_person
         self.ira_registration_number = ira_registration_number
-        self.ira_license_number = ira_license_number
+        self.ira_license_number = ira_licence_number
         self.kra_pin = kra_pin
         self.website = website
-        """
+        self.facebook = facebook
+        self.instagram = instagram
+        self.twitter = twitter
+        self.avatar_url = avatar_url
+        self.mpesa_paybill = mpesa_paybill
 
     def __repr__(self):
         return f"{self.broker_name}"
@@ -307,13 +328,16 @@ class Broker(db.Model):
     def serializers(self):
         return {
             "broker_name": self.broker_name,
-            "b_contact_person": self.b_contact_person,
+            "contact_person": self.contact_person,
             "broker_phone_number": self.broker_phone_number,
             "broker_email": self.broker_email,
             "ira_registration_number": self.ira_registration_number,
             "ira_license_number": self.ira_license_number,
             "kra_pin": self.kra_pin,
-            "website": self.website
+            "website": self.website,
+            "facebook": self.facebook,
+            "instagram": self.instagram,
+            "twitter": self.twitter
         }, 200
 
     def save(self):
@@ -334,13 +358,16 @@ class Broker(db.Model):
         broker_rows = cls.query.all()
         brokers = [{
             "broker_name": broker.broker_name,
-            "b_contact_person": broker.b_contact_person,
+            "contact_person": broker.contact_person,
             "broker_phone_number": broker.broker_phone_number,
             "broker_email": broker.broker_email,
             "ira_registration_number": broker.ira_registration_number,
             "ira_license_number": broker.ira_license_number,
             "kra_pin": broker.kra_pin,
-            "website": broker.website
+            "website": broker.website,
+            "facebook": broker.facebook,
+            "instagram": broker.instagram,
+            "twitter": broker.twitter
         } for broker in broker_rows]
 
         return brokers
@@ -349,6 +376,10 @@ class Broker(db.Model):
     def get_broker_by_id(cls, broker_id):
         return cls.query.filter_by(broker_id=broker_id).first()
 
+    @classmethod
+    def get_broker_by_contact_id(cls, user_id):
+        return cls.query.filter_by(contact_person=user_id).first()
+
 
 class InsuranceCompany(db.Model):
     insurance_company_id = db.Column(
@@ -356,15 +387,14 @@ class InsuranceCompany(db.Model):
     company_name = db.Column(db.String(100), unique=True, nullable=False)
     contact_person = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))
-    contact_first_name = db.Column(db.String(50), nullable=False)
-    contact_last_name = db.Column(db.String(50), nullable=False)
-    contact_phone = db.Column(db.BIGINT, nullable=False)
     company_phone = db.Column(db.BIGINT, unique=True, nullable=False)
     company_email = db.Column(db.String(100), nullable=False, unique=True)
     ira_registration_number = db.Column(db.String(15), unique=True)
     ira_license_number = db.Column(db.String(15), unique=True)
     kra_pin = db.Column(db.String(15), unique=True)
     website = db.Column(db.String(150), unique=True)
+    bank_account = db.Column(db.BIGINT, nullable=True)
+    mpesa_paybill = db.Column(db.BIGINT, nullable=True, unique=True)
 
     # social media handles
     facebook = db.Column(db.String(150))
@@ -372,15 +402,22 @@ class InsuranceCompany(db.Model):
     twitter = db.Column(db.String(150))
     avatar_url = db.Column(db.String(150))
 
-    def __init__(self, company_name, company_email, company_phone, contact_person, contact_first_name,
-                 contact_last_name, contact_phone):
+    def __init__(self, company_name, company_email, company_phone, contact_person, ira_registration_number=None,
+                 ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
+                 avatar_url=None, mpesa_paybill=None):
         self.company_name = company_name
         self.company_email = company_email
         self.company_phone = company_phone
         self.contact_person = contact_person
-        self.contact_first_name = contact_first_name
-        self.contact_last_name = contact_last_name
-        self.contact_phone = contact_phone
+        self.ira_registration_number = ira_registration_number
+        self.ira_license_number = ira_licence_number
+        self.kra_pin = kra_pin
+        self.website = website
+        self.facebook = facebook
+        self.instagram = instagram
+        self.twitter = twitter
+        self.avatar_url = avatar_url
+        self.mpesa_paybill = mpesa_paybill
 
     def __repr__(self):
         return f"{self.company_name}"
@@ -388,9 +425,11 @@ class InsuranceCompany(db.Model):
     def serialize(self):
         return{
             "company_name": self.company_name,
-            "c_contact_person": self.c_contact_person,
+            "contact_person": self.contact_person,
             "company_number": self.company_number,
             "company_email": self.company_email,
+            "bank_account": self.bank_account,
+            "mpesa_paybill": self.mpesa_paybill,
             "ira_registration_number": self.ira_registration_number,
             "ira_license_number": self.ira_license_number,
             "kra_pin": self.kra_pin,
@@ -415,14 +454,18 @@ class InsuranceCompany(db.Model):
 
     @classmethod
     def get_company_by_id(cls, insurance_company_id):
-        cls.query.filter_by(insurance_company_id=insurance_company_id).first()
+        return cls.query.filter_by(insurance_company_id=insurance_company_id).first()
+
+    @classmethod
+    def get_company_by_contact_person(cls, user_id):
+        return cls.filter_by(contact_person=user_id).first()
 
     @classmethod
     def get_all_companies(cls):
         company_rows = cls.query.all()
         companies = [{
             "company_name": company.company_name,
-            "c_contact_person": company.c_contact_person,
+            "contact_person": company.contact_person,
             "company_number": company.company_number,
             "company_email": company.company_email,
             "ira_registration_number": company.ira_registration_number,
@@ -449,12 +492,10 @@ class IndependentAgent(db.Model):
     agency_email = db.Column(db.String(100), nullable=False, unique=True)
     contact_person = db.Column(db.Integer, db.ForeignKey(
         'user.id', onupdate='CASCADE', ondelete='CASCADE'))
-    contact_first_name = db.Column(db.String(50), nullable=False)
-    contact_last_name = db.Column(db.String(50), nullable=False)
-    contact_phone = db.Column(db.BIGINT, nullable=False)
     ira_registration_number = db.Column(db.String(15))
     ira_licence_number = db.Column(db.String(15))
     kra_pin = db.Column(db.String(15))
+    mpesa_paybill=db.Column(db.BIGINT, nullable=True, unique=True)
 
     # social media handles
     facebook = db.Column(db.String(150))
@@ -465,26 +506,35 @@ class IndependentAgent(db.Model):
     def __repr__(self):
         return f"{self.agency_name}"
 
-    def __init__(self, agency_name, agency_phone, agency_email, contact_person, contact_first_name, contact_last_name,
-                 contact_phone):
+    def __init__(self, agency_name, agency_phone, agency_email, contact_person, ira_registration_number=None,
+                 ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
+                 avatar_url=None, mpesa_paybill=None):
         self.agency_name = agency_name
         self.agency_email = agency_email
         self.agency_phone = agency_phone
         self.contact_person = contact_person
-        self.contact_phone = contact_phone
-        self.contact_first_name = contact_first_name
-        self.contact_last_name = contact_last_name
+        self.ira_registration_number = ira_registration_number
+        self.ira_license_number = ira_licence_number
+        self.kra_pin = kra_pin
+        self.website = website
+        self.facebook = facebook
+        self.instagram = instagram
+        self.twitter = twitter
+        self.avatar_url = avatar_url
+        self.mpesa_paybill = mpesa_paybill
 
     def serialize(self):
         return {
             "agency_name": self.agency_name,
+            "agency_email": self.agency_email,
+            "agency_phone": self.agency_phone,
             "contact_person": self.contact_person,
-            "contact_phone": self.contact_phone,
-            "contact_first_name": self.contact_first_name,
-            "contact_last_name": self.contact_last_name,
             "ira_registration_number": self.ira_registration_number,
             "ira_licence_number": self.ira_licence_number,
-            "kra_pin": self.kra_pin
+            "kra_pin": self.kra_pin,
+            "facebook": self.facebook,
+            "instagram": self.instagram,
+            "twitter": self.twitter
         }, 200
 
     def save(self):
@@ -505,12 +555,15 @@ class IndependentAgent(db.Model):
         agency_rows = cls.query.all()
         agencies = [{
             "agency_name": agency.agency_name,
-            "a_contact_person": agency.a_contact_person,
-            "a_contact_number": agency.a_contact_number,
-            "a_contact_email": agency.a_contact_email,
+            "contact_person": agency.contact_person,
+            "agency_email": agency.agency_email,
+            "agency_phone": agency.agency_phone,
             "ira_registration_number": agency.ira_registration_number,
             "ira_licence_number": agency.ira_licence_number,
-            "kra_pin": agency.kra_pin
+            "kra_pin": agency.kra_pin,
+            "facebook": agency.facebook,
+            "instagram": agency.instagram,
+            "twitter": agency.twitter
         } for agency in agency_rows]
 
         return agencies
@@ -518,6 +571,10 @@ class IndependentAgent(db.Model):
     @classmethod
     def get_agency_by_id(cls, agency_id):
         return cls.query.filter_by(id=agency_id).first()
+
+    @classmethod
+    def get_agency_by_contact_person(cls, user_id):
+        return cls.filter_by(contact_person=user_id).first()
 
 
 class TiedAgents(db.Model):
@@ -528,11 +585,11 @@ class TiedAgents(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     # The tied agent is linked to a user profile since they have common details
-    user = db.Column(db.Integer, db.ForeignKey(
+    user_id = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))
 
-    def __init__(self, user):
-        self.user = user
+    def __init__(self, user_id):
+        self.user_id = user_id
 
     def __repr__(self):
         return f"{self.id}"
@@ -540,7 +597,7 @@ class TiedAgents(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "user": self.user,
+            "user": self.user_id,
         }, 200
 
     def save(self):
@@ -580,18 +637,18 @@ class IndividualCustomer(db.Model):
     __tablename__ = 'individual_customer'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user = db.Column(db.Integer, db.ForeignKey(
+    user_id = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))
     salutation = db.Column(db.String(4), nullable=False)
-    customer_number = db.Column(db.String(50), nullable=True)
+    # customer_number = db.Column(db.String(50), nullable=True)
 
     def __repr__(self):
         return f"{self.user}"
 
-    def __init__(self, user, salutation, customer_number):
-        self.user = user
+    def __init__(self, user_id, salutation):
+        self.user_id = user_id
         self.salutation = salutation
-        self.customer_number = customer_number
+        # self.customer_number = customer_number
 
     def save(self):
         db.session.add(self)
@@ -615,7 +672,7 @@ class OrganizationCustomer(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     org_type = db.Column(db.String(100), nullable=False)
-    org_customer_number = db.Column(db.String(50), unique=True, nullable=True)
+    # org_customer_number = db.Column(db.String(50), unique=True, nullable=True)
     org_name = db.Column(db.String(100), unique=True)
     org_phone = db.Column(db.BIGINT)
     org_email = db.Column(db.String(100))
@@ -627,27 +684,24 @@ class OrganizationCustomer(db.Model):
     constituency = db.Column(db.String(30))
     ward = db.Column(db.String(30))
     # organization contact person details
-    contact_first_name = db.Column(db.String(50))
-    contact_last_name = db.Column(db.String(50))
-    contact_phone_number = db.Column(db.BIGINT)
-    contact_email = db.Column(db.String(100))
+    contact_person = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
     # social media handles
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
 
     created_on = db.Column(db.DateTime, default=db.func.now())
-    updated_on = db.Column(
-        db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
     def __init__(self, org_type, org_name, org_phone, email, org_registration_number, physical_address,
-                 postal_code, postal_town, county, facebook, instagram, twitter, constituency, ward, contact_first_name,
-                 contact_last_name, contact_phone_number, contact_email):
+                 postal_code, postal_town, county, facebook, instagram, twitter, constituency,
+                 ward, contact_person):
         self.org_type = org_type
         self.org_name = org_name
         self.org_phone = org_phone
         self.email = email
         self.org_registration_number = org_registration_number
+        # self.org_customer_number = org_customer_number
         self.physical_address = physical_address
         self.postal_code = postal_code
         self.postal_town = postal_town
@@ -657,10 +711,7 @@ class OrganizationCustomer(db.Model):
         self.facebook = facebook
         self.instagram = instagram
         self.twitter = twitter
-        self.contact_first_name = contact_first_name
-        self.contact_last_name = contact_last_name
-        self.contact_phone_number = contact_phone_number
-        self.contact_email = contact_email
+        self.contact_person = contact_person
 
     def __repr__(self):
         return f"{self.org_name}"
@@ -679,10 +730,10 @@ class OrganizationCustomer(db.Model):
             "county": self.county,
             "constituency": self.constituency,
             "ward": self.ward,
-            "contact_first_name": self.contact_first_name,
-            "contact_last_name": self.contact_last_name,
-            "contact_phone_number": self.contact_phone_number,
-            "contact_email": self.contact_email,
+            "contact_first_name": self.user.user_profile.first_name,
+            "contact_last_name": self.user.user_profile.last_name,
+            "contact_phone_number": self.user.user_profile.phone,
+            "contact_email": self.user.user_profile.email,
             "facebook": self.facebook,
             "instagram": self.instagram,
             "twitter": self.twitter
@@ -711,29 +762,8 @@ class OrganizationCustomer(db.Model):
 
     @classmethod
     def get_all_organization_customers(cls):
-        organization_customer_rows = cls.query.all()
-        organizations = [{
-            "org_customer_number": organization.org_customer_number,
-            "org_name": organization.org_name,
-            "org_phone": organization.org_phone,
-            "email": organization.email,
-            "org_registration_number": organization.org_registration_number,
-            "physical_address": organization.physical_address,
-            "postal_code": organization.postal_code,
-            "postal_town": organization.postal_town,
-            "county": organization.county,
-            "constituency": organization.constituency,
-            "ward": organization.ward,
-            "contact_first_name": organization.contact_first_name,
-            "contact_last_name": organization.contact_last_name,
-            "contact_phone_number": organization.contact_phone_number,
-            "contact_email": organization.contact_email,
-            "facebook": organization.facebook,
-            "instagram": organization.instagram,
-            "twitter": organization.twitter
-        } for organization in organization_customer_rows]
-
-        return organizations
+        results = [org.serialize() for org in cls.query.all()]
+        return results
 
 
 class OrganizationTypes(db.Model):
@@ -773,3 +803,33 @@ class OrganizationTypes(db.Model):
     def get_organization_customer_types(cls):
         all_types = [types.serialize() for types in cls.query.all()]
         return all_types
+
+
+class CustomerAffiliation(db.Model):
+    """
+    Create an affiliation between the customer and the agent or broker
+    """
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    customer_number = db.Column(db.String(50), unique=True, nullable=True)
+    broker_agent_id = db.Column(db.Integer, nullable=False)
+    staff_id = db.Column(db.Integer, nullable=True)
+    date_affiliated = db.Column(db.DateTime, default=db.func.now())
+    # we need to know whether the affiliation is active or not
+    is_active = db.Column(db.Boolean, default=True)
+
+    def __init__(self, customer_number, broker_agent_id, staff_id=None):
+        self.customer_number = customer_number
+        self.broker_agent_id = broker_agent_id
+        self.staff_id = staff_id
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    @classmethod
+    def filter_agent_broker(cls, role_id, broker_agent_id):
+        agent_broker_data = cls.query.filter_by(broker_agent_id=broker_agent_id).all()
+        return agent_broker_data
