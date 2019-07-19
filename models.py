@@ -435,11 +435,12 @@ class Broker(db.Model):
 class InsuranceCompany(db.Model):
     insurance_company_id = db.Column(
         db.Integer, autoincrement=True, primary_key=True)
-    company_name = db.Column(db.String(100), unique=True, nullable=False)
+    # Foreign key to the static data describing the company's profile
+    company_profile = db.Column(db.Integer, db.ForeignKey(
+        'static_company.id', ondelete='CASCADE', onupdate='CASCADE'))
     contact_person = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))
     company_phone = db.Column(db.BIGINT, unique=True, nullable=False)
-    company_email = db.Column(db.String(100), nullable=False, unique=True)
     ira_registration_number = db.Column(db.String(15), unique=True)
     ira_license_number = db.Column(db.String(15), unique=True)
     kra_pin = db.Column(db.String(15), unique=True)
@@ -450,14 +451,12 @@ class InsuranceCompany(db.Model):
     # social media handles
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
-    twitter = db.Column(db.String(150))
-    avatar_url = db.Column(db.String(150))
+    twitter = db.Column(db.String(150))    
 
-    def __init__(self, company_name, company_email, company_phone, contact_person, ira_registration_number=None,
+    def __init__(self, company_profile, company_phone, contact_person, ira_registration_number=None,
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
-                 avatar_url=None, mpesa_paybill=None):
-        self.company_name = company_name
-        self.company_email = company_email
+                 mpesa_paybill=None, bank_account=None):
+        self.company_profile = company_profile         
         self.company_phone = company_phone
         self.contact_person = contact_person
         self.ira_registration_number = ira_registration_number
@@ -467,18 +466,16 @@ class InsuranceCompany(db.Model):
         self.facebook = facebook
         self.instagram = instagram
         self.twitter = twitter
-        self.avatar_url = avatar_url
         self.mpesa_paybill = mpesa_paybill
+        self.bank_account = bank_account
 
     def __repr__(self):
         return f"{self.company_name}"
 
     def serialize(self):
         return{
-            "company_name": self.company_name,
             "contact_person": self.contact_person,
             "company_number": self.company_number,
-            "company_email": self.company_email,
             "bank_account": self.bank_account,
             "mpesa_paybill": self.mpesa_paybill,
             "ira_registration_number": self.ira_registration_number,
@@ -515,10 +512,9 @@ class InsuranceCompany(db.Model):
     def get_all_companies(cls):
         company_rows = cls.query.all()
         companies = [{
-            "company_name": company.company_name,
+            "company_profile": company.company_profile,
             "contact_person": company.contact_person,
             "company_number": company.company_number,
-            "company_email": company.company_email,
             "ira_registration_number": company.ira_registration_number,
             "ira_license_number": company.ira_license_number,
             "kra_pin": company.kra_pin,
@@ -529,6 +525,46 @@ class InsuranceCompany(db.Model):
         } for company in company_rows]
 
         return companies
+
+class StaticCompanyDetails(db.Model):
+    """Stores all static information about insurance companies"""
+    __tablename__ = 'static_company'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    email = db.Column(db.String(100), nullable=False, unique=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    avatar_url = db.Column(db.String(150))
+    physical_address = db.Column(db.String(100))    
+
+    def __repr__(self):
+        return f'{self.name}'
+
+    def __init__(self, email, name, avatar_url, physical_address):
+        self.email = email
+        self.name = name
+        self.avatar_url = avatar_url
+        self.physical_address = physical_address
+    
+    def serialize(self):
+        return {
+            "name": self.name,
+            "email": self.email,
+            "avatar_url":self.avatar_url,
+            "physical_address": self.physical_address
+        }, 200
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self, data):
+        for key, item in data.items():
+            setattr(self, key, item)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
 
 class IndependentAgent(db.Model):
