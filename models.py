@@ -27,7 +27,8 @@ class User(db.Model):
     # define the relationship to the individual customer
     individual_customer = db.relationship("IndividualCustomer", backref="user")
     # define the relationship to the organization customer
-    organization_customer = db.relationship("OrganizationCustomer", backref="user")
+    organization_customer = db.relationship(
+        "OrganizationCustomer", backref="user")
     # define the relationship to the tied agent
     tied_agent = db.relationship("TiedAgents", backref="user")
     # define the relationship to the independent agent
@@ -36,6 +37,8 @@ class User(db.Model):
     insurance_company = db.relationship("InsuranceCompany", backref="user")
     # define the relationship to the broker
     broker = db.relationship("Broker", backref="user")
+    # define the relationship to the staff
+    staff = db.relationship("Staff", backref="user")
 
     def __init__(self, user_id, email, password):
         self.user_id = user_id
@@ -66,7 +69,7 @@ class User(db.Model):
         for key, item in data.items():
             setattr(self, key, item)
         db.session.commit()
-    
+
     def update_password(self, password):
         setattr(self, "password", password)
         db.session.commit()
@@ -116,7 +119,8 @@ class UserProfile(db.Model):
     twitter = db.Column(db.String(150))
 
     created_on = db.Column(db.DateTime, default=db.func.now())
-    updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    updated_on = db.Column(
+        db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
     def __init__(self, user_id, first_name, last_name, phone, gender=None, avatar_url=None, occupation=None,
                  id_passport=None, kra_pin=None, birth_date=None, physical_address=None, postal_code=None,
@@ -206,7 +210,8 @@ class Roles(db.Model):
     # define the relationship to the user role placement
     user_role = db.relationship("UserRolePlacement", backref="role")
     # define the relationship to the customer affiliations
-    customer_affiliation = db.relationship("CustomerAffiliation", backref="role")
+    customer_affiliation = db.relationship(
+        "CustomerAffiliation", backref="role")
 
     def __init__(self, role_name):
         self.role_name = role_name
@@ -248,6 +253,52 @@ class Roles(db.Model):
         role_row = cls.query.filter_by(role_name=name).first()
         return role_row.id
 
+
+class Permissions(db.Model):
+
+    __tablename__ = 'permission'
+    #  stores the list of permissions
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    permission_name = db.Column(db.String(100))
+    user_permission = db.Relationship('UserPermissions', backref='permissions')
+
+    def __init__(self, permission_name, user_id):
+        self.permission_name = permission_name
+        self.user_id = user_id
+
+    def __str__(self):
+        return f"{self.id}"
+
+
+class UserPermissions(db.Model):
+    __tablename__ = 'user_permission'
+
+    id = db.Columbn(db.Integer, primary_key=True, auto_increment=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id', onupdate='CASCADE', ondelete='CASCADE'))
+    permission_id = db.Column(db.Integer, db.ForeignKey(
+        'permissions.id', onupdate='CASCADE', ondelete='CASCADE'))
+
+    def __init__(self, user_id, permission_id):
+        self.user_id = user_id
+        self.permission_id = permission_id
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self, data):
+        for key, item in data.items():
+            setattr(self, key, item)
+        db.session.commit()
+
+    @classmethod
+    def get_permission_by_id(cls, id):
+        permissions_list = cls.query.filter_by(user_id=id).all()
+        permission_ids = []
+        for i in permissions_list:
+            permission_ids.append(str(i.permission_id))
+        return ''.join(permission_ids)
 
 class UserRolePlacement(db.Model):
     """
@@ -495,8 +546,7 @@ class IndependentAgent(db.Model):
     ira_registration_number = db.Column(db.String(15))
     ira_licence_number = db.Column(db.String(15))
     kra_pin = db.Column(db.String(15))
-    mpesa_paybill=db.Column(db.BIGINT, nullable=True, unique=True)
-
+    mpesa_paybill = db.Column(db.BIGINT, nullable=True, unique=True)
     # social media handles
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
@@ -684,14 +734,16 @@ class OrganizationCustomer(db.Model):
     constituency = db.Column(db.String(30))
     ward = db.Column(db.String(30))
     # organization contact person details
-    contact_person = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
+    contact_person = db.Column(db.Integer, db.ForeignKey(
+        'user.id', ondelete='CASCADE', onupdate='CASCADE'))
     # social media handles
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
 
     created_on = db.Column(db.DateTime, default=db.func.now())
-    updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    updated_on = db.Column(
+        db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
     def __init__(self, org_type, org_name, org_phone, email, org_registration_number, physical_address,
                  postal_code, postal_town, county, facebook, instagram, twitter, constituency,
@@ -772,7 +824,8 @@ class OrganizationTypes(db.Model):
     """
     __tablename__ = 'organization_type'
 
-    id = db.Column(db.Integer, autoincrement=True, nullable=False, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True,
+                   nullable=False, primary_key=True)
     type_name = db.Column(db.String(20), nullable=False, unique=True)
     type_acronym = db.Column(db.String(5), nullable=False, unique=True)
 
@@ -809,7 +862,8 @@ class CustomerAffiliation(db.Model):
     """
     Create an affiliation between the customer and the agent or broker
     """
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    id = db.Column(db.Integer, autoincrement=True,
+                   primary_key=True, nullable=False)
     customer_number = db.Column(db.String(50), unique=True, nullable=True)
     broker_agent_id = db.Column(db.Integer, nullable=False)
     staff_id = db.Column(db.Integer, nullable=True)
@@ -831,5 +885,33 @@ class CustomerAffiliation(db.Model):
 
     @classmethod
     def filter_agent_broker(cls, role_id, broker_agent_id):
-        agent_broker_data = cls.query.filter_by(broker_agent_id=broker_agent_id).all()
+        agent_broker_data = cls.query.filter_by(
+            broker_agent_id=broker_agent_id).all()
         return agent_broker_data
+
+
+class Staff(db.Model):
+    __tablename__ = 'staff'
+
+    id = db.Column(db.Integer, primary_key=True, auto_increment=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
+    agent_broker_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
+
+    def __init__(self, user_id, agent_broker_id):
+        self.user_id = user_id
+        self.agent_broker_id = agent_broker_id
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()    
+    
+    @classmethod
+    def fetch_staff_by_id(cls, id):
+        return cls.query.filter_by(user_id=id).first()

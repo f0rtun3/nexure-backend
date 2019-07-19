@@ -9,6 +9,7 @@ from models import UserRolePlacement
 from models import InsuranceCompany
 from models import IndividualCustomer, OrganizationCustomer, OrganizationTypes
 from models import CustomerAffiliation
+from models import Staff
 from flask import make_response
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import get_jwt_identity, jwt_required
@@ -349,7 +350,7 @@ class CustomerOnBoarding(Resource):
         # check whether customer exists
         customer_details = customer_parser.parse_args()
         customer_row = User.get_user_by_email(customer_details['email'])
-        customer_account_number = self.create_customer_number(customer_details['org_type'],
+        customer_number = self.create_customer_number(customer_details['org_type'],
                                                               customer_row.id, customer_details['country'])
         customer_id = customer_row.id
 
@@ -374,9 +375,22 @@ class CustomerOnBoarding(Resource):
                 customer_details["phone"]
             )
             new_individual_profile.save()
+            """
             # ToDo: send the temporary password and account activation email
-            customer_id = new_account.id
+            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+                                                                  temporary_pass)
+            subject = "Your Nexure Temporary Password"
+            helper.send_email(customer_details['org_email'], subject, email_template)
 
+            #  Generate a user account activation email
+            confirmation_code = token_handler.user_account_confirmation_token(user_id)
+            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+                                                                  confirmation_code)
+            subject = "Please confirm your account"
+            helper.send_email(customer_details['org_email'], subject, email_template)
+            """
+            customer_id = new_account.id
+        
         if customer_details['type'] == "Individual":
             #   create a new individual customer detail
             self.create_individual_customer(customer_row.id, customer_details['salutation'])
@@ -402,88 +416,23 @@ class CustomerOnBoarding(Resource):
             )
             new_org_customer.save()
             self.role_placement(customer_row.id, "ORG")
-        # ToDo: Create a customer number and enter into affiliation
-        # ToDo: create a staff model where we can get agent_broker id incase staff enrolled the customer
-        # create a new affiliation between the customer and broker/agent
-        # each affiliation must only exist once in the db
-        # we need to fetch the role of the agent/broker and associate it into the affiliation
+        uid = get_jwt_identity()
+        # we need to check whether the current user is a staff member or an agent/broker
+        u_role = UserRolePlacement.fetch_role_by_user_id(uid)
+        u_role_id = u_role.role_id
+        role_name = Roles.fetch_role_by_id(u_role_id)
+        if role_name == 'STF':
+            staff_member = Staff.fetch_staff_by_id(uid)
+            agent_broker_id = staff_member.agent_broker_id
+            new_affiliation = CustomerAffiliation(customer_number, agent_broker_id, uid)
+            new_affiliation.save()
+        else:
+            new_affiliation = CustomerAffiliation(customer_number, uid)
+            new_affiliation.save()
 
-        """
-        # If individual customer already created an account
-        if customer_details["type"] == "Individual":
-            if customer_row:
-                # Create an individual customer
-                customer_number = self.create_customer_number('IN', customer_row.id, customer_details['country'])
-                self.create_individual_customer(customer_row.id, customer_details['salutation'], customer_number)
-                # assign role
-                self.role_placement(customer_row.id, "IND")
-            else:
-                # assign role
-                self.role_placement(new_account.id, "IND")
-                # Create individual customer
-                customer_number = self.create_customer_number('IN', customer_row.id, customer_details['country'])
-                self.create_individual_customer(new_individual_cust.id, customer_details['salutation'], customer_number)
-                
-                #  Send temporary password to user via email
-                email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
-                                                                      temporary_pass)
-                subject = "Your Nexure Temporary Password"
-                helper.send_email(customer_details['email'], subject, email_template)
-                
-                #  Generate a user account activation email
-                confirmation_code = token_handler.user_account_confirmation_token(user_id)
-                email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
-                                                                      confirmation_code)
-                subject = "Please confirm your account"
-                helper.send_email(customer_details['email'], subject, email_template)
-                
-        # Customer on boarding for organizations
-        if customer_details["type"] == "Organization":
-            # create a new user account using the organization email
-            # assign role
-            self.role_placement(new_account.id, "ORG")
+        response_msg = helper.make_rest_success_response("New customer has been on boarded successfully!")
+        return make_response(response_msg, 200)     
 
-            # create a new "organization" customer account
-            new_org_cust = OrganizationCustomer(
-                customer_details['org_type'],
-                customer_details["org_name"],
-                customer_details['org_phone'],
-                customer_details['org_email'],
-                self.create_customer_number(customer_details['org_type'], customer_row.id, 'KE'),
-                customer_details['physical_address'],
-                customer_details['postal_code'],
-                customer_details['postal_town'],
-                customer_details['county'],
-                customer_details['constituency'],
-                customer_details['ward'],
-                customer_details['facebook'],
-                customer_details['instagram'],
-                customer_details['twitter'],
-                customer_details["first_name"],
-                customer_details["last_name"],
-                customer_details["phone"],
-                customer_details["email"]
-            )
-            new_org_cust.save()
-            
-            #  Send temporary password to user via email
-            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
-                                                                  temporary_pass)
-            subject = "Your Nexure Temporary Password"
-            helper.send_email(customer_details['org_email'], subject, email_template)
-
-            #  Generate a user account activation email
-            confirmation_code = token_handler.user_account_confirmation_token(user_id)
-            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
-                                                                  confirmation_code)
-            subject = "Please confirm your account"
-            helper.send_email(customer_details['org_email'], subject, email_template)
-            
-        # Send the user an email confirmation with their temporary password. Advice them to change it.
-        response = helper.make_rest_success_response(
-            f"Customer has been on boarded successfully. Please check your email for further instructions")
-        return make_response(response, 200)
-        """
     @staticmethod
     def create_individual_customer(cust_id, salutation):
         new_individual_cust = IndividualCustomer(cust_id, salutation)
@@ -527,3 +476,7 @@ class OrganizationCustomerResource(Resource):
         message = "No data was found in database"
         response_msg = helper.make_rest_fail_response(message)
         return make_response(response_msg, 404)
+
+class AddStaff(Resource):
+    def post:
+        # create a new user with log in details 
