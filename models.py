@@ -534,16 +534,19 @@ class StaticCompanyDetails(db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
     avatar_url = db.Column(db.String(150))
-    physical_address = db.Column(db.String(100))    
+    physical_address = db.Column(db.String(100))
+    website = db.Column(db.String(150))
+    company = db.relationship("InsuranceCompany", backref="company")
 
     def __repr__(self):
         return f'{self.name}'
 
-    def __init__(self, email, name, avatar_url, physical_address):
+    def __init__(self, email, name, avatar_url, physical_address, website):
         self.email = email
         self.name = name
         self.avatar_url = avatar_url
         self.physical_address = physical_address
+        self.website = website
     
     def serialize(self):
         return {
@@ -951,3 +954,146 @@ class Staff(db.Model):
     @classmethod
     def fetch_staff_by_id(cls, id):
         return cls.query.filter_by(user_id=id).first()
+
+class CarMake(db.Model):
+    """
+    Stores the car make and the make id
+    """
+    __tablename__ = 'car_make'
+    make_id = db.Column(db.Integer, primary_key=True, nullable=False)
+    make_name = db.Column(db.String(50), unique=True, nullable=False)
+
+    def __init__(self, make_id, make_name):
+        self.make_id = make_id
+        self.make_name = make_name
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def get_car_make_by_name(cls, name):
+        car = cls.query.get(make_name=name)
+        return car.id
+
+class CarModel(db.Model):
+    """
+    Stores car model
+    """
+    __tablename__ = "car_model"
+
+    model_id = db.Column(db.Integer, primary_key=True, nullable=False)
+    model_name = db.Column(db.String(100), unique=True, nullable=False)
+    series = db.Column(db.String(100), unique=True, nullable=False)
+    make = db.Column(db.Integer, db.ForeignKey('car_make.id', ondelete='CASCADE', onupdate='CASCADE'))
+
+    def __init__(self, model_name, series, make):
+        self. model_name = model_name
+        self.series = series
+        self.make = make
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+    
+class InsuranceClass(db.Model):
+    """
+    Insurance class
+    """
+    __tablename__ = 'insurance_class'
+
+    serial_number = db.Column(db.Integer, primary_key=True, nullable=False)
+    class_name = db.Column(db.String(50), unique=True, nullable=False)
+    acronym = db.Column(db.String(3), unique=True, nullable=False)
+    sector = db.Column(db.String(100), unique=True, nullable=False)
+    subclass = db.relationship("InsuranceSubclass", backref="subclass")
+
+    def __init__(self, serial_number, class_name, acronym, sector):
+        self.serial_number = serial_number
+        self.class_name = class_name
+        self.acronym = acronym
+        self.sector = sector
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+class InsuranceSubclass(db.Model):
+    __tablename__ = 'insurance_subclass'
+
+    class_code = db.Column(db.Integer, primary_key=True, nullable=False)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    parent_class = db.Column(db.Integer, db.ForeignKey('insurance_class.serial_number', ondelete='CASCADE', onupdate='CASCADE'))
+
+    def __init__(self, name, class_code, parent_class):
+        self.name = name
+        self.class_code = class_code
+        self.parent_class = parent_class
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+    
+class County(db.Model):
+    __tablename__ = 'county'
+    id = db.Column(db.Integer, primary_key=True, auto_increment=True, nullable=False)
+    county_name = db.Column(db.String(50), unique=True, nullable=False)
+    constituency = db.relationship("Constituency", backref="constituency")
+    ward = db.relationship("Ward", backref="ward")
+
+    def __init__(self, county_name):
+        self.county_name = county_name
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def get_county_by_name(cls, name):
+        county = cls.query.get(county_name=name)
+        return county.id
+   
+class Constituency(db.Model):
+    __tablename__ = 'constituency'
+
+    id = db.Column(db.Integer, primary_key=True, auto_increment=True, nullable=False)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    county = db.Column(db.Integer, db.ForeignKey('county.id', ondelete='CASCADE', onupdate='CASCADE'))
+    ward = db.Relationship("Ward", backref="ward")
+
+    def __init__(self, name, county):
+        self.name = name
+        self.county = county
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+class Ward(db.Model):
+    __tablename__ = 'ward'
+
+    id = db.Column(db.Integer, primary_key=True, auto_increment=True, nullable=False)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    constituency = db.Column(db.Integer, db.ForeignKey('county.id', ondelete='CASCADE', onupdate='CASCADE'))
+    county = db.Column(db.Integer, db.ForeignKey('county.id', ondelete='CASCADE', onupdate='CASCADE'))
+
+    def __init__(self, name, constituency, county):
+        self.name = name
+        self.constituency = constituency
+        self.county = county
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+    
+
+    
+    
+
+
+
+
+
+    
+
+
