@@ -64,12 +64,12 @@ def fresh_token_loader_handler():
     return make_response(jsonify(response), 401)
 
 
-from resources import UserRegister
-from resources import UserLogin
-from resources import UserAccountConfirmation
-from resources import CustomerOnBoarding
-from resources import OrganizationType
-from resources import OrganizationCustomerResource
+from resources.resources import UserRegister
+from resources.resources import UserLogin
+from resources.resources import UserAccountConfirmation
+from resources.resources import CustomerOnBoarding
+from resources.resources import OrganizationType
+from resources.resources import OrganizationCustomerResource
 
 
 api.add_resource(UserRegister, '/user')

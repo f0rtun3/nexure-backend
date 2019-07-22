@@ -1,0 +1,31 @@
+from app import db
+
+
+class CustomerAffiliation(db.Model):
+    """
+    Create an affiliation between the customer and the agent or broker
+    """
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    customer_number = db.Column(db.String(50), unique=True, nullable=True)
+    broker_agent_id = db.Column(db.Integer, nullable=False)
+    staff_id = db.Column(db.Integer, nullable=True)
+    date_affiliated = db.Column(db.DateTime, default=db.func.now())
+    # we need to know whether the affiliation is active or not
+    is_active = db.Column(db.Boolean, default=True)
+
+    def __init__(self, customer_number, broker_agent_id, staff_id=None):
+        self.customer_number = customer_number
+        self.broker_agent_id = broker_agent_id
+        self.staff_id = staff_id
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    @classmethod
+    def filter_agent_broker(cls, role_id, broker_agent_id):
+        agent_broker_data = cls.query.filter_by(broker_agent_id=broker_agent_id).all()
+        return agent_broker_data

@@ -2,13 +2,18 @@
 User resource
 Handles user related actions
 """
-from models import User
-from models import UserProfile, IndependentAgent, TiedAgents, Broker
-from models import Roles
-from models import UserRolePlacement
-from models import InsuranceCompany
-from models import IndividualCustomer, OrganizationCustomer, OrganizationTypes
-from models import CustomerAffiliation
+from models.User import User
+from models.UserProfile import UserProfile
+from models.IndependentAgent import IndependentAgent
+from models.TiedAgent import TiedAgents
+from models.Broker import Broker
+from models.Role import Role
+from models.UserRolePlacement import UserRolePlacement
+from models.InsuranceCompany import InsuranceCompany
+from models.IndividualCustomer import IndividualCustomer
+from models.OrganizationCustomer import OrganizationCustomer
+from models.OrganizationTypes import OrganizationTypes
+from models.CustomerAffiliation import CustomerAffiliation
 from flask import make_response
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import get_jwt_identity, jwt_required
@@ -55,7 +60,7 @@ class UserRegister(Resource):
 
         new_user_role = UserRolePlacement(
             new_user_authentication.id,
-            Roles.fetch_role_by_name(user_details['role'])
+            Role.fetch_role_by_name(user_details['role'])
         )
         new_user_role.save()
 
@@ -69,7 +74,7 @@ class UserRegister(Resource):
         Send a confirmation link to the user for account confirmation
         confirmation_code = token_handler.user_account_confirmation_token(
             new_user_authentication.id)
-        
+
         email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                   confirmation_code)
         subject = "Please confirm your account"
@@ -333,7 +338,7 @@ class UserLogin(Resource):
     @staticmethod
     def get_user_role(user_id):
         role = UserRolePlacement.fetch_role_by_user_id(user_id)
-        role_name = Roles.fetch_role_by_id(role.role_id)
+        role_name = Role.fetch_role_by_id(role.role_id)
 
         return role_name
 
@@ -345,6 +350,7 @@ class CustomerOnBoarding(Resource):
     otherwise we add a new user create a temporary password, generate customer number for them and associate the new
     user with the affiliated agent/broker
     """
+
     def post(self):
         # check whether customer exists
         customer_details = customer_parser.parse_args()
@@ -403,7 +409,7 @@ class CustomerOnBoarding(Resource):
             new_org_customer.save()
             self.role_placement(customer_row.id, "ORG")
         # ToDo: Create a customer number and enter into affiliation
-        # ToDo: create a staff model where we can get agent_broker id incase staff enrolled the customer
+        # ToDo: create a staff model where we can get agent_broker id in case a staff member enrolled the customer
         # create a new affiliation between the customer and broker/agent
         # each affiliation must only exist once in the db
         # we need to fetch the role of the agent/broker and associate it into the affiliation
@@ -423,20 +429,20 @@ class CustomerOnBoarding(Resource):
                 # Create individual customer
                 customer_number = self.create_customer_number('IN', customer_row.id, customer_details['country'])
                 self.create_individual_customer(new_individual_cust.id, customer_details['salutation'], customer_number)
-                
+
                 #  Send temporary password to user via email
                 email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                       temporary_pass)
                 subject = "Your Nexure Temporary Password"
                 helper.send_email(customer_details['email'], subject, email_template)
-                
+
                 #  Generate a user account activation email
                 confirmation_code = token_handler.user_account_confirmation_token(user_id)
                 email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                       confirmation_code)
                 subject = "Please confirm your account"
                 helper.send_email(customer_details['email'], subject, email_template)
-                
+
         # Customer on boarding for organizations
         if customer_details["type"] == "Organization":
             # create a new user account using the organization email
@@ -465,7 +471,7 @@ class CustomerOnBoarding(Resource):
                 customer_details["email"]
             )
             new_org_cust.save()
-            
+
             #  Send temporary password to user via email
             email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                   temporary_pass)
@@ -478,12 +484,13 @@ class CustomerOnBoarding(Resource):
                                                                   confirmation_code)
             subject = "Please confirm your account"
             helper.send_email(customer_details['org_email'], subject, email_template)
-            
+
         # Send the user an email confirmation with their temporary password. Advice them to change it.
         response = helper.make_rest_success_response(
             f"Customer has been on boarded successfully. Please check your email for further instructions")
         return make_response(response, 200)
         """
+
     @staticmethod
     def create_individual_customer(cust_id, salutation):
         new_individual_cust = IndividualCustomer(cust_id, salutation)
@@ -493,7 +500,7 @@ class CustomerOnBoarding(Resource):
     def role_placement(role_id, role):
         new_user_role = UserRolePlacement(
             role_id,
-            Roles.fetch_role_by_name(role)
+            Role.fetch_role_by_name(role)
         )
         new_user_role.save()
 
