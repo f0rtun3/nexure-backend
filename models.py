@@ -1,7 +1,7 @@
+
 from app import db
 from sqlalchemy.dialects.postgresql import UUID
 from werkzeug.security import generate_password_hash, check_password_hash
-
 
 class User(db.Model):
     """
@@ -260,7 +260,7 @@ class Permissions(db.Model):
     #  stores the list of permissions
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     permission_name = db.Column(db.String(100))
-    user_permission = db.Relationship('UserPermissions', backref='permissions')
+    user_permission = db.relationship('UserPermissions', backref='permissions')
 
     def __init__(self, permission_name, user_id):
         self.permission_name = permission_name
@@ -273,11 +273,11 @@ class Permissions(db.Model):
 class UserPermissions(db.Model):
     __tablename__ = 'user_permission'
 
-    id = db.Columbn(db.Integer, primary_key=True, auto_increment=True)
+    id = db.Column(db.Integer, primary_key=True, auto_increment=True)
     user_id = db.Column(db.Integer, db.ForeignKey(
         'user.id', onupdate='CASCADE', ondelete='CASCADE'))
     permission_id = db.Column(db.Integer, db.ForeignKey(
-        'permissions.id', onupdate='CASCADE', ondelete='CASCADE'))
+        'permission.id', onupdate='CASCADE', ondelete='CASCADE'))
 
     def __init__(self, user_id, permission_id):
         self.user_id = user_id
@@ -985,7 +985,7 @@ class CarModel(db.Model):
     model_id = db.Column(db.Integer, primary_key=True, nullable=False)
     model_name = db.Column(db.String(100), unique=True, nullable=False)
     series = db.Column(db.String(100), unique=True, nullable=False)
-    make = db.Column(db.Integer, db.ForeignKey('car_make.id', ondelete='CASCADE', onupdate='CASCADE'))
+    make = db.Column(db.Integer, db.ForeignKey('car_make.make_id', ondelete='CASCADE', onupdate='CASCADE'))
 
     def __init__(self, model_name, series, make):
         self. model_name = model_name
@@ -1059,7 +1059,7 @@ class Constituency(db.Model):
     id = db.Column(db.Integer, primary_key=True, auto_increment=True, nullable=False)
     name = db.Column(db.String(50), unique=True, nullable=False)
     county = db.Column(db.Integer, db.ForeignKey('county.id', ondelete='CASCADE', onupdate='CASCADE'))
-    ward = db.Relationship("Ward", backref="ward")
+    ward = db.relationship("Ward", backref="ward")
 
     def __init__(self, name, county):
         self.name = name

@@ -2,9 +2,9 @@
 User resource
 Handles user related actions
 """
-from models import User
 from models import UserProfile, IndependentAgent, TiedAgents, Broker
 from models import Roles
+from models import User
 from models import UserRolePlacement
 from models import InsuranceCompany
 from models import IndividualCustomer, OrganizationCustomer, OrganizationTypes
@@ -12,7 +12,6 @@ from models import CustomerAffiliation
 from models import Staff
 from flask import make_response
 from flask_restful import Resource, reqparse
-from flask_jwt_extended import get_jwt_identity, jwt_required
 # get the utility file
 import helpers.helpers as helper
 import helpers.tokens as token_handler
@@ -432,7 +431,7 @@ class CustomerOnBoarding(Resource):
 
         response_msg = helper.make_rest_success_response("New customer has been on boarded successfully!")
         return make_response(response_msg, 200)     
-
+        
     @staticmethod
     def create_individual_customer(cust_id, salutation):
         new_individual_cust = IndividualCustomer(cust_id, salutation)
@@ -478,5 +477,6 @@ class OrganizationCustomerResource(Resource):
         return make_response(response_msg, 404)
 
 class AddStaff(Resource):
-    def post:
-        # create a new user with log in details 
+    def post(self):
+        # create a new user with log in details
+        pass

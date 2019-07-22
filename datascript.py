@@ -2,7 +2,7 @@ import pandas as pd
 from models import CarMake, CarModel, InsuranceClass, InsuranceSubclass, Constituency, County, Ward
 
 
-# Import the CSV files into python using read_csv()
+# Import the CSV files into python using read_csv
 
 # fetch car makes data and send it to its models
 def car_makes():
@@ -12,8 +12,6 @@ def car_makes():
         new_car_make.save()
 
 # fetch car models data
-
-
 def car_models():
     df = pd.read_csv("data/Car_Models_Insurance.csv")
     for row in df.head().itertuples():
@@ -23,8 +21,6 @@ def car_models():
         new_car_model.save()
 
 # Insurance classes and subclasses
-
-
 def insurance_classes():
     df = pd.read_csv("data/Classes_Insurance.csv")
     for row in df.head().itertuples():
@@ -91,8 +87,8 @@ def ward():
 
 if __name__ == '__main__':
     car_makes()
-    # car_models()
-    # insurance_classes()
-    # counties()
-    # constituencies()
-    # ward()
+    car_models()
+    insurance_classes()
+    counties()
+    constituencies()
+    ward()
