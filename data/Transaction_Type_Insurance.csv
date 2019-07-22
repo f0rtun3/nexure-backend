@@ -1,0 +1,8 @@
+Transaction_Code,Trans,Abbreviation
+1,New Business,NB
+2,Renewal Business,RN
+3,Extension,EX
+4,Reinstatement,RN
+5,Refund,RF
+6,Cancellation,CN
+7,Nil Transaction,NL
