@@ -2,6 +2,7 @@
 User resource
 Handles user related actions
 """
+
 from models.User import User
 from models.UserProfile import UserProfile
 from models.IndependentAgent import IndependentAgent
@@ -14,6 +15,15 @@ from models.IndividualCustomer import IndividualCustomer
 from models.OrganizationCustomer import OrganizationCustomer
 from models.OrganizationTypes import OrganizationTypes
 from models.CustomerAffiliation import CustomerAffiliation
+
+from models import User
+from models import UserProfile, IndependentAgent, TiedAgents, Broker
+from models import Roles
+from models import UserRolePlacement
+from models import InsuranceCompany
+from models import IndividualCustomer, OrganizationCustomer, OrganizationTypes
+from models import CustomerAffiliation
+from models import Staff
 from flask import make_response
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import get_jwt_identity, jwt_required
@@ -355,7 +365,7 @@ class CustomerOnBoarding(Resource):
         # check whether customer exists
         customer_details = customer_parser.parse_args()
         customer_row = User.get_user_by_email(customer_details['email'])
-        customer_account_number = self.create_customer_number(customer_details['org_type'],
+        customer_number = self.create_customer_number(customer_details['org_type'],
                                                               customer_row.id, customer_details['country'])
         customer_id = customer_row.id
 
@@ -380,9 +390,22 @@ class CustomerOnBoarding(Resource):
                 customer_details["phone"]
             )
             new_individual_profile.save()
+            """
             # ToDo: send the temporary password and account activation email
-            customer_id = new_account.id
+            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+                                                                  temporary_pass)
+            subject = "Your Nexure Temporary Password"
+            helper.send_email(customer_details['org_email'], subject, email_template)
 
+            #  Generate a user account activation email
+            confirmation_code = token_handler.user_account_confirmation_token(user_id)
+            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+                                                                  confirmation_code)
+            subject = "Please confirm your account"
+            helper.send_email(customer_details['org_email'], subject, email_template)
+            """
+            customer_id = new_account.id
+        
         if customer_details['type'] == "Individual":
             #   create a new individual customer detail
             self.create_individual_customer(customer_row.id, customer_details['salutation'])
@@ -490,6 +513,22 @@ class CustomerOnBoarding(Resource):
             f"Customer has been on boarded successfully. Please check your email for further instructions")
         return make_response(response, 200)
         """
+        uid = get_jwt_identity()
+        # we need to check whether the current user is a staff member or an agent/broker
+        u_role = UserRolePlacement.fetch_role_by_user_id(uid)
+        u_role_id = u_role.role_id
+        role_name = Roles.fetch_role_by_id(u_role_id)
+        if role_name == 'STF':
+            staff_member = Staff.fetch_staff_by_id(uid)
+            agent_broker_id = staff_member.agent_broker_id
+            new_affiliation = CustomerAffiliation(customer_number, agent_broker_id, uid)
+            new_affiliation.save()
+        else:
+            new_affiliation = CustomerAffiliation(customer_number, uid)
+            new_affiliation.save()
+
+        response_msg = helper.make_rest_success_response("New customer has been on boarded successfully!")
+        return make_response(response_msg, 200)     
 
     @staticmethod
     def create_individual_customer(cust_id, salutation):
@@ -533,4 +572,9 @@ class OrganizationCustomerResource(Resource):
 
         message = "No data was found in database"
         response_msg = helper.make_rest_fail_response(message)
+
         return make_response(response_msg, 404)
+
+class AddStaff(Resource):
+    def post:
+        # create a new user with log in details
