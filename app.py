@@ -25,6 +25,8 @@ api = Api(app)
 jwt = JWTManager(app)
 mail = Mail(app)
 
+def create_app():
+    from . import models, r
 
 @jwt.expired_token_loader
 def expired_token_handler():

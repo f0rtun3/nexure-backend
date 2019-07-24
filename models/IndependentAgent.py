@@ -16,7 +16,7 @@ class IndependentAgent(db.Model):
     ira_registration_number = db.Column(db.String(15))
     ira_licence_number = db.Column(db.String(15))
     kra_pin = db.Column(db.String(15))
-    mpesa_paybill=db.Column(db.BIGINT, nullable=True, unique=True)
+    mpesa_paybill = db.Column(db.BIGINT, nullable=True, unique=True)
 
     # social media handles
     facebook = db.Column(db.String(150))
