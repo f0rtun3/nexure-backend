@@ -578,3 +578,4 @@ class OrganizationCustomerResource(Resource):
 class AddStaff(Resource):
     def post:
         # create a new user with log in details
+        pass
