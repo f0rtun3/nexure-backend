@@ -112,15 +112,16 @@ def ward():
     df = pd.read_csv("data/Ward_Insurance.csv")
     for row in df.itertuples():
         county_id = County.get_county_by_name(row.County_Name)
-        new_ward = Ward(row.Ward_Name, row.Constituency_Code, county_id)
+        constituency = Constituency.get_constituency_by_name(row.Constituency_Name)
+        new_ward = Ward(row.Ward_Name, constituency, county_id)
         new_ward.save()
 
 
 if __name__ == '__main__':
-    # car_makes()
-    # car_models()
-    # insurance_classes()
-    # insurance_subclass()
-    # counties()
-    # constituencies()
+    car_makes()
+    car_models()
+    insurance_classes()
+    insurance_subclass()
+    counties()
+    constituencies()
     ward()

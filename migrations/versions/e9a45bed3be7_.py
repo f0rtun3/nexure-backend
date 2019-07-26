@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 74ee89158e8c
+Revision ID: e9a45bed3be7
 Revises: 
-Create Date: 2019-07-26 12:03:43.228937
+Create Date: 2019-07-26 13:49:41.902486
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '74ee89158e8c'
+revision = 'e9a45bed3be7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -185,8 +185,7 @@ def upgrade():
     sa.Column('name', sa.String(length=50), nullable=False),
     sa.Column('parent_class', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['parent_class'], ['insurance_class.class_id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('class_code'),
-    sa.UniqueConstraint('name')
+    sa.PrimaryKeyConstraint('class_code')
     )
     op.create_table('organization_customer',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
@@ -275,8 +274,7 @@ def upgrade():
     sa.Column('county', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['constituency'], ['constituency.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['county'], ['county.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 

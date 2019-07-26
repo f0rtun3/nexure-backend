@@ -1075,11 +1075,16 @@ class Constituency(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    @classmethod
+    def get_constituency_by_name(cls, name):
+        const = cls.query.filter_by(name=name).first()
+        return const.id
+
 class Ward(db.Model):
     __tablename__ = 'ward'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
-    name = db.Column(db.String(50), unique=True, nullable=False)
+    name = db.Column(db.String(50), nullable=False)
     constituency = db.Column(db.Integer, db.ForeignKey('constituency.id', ondelete='CASCADE', onupdate='CASCADE'))
     county = db.Column(db.Integer, db.ForeignKey('county.id', ondelete='CASCADE', onupdate='CASCADE'))
 
