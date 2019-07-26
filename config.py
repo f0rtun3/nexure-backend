@@ -9,10 +9,10 @@ class Config(object):
     SECRET_KEY = os.environ['SECRET_KEY']
     JWT_SECRET_KEY = os.environ['JWT_SECRET_KEY']
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
-    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_SERVER = 'smtp.mail.us-east-1.awsapps.com'
     MAIL_PORT = 465
-    MAIL_USERNAME = 'oderapaul7@gmail.com'
-    MAIL_PASSWORD = 'Sept21@1995'
+    MAIL_USERNAME = 'no-reply@nexure.co.ke'
+    MAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
 
