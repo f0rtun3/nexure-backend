@@ -8,7 +8,7 @@ class CarModel(db.Model):
 
     model_id = db.Column(db.Integer, primary_key=True, nullable=False)
     model_name = db.Column(db.String(300), nullable=False)
-    series = db.Column(db.String(100), unique=True, nullable=False)
+    series = db.Column(db.String(100), nullable=False)
     make = db.Column(db.Integer, db.ForeignKey('car_make.make_id', ondelete='CASCADE', onupdate='CASCADE'))
 
     def __init__(self, model_name, series, make):

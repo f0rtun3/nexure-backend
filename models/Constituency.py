@@ -1,12 +1,12 @@
 from app import db
-  
+
 class Constituency(db.Model):
     __tablename__ = 'constituency'
 
-    id = db.Column(db.Integer, primary_key=True, auto_increment=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     name = db.Column(db.String(50), unique=True, nullable=False)
     county = db.Column(db.Integer, db.ForeignKey('county.id', ondelete='CASCADE', onupdate='CASCADE'))
-    ward = db.relationship("Ward", backref="constituency")
+    ward = db.relationship("Ward", backref="constituency_ward")
 
     def __init__(self, name, county):
         self.name = name
