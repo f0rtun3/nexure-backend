@@ -210,8 +210,8 @@ class Roles(db.Model):
     # define the relationship to the user role placement
     user_role = db.relationship("UserRolePlacement", backref="role")
     # define the relationship to the customer affiliations
-    customer_affiliation = db.relationship(
-        "CustomerAffiliation", backref="role")
+    # customer_affiliation = db.relationship(
+    #     "CustomerAffiliation", backref="role")
 
     def __init__(self, role_name):
         self.role_name = role_name
@@ -273,7 +273,7 @@ class Permissions(db.Model):
 class UserPermissions(db.Model):
     __tablename__ = 'user_permission'
 
-    id = db.Column(db.Integer, primary_key=True, auto_increment=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey(
         'user.id', onupdate='CASCADE', ondelete='CASCADE'))
     permission_id = db.Column(db.Integer, db.ForeignKey(
@@ -932,9 +932,9 @@ class CustomerAffiliation(db.Model):
 class Staff(db.Model):
     __tablename__ = 'staff'
 
-    id = db.Column(db.Integer, primary_key=True, auto_increment=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
-    agent_broker_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
+    # agent_broker_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
 
     def __init__(self, user_id, agent_broker_id):
         self.user_id = user_id
@@ -973,8 +973,8 @@ class CarMake(db.Model):
     
     @classmethod
     def get_car_make_by_name(cls, name):
-        car = cls.query.get(make_name=name)
-        return car.id
+        car = cls.query.filter_by(make_name=name).first()
+        return car.make_id
 
 class CarModel(db.Model):
     """
@@ -983,8 +983,8 @@ class CarModel(db.Model):
     __tablename__ = "car_model"
 
     model_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    model_name = db.Column(db.String(100), unique=True, nullable=False)
-    series = db.Column(db.String(100), unique=True, nullable=False)
+    model_name = db.Column(db.String(300), nullable=False)
+    series = db.Column(db.String(100), nullable=False)
     make = db.Column(db.Integer, db.ForeignKey('car_make.make_id', ondelete='CASCADE', onupdate='CASCADE'))
 
     def __init__(self, model_name, series, make):
@@ -1001,15 +1001,15 @@ class InsuranceClass(db.Model):
     Insurance class
     """
     __tablename__ = 'insurance_class'
-
-    serial_number = db.Column(db.Integer, primary_key=True, nullable=False)
+    
+    class_id = db.Column(db.Integer, primary_key=True, nullable=False)
     class_name = db.Column(db.String(50), unique=True, nullable=False)
     acronym = db.Column(db.String(3), unique=True, nullable=False)
-    sector = db.Column(db.String(100), unique=True, nullable=False)
+    sector = db.Column(db.String(100), nullable=False)
     subclass = db.relationship("InsuranceSubclass", backref="subclass")
 
-    def __init__(self, serial_number, class_name, acronym, sector):
-        self.serial_number = serial_number
+    def __init__(self, class_id, class_name, acronym, sector):
+        self.class_id = class_id
         self.class_name = class_name
         self.acronym = acronym
         self.sector = sector
@@ -1018,16 +1018,21 @@ class InsuranceClass(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    @classmethod
+    def get_class_by_name(cls, name):
+        parent_class = cls.query.filter_by(class_name=name).first()
+        return parent_class.class_id
+
 class InsuranceSubclass(db.Model):
     __tablename__ = 'insurance_subclass'
 
     class_code = db.Column(db.Integer, primary_key=True, nullable=False)
-    name = db.Column(db.String(50), unique=True, nullable=False)
-    parent_class = db.Column(db.Integer, db.ForeignKey('insurance_class.serial_number', ondelete='CASCADE', onupdate='CASCADE'))
+    name = db.Column(db.String(50), nullable=False)
+    parent_class = db.Column(db.Integer, db.ForeignKey('insurance_class.class_id', ondelete='CASCADE', onupdate='CASCADE'))
 
-    def __init__(self, name, class_code, parent_class):
-        self.name = name
+    def __init__(self, class_code, name, parent_class):        
         self.class_code = class_code
+        self.name = name
         self.parent_class = parent_class
 
     def save(self):
@@ -1036,7 +1041,7 @@ class InsuranceSubclass(db.Model):
     
 class County(db.Model):
     __tablename__ = 'county'
-    id = db.Column(db.Integer, primary_key=True, auto_increment=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     county_name = db.Column(db.String(50), unique=True, nullable=False)
     constituency = db.relationship("Constituency", backref="constituency")
     ward = db.relationship("Ward", backref="ward")
@@ -1050,16 +1055,17 @@ class County(db.Model):
     
     @classmethod
     def get_county_by_name(cls, name):
-        county = cls.query.get(county_name=name)
+        county = cls.query.filter_by(county_name=name).first()
         return county.id
    
 class Constituency(db.Model):
+    
     __tablename__ = 'constituency'
 
-    id = db.Column(db.Integer, primary_key=True, auto_increment=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     name = db.Column(db.String(50), unique=True, nullable=False)
     county = db.Column(db.Integer, db.ForeignKey('county.id', ondelete='CASCADE', onupdate='CASCADE'))
-    ward = db.relationship("Ward", backref="ward")
+    ward = db.relationship("Ward", backref="constituency_ward")
 
     def __init__(self, name, county):
         self.name = name
@@ -1072,9 +1078,9 @@ class Constituency(db.Model):
 class Ward(db.Model):
     __tablename__ = 'ward'
 
-    id = db.Column(db.Integer, primary_key=True, auto_increment=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     name = db.Column(db.String(50), unique=True, nullable=False)
-    constituency = db.Column(db.Integer, db.ForeignKey('county.id', ondelete='CASCADE', onupdate='CASCADE'))
+    constituency = db.Column(db.Integer, db.ForeignKey('constituency.id', ondelete='CASCADE', onupdate='CASCADE'))
     county = db.Column(db.Integer, db.ForeignKey('county.id', ondelete='CASCADE', onupdate='CASCADE'))
 
     def __init__(self, name, constituency, county):
@@ -1085,15 +1091,3 @@ class Ward(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
-    
-
-    
-    
-
-
-
-
-
-    
-
-

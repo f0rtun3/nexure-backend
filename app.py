@@ -4,7 +4,7 @@ from flask_cors import CORS
 from flask_mail import Mail
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Api
+
 
 import os
 
@@ -19,7 +19,6 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app, resources={r"/*": {"origins": app.config['ALLOWED_HOSTS']}})
 db = SQLAlchemy(app)
-api = Api(app)
 jwt = JWTManager(app)
 mail = Mail(app)
 
@@ -62,22 +61,6 @@ def fresh_token_loader_handler():
         'message': 'Needs a fresh token'
     }
     return make_response(jsonify(response), 401)
-
-
-from resources import UserRegister
-from resources import UserLogin
-from resources import UserAccountConfirmation
-from resources import CustomerOnBoarding
-from resources import OrganizationType
-from resources import OrganizationCustomerResource
-
-
-api.add_resource(UserRegister, '/user')
-api.add_resource(UserLogin, '/login')
-api.add_resource(CustomerOnBoarding, '/register_customer')
-api.add_resource(UserAccountConfirmation, '/confirm')
-api.add_resource(OrganizationType, '/get_organization_types')
-api.add_resource(OrganizationCustomerResource, '/organization')
 
 
 if __name__ == '__main__':

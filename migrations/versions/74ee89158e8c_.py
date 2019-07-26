@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 7749022fa7d6
+Revision ID: 74ee89158e8c
 Revises: 
-Create Date: 2019-07-19 17:18:04.300174
+Create Date: 2019-07-26 12:03:43.228937
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '7749022fa7d6'
+revision = '74ee89158e8c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,7 +25,7 @@ def upgrade():
     sa.UniqueConstraint('make_name')
     )
     op.create_table('county',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('county_name', sa.String(length=50), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('county_name')
@@ -41,14 +41,13 @@ def upgrade():
     sa.UniqueConstraint('customer_number')
     )
     op.create_table('insurance_class',
-    sa.Column('serial_number', sa.Integer(), nullable=False),
+    sa.Column('class_id', sa.Integer(), nullable=False),
     sa.Column('class_name', sa.String(length=50), nullable=False),
     sa.Column('acronym', sa.String(length=3), nullable=False),
     sa.Column('sector', sa.String(length=100), nullable=False),
-    sa.PrimaryKeyConstraint('serial_number'),
+    sa.PrimaryKeyConstraint('class_id'),
     sa.UniqueConstraint('acronym'),
-    sa.UniqueConstraint('class_name'),
-    sa.UniqueConstraint('sector')
+    sa.UniqueConstraint('class_name')
     )
     op.create_table('organization_type',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
@@ -116,16 +115,14 @@ def upgrade():
     )
     op.create_table('car_model',
     sa.Column('model_id', sa.Integer(), nullable=False),
-    sa.Column('model_name', sa.String(length=100), nullable=False),
+    sa.Column('model_name', sa.String(length=300), nullable=False),
     sa.Column('series', sa.String(length=100), nullable=False),
     sa.Column('make', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['make'], ['car_make.make_id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('model_id'),
-    sa.UniqueConstraint('model_name'),
-    sa.UniqueConstraint('series')
+    sa.PrimaryKeyConstraint('model_id')
     )
     op.create_table('constituency',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
     sa.Column('county', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['county'], ['county.id'], onupdate='CASCADE', ondelete='CASCADE'),
@@ -187,7 +184,7 @@ def upgrade():
     sa.Column('class_code', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
     sa.Column('parent_class', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['parent_class'], ['insurance_class.serial_number'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['parent_class'], ['insurance_class.class_id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('class_code'),
     sa.UniqueConstraint('name')
     )
@@ -215,10 +212,8 @@ def upgrade():
     sa.UniqueConstraint('org_name')
     )
     op.create_table('staff',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('agent_broker_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['agent_broker_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
@@ -229,7 +224,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user_permission',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('permission_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['permission_id'], ['permission.id'], onupdate='CASCADE', ondelete='CASCADE'),
@@ -274,11 +269,11 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('ward',
-    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
     sa.Column('constituency', sa.Integer(), nullable=True),
     sa.Column('county', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['constituency'], ['county.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['constituency'], ['constituency.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['county'], ['county.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
