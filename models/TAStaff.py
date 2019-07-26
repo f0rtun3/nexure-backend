@@ -7,6 +7,7 @@ class TAStaff(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
     agent_id = db.Column(db.Integer, db.ForeignKey('tied_agent.id', ondelete='CASCADE', onupdate='CASCADE'))
+    ta_customer = db.relationship("TACustomer", backref="ta_customer_member")
 
     def __init__(self, user_id, agent_id):
         self.user_id = user_id

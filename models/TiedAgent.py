@@ -11,7 +11,7 @@ class TiedAgents(db.Model):
     # The tied agent is linked to a user profile since they have common details
     user_id = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))
-    ta_customer = db.Relationship("TACustomer", backref="ta_affiliation")
+    ta_customer = db.relationship("TACustomer", backref="ta_affiliation")
     ta_staff = db.relationship("TAStaff", backref="ta_member")
 
     def __init__(self, user_id):

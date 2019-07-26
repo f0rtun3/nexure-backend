@@ -10,7 +10,7 @@ class TACustomer(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
     customer_number = db.Column(db.String(50), unique=True, nullable=True)
     agent_id = db.Column(db.Integer, db.ForeignKey('tied_agent.id', onupdate='CASCADE', ondelete='CASCADE'))
-    staff_id = db.Column(db.Integer, db.ForeignKey('staff.id', onupdate='CASCADE'))
+    staff_id = db.Column(db.Integer, db.ForeignKey('ta_staff.id', onupdate='CASCADE'), nullable=True)
     date_affiliated = db.Column(db.DateTime, default=db.func.now())
     # we need to know whether the affiliation is active or not
     is_active = db.Column(db.Boolean, default=True)

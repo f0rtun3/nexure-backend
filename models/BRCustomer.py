@@ -10,7 +10,7 @@ class BRCustomer(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
     customer_number = db.Column(db.String(50), unique=True, nullable=True)
     broker_id = db.Column(db.Integer, db.ForeignKey('broker.broker_id', onupdate='CASCADE', ondelete='CASCADE'))
-    staff_id = db.Column(db.Integer, db.ForeignKey('staff.id', onupdate='CASCADE'))
+    staff_id = db.Column(db.Integer, db.ForeignKey('br_staff.id', onupdate='CASCADE'), nullable=True)
     date_affiliated = db.Column(db.DateTime, default=db.func.now())
     # we need to know whether the affiliation is active or not
     is_active = db.Column(db.Boolean, default=True)
