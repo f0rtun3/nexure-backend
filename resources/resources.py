@@ -566,7 +566,8 @@ class OrganizationCustomerResource(Resource):
 
         return make_response(response_msg, 404)
 
-class AddStaff(Resource):
+
+class StaffRegistration(Resource):
     def post(self):
         # create a new user with log in details
         pass

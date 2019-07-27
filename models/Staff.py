@@ -1,9 +1,10 @@
 from app import db
 
+
 class Staff(db.Model):
     __tablename__ = 'staff'
 
-    id = db.Column(db.Integer, primary_key=True, auto_increment=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
     agent_broker_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
 
@@ -21,7 +22,7 @@ class Staff(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()    
-    
+
     @classmethod
     def fetch_staff_by_id(cls, id):
         return cls.query.filter_by(user_id=id).first()

@@ -68,21 +68,5 @@ def fresh_token_loader_handler():
     return make_response(jsonify(response), 401)
 
 
-from resources.resources import UserRegister
-from resources.resources import UserLogin
-from resources.resources import UserAccountConfirmation
-from resources.resources import CustomerOnBoarding
-from resources.resources import OrganizationType
-from resources.resources import OrganizationCustomerResource
-
-
-api.add_resource(UserRegister, '/user')
-api.add_resource(UserLogin, '/login')
-api.add_resource(CustomerOnBoarding, '/register_customer')
-api.add_resource(UserAccountConfirmation, '/confirm')
-api.add_resource(OrganizationType, '/get_organization_types')
-api.add_resource(OrganizationCustomerResource, '/organization')
-
-
 if __name__ == '__main__':
     app.run(port=app.config['PORT'], debug=app.config['DEBUG'])
