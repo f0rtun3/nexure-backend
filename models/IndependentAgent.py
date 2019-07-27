@@ -23,6 +23,7 @@ class IndependentAgent(db.Model):
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
     avatar_url = db.Column(db.String(150))
+    ia_customer = db.relationship("IACustomer", backref="ia_affiliation")
 
     def __repr__(self):
         return f"{self.agency_name}"
