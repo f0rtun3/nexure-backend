@@ -27,3 +27,9 @@ class IAStaff(db.Model):
     @classmethod
     def fetch_staff_by_id(cls, agent_id):
         return cls.query.filter_by(agent_id=agent_id).first()
+
+    @classmethod
+    def fetch_agent_by_staff(cls, staff_id):
+        agent = cls.query.filter_by(staff_id=staff_id).first()
+
+        return agent.user_id

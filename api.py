@@ -3,17 +3,13 @@ from app import app
 
 api = Api(app)
 
-from resources.resources import UserRegister
-from resources.resources import UserLogin
-from resources.resources import UserAccountConfirmation
-from resources.resources import CustomerOnBoarding
-from resources.resources import OrganizationType
-from resources.resources import OrganizationCustomerResource
+from resources.Users import UserRegister
+from resources.Users import UserLogin
+from resources.Users import AccountConfirmation
+from resources.Customers import CustomerOnBoarding
 
 
-api.add_resource(UserRegister, '/user')
-api.add_resource(UserLogin, '/login')
-api.add_resource(CustomerOnBoarding, '/register_customer')
-api.add_resource(UserAccountConfirmation, '/confirm')
-api.add_resource(OrganizationType, '/get_organization_types')
-api.add_resource(OrganizationCustomerResource, '/organization')
+api.add_resource(UserRegister, '/api/user')
+api.add_resource(UserLogin, '/api/login')
+api.add_resource(CustomerOnBoarding, '/api/register_customer')
+api.add_resource(AccountConfirmation, '/api/confirm')
