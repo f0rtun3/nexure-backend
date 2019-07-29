@@ -23,7 +23,6 @@ from models.UserRolePlacement import UserRolePlacement
 from models.InsuranceCompany import InsuranceCompany
 from models.OrganizationCustomer import OrganizationCustomer
 from models.OrganizationTypes import OrganizationTypes
-from models.CustomerAffiliation import CustomerAffiliation
 import helpers.helpers as helper
 from helpers.parsers import customer_parser
 from helpers.CustomerNumber import CustomerNumber

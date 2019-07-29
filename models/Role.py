@@ -9,11 +9,9 @@ class Role(db.Model):
 
     # the role name will help us know what permissions to grant the user
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    role_name = db.Column(db.String(3), nullable=False)
+    role_name = db.Column(db.String(3), nullable=False, unique=True)
     # define the relationship to the user role placement
     user_role = db.relationship("UserRolePlacement", backref="role")
-    # define the relationship to the customer affiliations
-    customer_affiliation = db.relationship("CustomerAffiliation", backref="role")
 
     def __init__(self, role_name):
         self.role_name = role_name
@@ -44,13 +42,13 @@ class Role(db.Model):
         return roles
 
     @classmethod
-    def fetch_role_by_id(cls, id):
-        # Get user role by name
-        role_row = cls.query.filter_by(id=id).first()
+    def fetch_role_by_id(cls, role_id):
+        # Get user role by id
+        role_row = cls.query.filter_by(id=role_id).first()
         return role_row.role_name
 
     @classmethod
-    def fetch_role_by_name(cls, name):
+    def fetch_role_by_name(cls, role_name):
         # Get user role by name
-        role_row = cls.query.filter_by(role_name=name).first()
+        role_row = cls.query.filter_by(role_name=role_name).first()
         return role_row.id

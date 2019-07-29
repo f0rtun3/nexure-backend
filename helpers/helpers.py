@@ -31,13 +31,16 @@ def generate_temporary_password_template(url_endpoint, code):
 
 
 def send_email(recipient, subject, template):
+    """
     msg = Message(
         subject,
         recipients=[recipient],
         html=template,
-        sender=app.config['MAIL_DEFAULT_SENDER']
+        sender=app.config['MAIL_DEFAULT_USER']
     )
     mail.send(msg)
+    """
+    pass
 
 
 def create_user_password():

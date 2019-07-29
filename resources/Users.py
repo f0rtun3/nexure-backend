@@ -65,8 +65,8 @@ class UserRegister(Resource):
                                                                confirmation_code)
         subject = "Please confirm your account"
         helper.send_email(user_details['email'], subject, email_template)
-
-        success_msg = "You have been registered. Kindly check your email to confirm account"
+        # ToDo: Remove the key from here in production
+        success_msg = f"You have been registered. Kindly check your email to confirm account {confirmation_code}"
         response = helper.make_rest_success_response(
             success_msg)
 
@@ -130,6 +130,7 @@ class AccountConfirmation(Resource):
     Handle user account activation
     if the sent token is expured, a request handler will send a fresh token
     """
+
     @jwt_required
     def put(self):
         """
@@ -163,7 +164,7 @@ class AccountConfirmation(Resource):
         if user_row:
             confirmation_code = token_handler.user_account_confirmation_token(user_id)
             email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
-                                                                  confirmation_code)
+                                                                   confirmation_code)
             subject = "Please confirm your account"
             helper.send_email(user_row.email, subject, email_template)
             response = helper.make_rest_success_response("Please check your email to confirm your account")

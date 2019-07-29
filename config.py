@@ -9,12 +9,13 @@ class Config(object):
     SECRET_KEY = os.environ['SECRET_KEY']
     JWT_SECRET_KEY = os.environ['JWT_SECRET_KEY']
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
-    MAIL_SERVER = 'smtp.mail.us-east-1.awsapps.com'
+    MAIL_SERVER = 'email-smtp.us-east-1.amazonaws.com'
     MAIL_PORT = 465
-    MAIL_USERNAME = 'no-reply@nexure.co.ke'
+    MAIL_USERNAME = os.environ['EMAIL_USERNAME']
+    MAIL_DEFAULT_USER = 'no-reply@nexure.co.ke'
     MAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
     MAIL_USE_TLS = False
-    MAIL_USE_SSL = True
+    MAIL_USE_SSL = False
 
 
 class Production(Config):
