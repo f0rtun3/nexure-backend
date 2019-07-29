@@ -20,7 +20,7 @@ class Broker(db.Model):
     twitter = db.Column(db.String(150))
     avatar_url = db.Column(db.String(150))
     br_customer = db.relationship("BRCustomer", backref="br_affiliation")
-    br_staff = db.relationship("BRStaff", backref="br_staff_member")
+    br_staff = db.relationship("BRStaff", backref="broker")
 
     def __init__(self, broker_name, broker_phone_number, broker_email, contact_person, ira_registration_number=None,
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
