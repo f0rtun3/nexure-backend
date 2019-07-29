@@ -27,3 +27,9 @@ class BRStaff(db.Model):
     @classmethod
     def fetch_staff_by_id(cls, broker_id):
         return cls.query.filter_by(broker_id=broker_id).first()
+
+    @classmethod
+    def fetch_broker_by_staff(cls, staff_id):
+        broker = cls.query.filter_by(staff_id=staff_id).first()
+
+        return broker.user_id

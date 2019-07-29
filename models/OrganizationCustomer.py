@@ -31,15 +31,15 @@ class OrganizationCustomer(db.Model):
     created_on = db.Column(db.DateTime, default=db.func.now())
     updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
-    def __init__(self, org_type, org_name, org_phone, email, org_registration_number, physical_address,
-                 postal_code, postal_town, county, facebook, instagram, twitter, constituency,
+    def __init__(self, org_type, org_name, org_phone, email, org_registration_number, org_customer_number,
+                 physical_address, postal_code, postal_town, county, facebook, instagram, twitter, constituency,
                  ward, contact_person):
         self.org_type = org_type
         self.org_name = org_name
         self.org_phone = org_phone
         self.email = email
         self.org_registration_number = org_registration_number
-        # self.org_customer_number = org_customer_number
+        self.org_customer_number = org_customer_number
         self.physical_address = physical_address
         self.postal_code = postal_code
         self.postal_town = postal_town

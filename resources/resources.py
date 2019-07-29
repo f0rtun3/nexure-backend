@@ -69,7 +69,7 @@ class UserRegister(Resource):
         # Account confirmation email generation
         # Save extra user details depending on their role
         role = user_details["role"]
-        self.onboard_client(role, new_user_authentication.id, user_details)
+        self.on_board_client(role, new_user_authentication.id, user_details)
 
         """
         Send a confirmation link to the user for account confirmation
@@ -214,11 +214,13 @@ class UserRegister(Resource):
             f"Update successful.")
         return make_response(response_msg, 200)
 
-    def update_profile(self, id, data):
+    @staticmethod
+    def update_profile(id, data):
         profile = UserProfile.get_profile_by_user_id(id)
         profile.update(data)
 
-    def onboard_client(self, role, user_id, user_details):
+    @staticmethod
+    def on_board_client(role, user_id, user_details):
         # Use user's role to determine where the details will be stored
         if role == "IA":
             # If it's an independent agency
@@ -351,7 +353,6 @@ class CustomerOnBoarding(Resource):
     otherwise we add a new user create a temporary password, generate customer number for them and associate the new
     user with the affiliated agent/broker
     """
-
     def post(self):
         # check whether customer exists
         customer_details = customer_parser.parse_args()
