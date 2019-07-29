@@ -58,7 +58,22 @@ class CustomerOnBoarding(Resource):
             customer_id,
             customer_details["first_name"],
             customer_details["last_name"],
-            customer_details["phone"]
+            customer_details["phone"],
+            customer_details["gender"],
+            customer_details["avatar_url"],
+            customer_details["occupation"],
+            customer_details["id_passport"],
+            customer_details["kra_pin"],
+            customer_details["birth_date"],
+            customer_details['physical_address'],
+            customer_details['postal_code'],
+            customer_details['postal_town'],
+            customer_details['county'],
+            customer_details['constituency'],
+            customer_details['ward'],
+            customer_details['facebook'],
+            customer_details['instagram'],
+            customer_details['twitter']
         )
         new_individual_profile.save()
 
@@ -78,7 +93,7 @@ class CustomerOnBoarding(Resource):
         if customer_details['type'] == "Individual":
             #   create a new individual customer detail
             customer_acc_number = self.create_customer_number("IN", customer_id, customer_parser['country'])
-            customer_acc = self.create_individual_customer(customer_id, customer_details['salutation'])
+            customer_acc = self.create_individual_customer(customer_id, customer_details['salutation'], customer_acc_number)
             self.role_placement(customer_id, "IND")
         elif customer_details['type'] == "Organization":
             customer_acc_number = self.create_customer_number(customer_parser['org_type'],
@@ -133,8 +148,8 @@ class CustomerOnBoarding(Resource):
         return make_response(response, 404)
 
     @staticmethod
-    def create_individual_customer(cust_id, salutation):
-        new_individual_cust = IndividualCustomer(cust_id, salutation)
+    def create_individual_customer(cust_id, salutation, customer_number):
+        new_individual_cust = IndividualCustomer(cust_id, salutation, customer_number)
         new_individual_cust.save()
 
     def get_role_name(self, uid):
@@ -154,17 +169,17 @@ class CustomerOnBoarding(Resource):
                 return BRStaff.fetch_broker_by_staff(uid)
             elif role_name == "TASTF":
                 return TAStaff.fetch_agent_by_staff(uid)
-            else:
+            elif role_name== "IASTF":
                 return IAStaff.fetch_agent_by_staff(uid)
 
         return
 
     @staticmethod
-    def register_customer(type, customer_number, uid, staff_id=None):
-        if type == "BRSTF":
+    def register_customer(atype, customer_number, uid, staff_id=None):
+        if atype == "BRSTF":
             new_customer = BRCustomer(customer_number, uid, staff_id)
             new_customer.save()
-        elif type == "TASTF":
+        elif atype == "TASTF":
             new_customer = TACustomer(customer_number, uid, staff_id)
             new_customer.save()
         else:

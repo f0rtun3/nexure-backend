@@ -14,15 +14,15 @@ class IndividualCustomer(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))
     salutation = db.Column(db.String(4), nullable=False)
-    # customer_number = db.Column(db.String(50), nullable=True)
+    customer_number = db.Column(db.String(50), nullable=True)
 
     def __repr__(self):
         return f"{self.user}"
 
-    def __init__(self, user_id, salutation):
+    def __init__(self, user_id, salutation, customer_number):
         self.user_id = user_id
         self.salutation = salutation
-        # self.customer_number = customer_number
+        self.customer_number = customer_number
 
     def save(self):
         db.session.add(self)

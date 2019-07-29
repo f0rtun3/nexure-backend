@@ -211,6 +211,10 @@ customer_parser.add_argument(
     "occupation",
     type=str
 )
+customer_parser.add_argument(
+    "salutation",
+    type=str
+)
 
 # organization details
 customer_parser.add_argument(
