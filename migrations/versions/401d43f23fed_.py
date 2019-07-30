@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 498f4b5381da
+Revision ID: 401d43f23fed
 Revises: 
-Create Date: 2019-07-26 15:52:35.052284
+Create Date: 2019-07-29 18:17:07.174285
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '498f4b5381da'
+revision = '401d43f23fed'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,16 +29,6 @@ def upgrade():
     sa.Column('county_name', sa.String(length=50), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('county_name')
-    )
-    op.create_table('customer_affiliation',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('customer_number', sa.String(length=50), nullable=True),
-    sa.Column('broker_agent_id', sa.Integer(), nullable=False),
-    sa.Column('staff_id', sa.Integer(), nullable=True),
-    sa.Column('date_affiliated', sa.DateTime(), nullable=True),
-    sa.Column('is_active', sa.Boolean(), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('customer_number')
     )
     op.create_table('insurance_class',
     sa.Column('class_id', sa.Integer(), nullable=False),
@@ -60,7 +50,8 @@ def upgrade():
     op.create_table('role',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('role_name', sa.String(length=3), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('role_name')
     )
     op.create_table('user',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
@@ -137,6 +128,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('salutation', sa.String(length=4), nullable=False),
+    sa.Column('customer_number', sa.String(length=50), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
@@ -197,14 +189,6 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('org_name')
     )
-    op.create_table('staff',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('agent_broker_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['agent_broker_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('tied_agent',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
@@ -248,6 +232,30 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('br_staff',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('broker_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['broker_id'], ['broker.broker_id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('ia_staff',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('agent_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['agent_id'], ['independent_agent.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('ta_staff',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('agent_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['agent_id'], ['tied_agent.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('ward',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
@@ -257,16 +265,57 @@ def upgrade():
     sa.ForeignKeyConstraint(['county'], ['county.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('br_customer',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('customer_number', sa.String(length=50), nullable=True),
+    sa.Column('broker_id', sa.Integer(), nullable=True),
+    sa.Column('staff_id', sa.Integer(), nullable=True),
+    sa.Column('date_affiliated', sa.DateTime(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=True),
+    sa.ForeignKeyConstraint(['broker_id'], ['broker.broker_id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['staff_id'], ['br_staff.id'], onupdate='CASCADE'),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('customer_number')
+    )
+    op.create_table('ia_customer',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('customer_number', sa.String(length=50), nullable=True),
+    sa.Column('agent_id', sa.Integer(), nullable=True),
+    sa.Column('staff_id', sa.Integer(), nullable=True),
+    sa.Column('date_affiliated', sa.DateTime(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=True),
+    sa.ForeignKeyConstraint(['agent_id'], ['independent_agent.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['staff_id'], ['ia_staff.id'], onupdate='CASCADE'),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('customer_number')
+    )
+    op.create_table('ta_customer',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('customer_number', sa.String(length=50), nullable=True),
+    sa.Column('agent_id', sa.Integer(), nullable=True),
+    sa.Column('staff_id', sa.Integer(), nullable=True),
+    sa.Column('date_affiliated', sa.DateTime(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=True),
+    sa.ForeignKeyConstraint(['agent_id'], ['tied_agent.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['staff_id'], ['ta_staff.id'], onupdate='CASCADE'),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('customer_number')
+    )
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_table('ta_customer')
+    op.drop_table('ia_customer')
+    op.drop_table('br_customer')
     op.drop_table('ward')
+    op.drop_table('ta_staff')
+    op.drop_table('ia_staff')
+    op.drop_table('br_staff')
     op.drop_table('user_role')
     op.drop_table('user_profile')
     op.drop_table('tied_agent')
-    op.drop_table('staff')
     op.drop_table('organization_customer')
     op.drop_table('insurance_subclass')
     op.drop_table('insurance_company')
@@ -279,7 +328,6 @@ def downgrade():
     op.drop_table('role')
     op.drop_table('organization_type')
     op.drop_table('insurance_class')
-    op.drop_table('customer_affiliation')
     op.drop_table('county')
     op.drop_table('car_make')
     # ### end Alembic commands ###
