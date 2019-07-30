@@ -24,7 +24,7 @@ class UserRegister(Resource):
         # check if the user exists before registering them
         user_db_row = User.get_user_by_email(user_details['email'])
         if user_db_row:
-            err_msg = f"{user_details['first_name']} {user_details['last_name']} already exists"
+            err_msg = f"{user_details['email']} already exists"
             response_msg = helper.make_rest_fail_response(err_msg)
             return make_response(response_msg, 409)
 
@@ -89,9 +89,9 @@ class UserRegister(Resource):
         if role == "IA":
             # If it's an independent agency
             new_independent_agency = IndependentAgent(
-                user_details["agency_name"],
-                user_details["agency_email"],
-                user_details["agency_phone"],
+                user_details["org_name"],
+                user_details["org_phone"],
+                user_details["org_email"],
                 user_id
             )
             new_independent_agency.save()
@@ -99,9 +99,9 @@ class UserRegister(Resource):
         elif role == "IC":
             # if it's an insurance company
             new_insurance_company = InsuranceCompany(
-                user_details["company_name"],
-                user_details["company_email"],
-                user_details["company_phone"],
+                user_details["org_name"],
+                user_details["org_email"],
+                user_details["org_phone"],
                 user_id
             )
             new_insurance_company.save()
@@ -115,9 +115,9 @@ class UserRegister(Resource):
         elif role == "BR":
             # if it's a broker
             new_broker = Broker(
-                user_details["broker_name"],
-                user_details["broker_email"],
-                user_details["broker_phone_number"],
+                user_details["org_name"],
+                user_details["org_phone"],
+                user_details["org_email"],
                 user_id
             )
             new_broker.save()
