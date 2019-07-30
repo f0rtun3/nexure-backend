@@ -12,7 +12,7 @@ class Broker(db.Model):
     ira_license_number = db.Column(db.String(15), unique=True)
     kra_pin = db.Column(db.String(15), unique=True)
     website = db.Column(db.String(150), unique=True)
-    mpesa_paybill = db.Column(db.BIGINT, nullable=False)
+    mpesa_paybill = db.Column(db.BIGINT, nullable=True)
 
     # social media handles
     facebook = db.Column(db.String(150))
@@ -26,8 +26,8 @@ class Broker(db.Model):
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
                  avatar_url=None, mpesa_paybill=None):
         self.broker_name = broker_name
-        self.broker_email = broker_email
         self.broker_phone_number = broker_phone_number
+        self.broker_email = broker_email
         self.contact_person = contact_person
         self.ira_registration_number = ira_registration_number
         self.ira_license_number = ira_licence_number

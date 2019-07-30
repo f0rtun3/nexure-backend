@@ -18,13 +18,12 @@ app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app, resources={r"/*": {"origins": app.config['ALLOWED_HOSTS']}})
+# CORS(app, resources={r"/*": {"origins": app.config['ALLOWED_HOSTS']}})
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
 mail = Mail(app)
 
-def create_app():
-    from . import models, r
 
 @jwt.expired_token_loader
 def expired_token_handler():
@@ -67,5 +66,3 @@ def fresh_token_loader_handler():
 
 import api
 
-if __name__ == '__main__':
-    app.run(port=app.config['PORT'], debug=app.config['DEBUG'])

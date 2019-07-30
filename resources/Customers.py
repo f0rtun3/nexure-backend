@@ -206,3 +206,8 @@ class CustomerOnBoarding(Resource):
         :return:
         """
         pass
+
+
+class OrganizationHandler(Resource):
+    def get(self):
+        pass
