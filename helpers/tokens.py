@@ -3,7 +3,7 @@ User account confirmation token handler
 generates user token for account confirmation and verifies the same
 """
 from flask_jwt_extended import (create_access_token, create_refresh_token)
-
+import datetime
 
 def user_account_confirmation_token(identity):
     """
@@ -11,7 +11,8 @@ def user_account_confirmation_token(identity):
     :param identity:
     :return:
     """
-    user_confirmation_token = create_access_token(identity=identity)
+    expires = datetime.timedelta(minutes=20)
+    user_confirmation_token = create_access_token(identity=identity, expires_delta=expires)
 
     return user_confirmation_token
 

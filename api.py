@@ -11,5 +11,5 @@ from resources.Customers import CustomerOnBoarding
 
 api.add_resource(UserRegister, '/api/user')
 api.add_resource(UserLogin, '/api/login')
-api.add_resource(CustomerOnBoarding, '/api/register_customer')
+api.add_resource(CustomerOnBoarding, '/api/customer')
 api.add_resource(AccountConfirmation, '/api/confirm')
