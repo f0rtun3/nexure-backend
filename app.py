@@ -24,7 +24,6 @@ migrate = Migrate(app, db)
 jwt = JWTManager(app)
 mail = Mail(app)
 
-
 @jwt.expired_token_loader
 def expired_token_handler():
     """token sent has expired"""
@@ -63,6 +62,3 @@ def fresh_token_loader_handler():
         'message': 'Needs a fresh token'
     }
     return make_response(jsonify(response), 401)
-
-import api
-

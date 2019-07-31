@@ -566,9 +566,3 @@ class OrganizationCustomerResource(Resource):
         response_msg = helper.make_rest_fail_response(message)
 
         return make_response(response_msg, 404)
-
-
-class StaffRegistration(Resource):
-    def post(self):
-        # create a new user with log in details
-        pass
