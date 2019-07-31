@@ -62,5 +62,3 @@ def fresh_token_loader_handler():
         'message': 'Needs a fresh token'
     }
     return make_response(jsonify(response), 401)
-
-

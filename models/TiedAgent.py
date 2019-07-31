@@ -52,3 +52,7 @@ class TiedAgents(db.Model):
     @classmethod
     def get_tied_agent_by_id(cls, agent_id):
         return cls.query.filter_by(id=agent_id).first()
+    
+    @classmethod
+    def get_tied_agent_by_user_id(cls, user_id):
+        return cls.query.filter_by(user_id=user_id).first()
