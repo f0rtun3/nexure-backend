@@ -8,7 +8,7 @@ class BRCustomer(db.Model):
     __tablename__ = 'br_customer'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
-    customer_number = db.Column(db.String(50), unique=True, nullable=True)
+    customer_number = db.Column(db.String(50))
     broker_id = db.Column(db.Integer, db.ForeignKey('broker.broker_id', onupdate='CASCADE', ondelete='CASCADE'))
     staff_id = db.Column(db.Integer, db.ForeignKey('br_staff.id', onupdate='CASCADE'), nullable=True)
     date_affiliated = db.Column(db.DateTime, default=db.func.now())
@@ -31,3 +31,9 @@ class BRCustomer(db.Model):
     def get_affiliation(cls, broker_id):
         broker_data = cls.query.filter_by(broker_id=broker_id).all()
         return broker_data
+
+    @classmethod
+    def check_duplicate_affiliation(cls, broker_id, customer_number):
+        if cls.query.filter_by(broker_id=broker_id, customer_number=customer_number).first():
+            return True
+        return False

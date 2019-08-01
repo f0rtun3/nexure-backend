@@ -13,7 +13,7 @@ def make_rest_success_response(message=None, payload=None):
     if payload is None:
         payload = {}
 
-    return jsonify({"status_message":"success", "message": message, "payload": payload})
+    return jsonify({"status_message": "success", "message": message, "payload": payload})
 
 
 def generate_confirmation_template(url_endpoint, code):

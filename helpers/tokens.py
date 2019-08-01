@@ -5,6 +5,7 @@ generates user token for account confirmation and verifies the same
 from flask_jwt_extended import (create_access_token, create_refresh_token)
 import datetime
 
+
 def user_account_confirmation_token(identity):
     """
     generate a token to confirm user account
@@ -34,7 +35,8 @@ def create_user_token(identity):
     :param identity:
     :return: dictionary
     """
-    user_access_token = create_access_token(identity=identity, fresh=True)
+    expires = datetime.timedelta(minutes=20)
+    user_access_token = create_access_token(identity=identity, fresh=True, expires_delta=expires)
     user_refresh_token = create_refresh_token(identity=identity)
     auth_tokens = tokens(user_access_token, user_refresh_token)
     return auth_tokens
@@ -46,6 +48,7 @@ def refresh_user_token(identity):
     :param identity:
     :return: string
     """
-    user_refresh_token = create_access_token(identity=identity, fresh=False)
+    expires = datetime.timedelta(minutes=20)
+    user_refresh_token = create_access_token(identity=identity, fresh=False, expires_delta=expires)
     return user_refresh_token
 
