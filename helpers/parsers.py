@@ -251,5 +251,9 @@ customer_parser.add_argument(
     "instagram",
     type=str
 )
+customer_parser.add_argument(
+    "avatar_url",
+    type=str
+)
 
 

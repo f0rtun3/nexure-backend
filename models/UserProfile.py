@@ -1,4 +1,5 @@
 from app import db
+from datetime import datetime
 
 class UserProfile(db.Model):
     __tablename__ = 'user_profile'
@@ -20,6 +21,7 @@ class UserProfile(db.Model):
     kra_pin = db.Column(db.String(15), unique=True)
     birth_date = db.Column(db.Date)
     physical_address = db.Column(db.String(100))
+    postal_address = db.Column(db.String(100))
     postal_code = db.Column(db.Integer)
     postal_town = db.Column(db.String(30))
     county = db.Column(db.String(30))
@@ -35,9 +37,9 @@ class UserProfile(db.Model):
     updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
     def __init__(self, user_id, first_name, last_name, phone, gender=None, avatar_url=None, occupation=None,
-                 id_passport=None, kra_pin=None, birth_date=None, physical_address=None, postal_code=None,
-                 postal_town=None, county=None, constituency=None, ward=None, facebook=None, twitter=None,
-                 instagram=None):
+                 id_passport=None, kra_pin=None, birth_date=None, physical_address=None, postal_address=None,
+                 postal_code=None, postal_town=None, county=None, constituency=None, ward=None, facebook=None,
+                 twitter=None, instagram=None):
         self.user_id = user_id
         self.first_name = first_name
         self.last_name = last_name
@@ -47,8 +49,9 @@ class UserProfile(db.Model):
         self.occupation = occupation
         self.id_passport = id_passport
         self.kra_pin = kra_pin
-        self.birth_date = birth_date
+        self.birth_date = self.convert_date(birth_date)
         self.physical_address = physical_address
+        self.postal_address = postal_address
         self.postal_code = postal_code
         self.postal_town = postal_town
         self.county = county
@@ -108,3 +111,11 @@ class UserProfile(db.Model):
     @classmethod
     def get_profile_by_user_id(cls, user_id):
         return cls.query.filter_by(user_id=user_id).first()
+
+    def convert_date(self, date=None):
+        """birthdate should be in accepted format"""
+        if date is not None:
+            format_str = '%d/%m/%Y'
+            converted_date = datetime.strptime(date, format_str)
+            return converted_date.date()
+        return 

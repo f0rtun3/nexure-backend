@@ -8,7 +8,7 @@ class TACustomer(db.Model):
     __tablename__ = 'ta_customer'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
-    customer_number = db.Column(db.String(50), unique=True, nullable=True)
+    customer_number = db.Column(db.String(50))
     agent_id = db.Column(db.Integer, db.ForeignKey('tied_agent.id', onupdate='CASCADE', ondelete='CASCADE'))
     staff_id = db.Column(db.Integer, db.ForeignKey('ta_staff.id', onupdate='CASCADE'), nullable=True)
     date_affiliated = db.Column(db.DateTime, default=db.func.now())
@@ -31,3 +31,9 @@ class TACustomer(db.Model):
     def get_affiliation(cls, agent_id):
         agent_data = cls.query.filter_by(agent_id=agent_id).all()
         return agent_data
+
+    @classmethod
+    def check_duplicate_affiliation(cls, agent_id, customer_number):
+        if cls.query.filter_by(agent_id=agent_id, customer_number=customer_number).first():
+            return True
+        return False
