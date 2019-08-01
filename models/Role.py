@@ -9,7 +9,7 @@ class Role(db.Model):
 
     # the role name will help us know what permissions to grant the user
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    role_name = db.Column(db.String(3), nullable=False, unique=True)
+    role_name = db.Column(db.String(7), nullable=False, unique=True)
     # define the relationship to the user role placement
     user_role = db.relationship("UserRolePlacement", backref="role")
 
