@@ -131,5 +131,3 @@ class StaffRegistration(Resource):
         for i in permissions:
             user_permissions = UserPermissions(user_id, i)
             user_permissions.save()
-        
-        
