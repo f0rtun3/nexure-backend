@@ -4,6 +4,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
 from models.User import User
 from models.UserProfile import UserProfile
+from models.UserPermissions import UserPermissions
 from models.IndependentAgent import IndependentAgent
 from models.TiedAgent import TiedAgents
 from models.Broker import Broker
@@ -37,7 +38,7 @@ class StaffRegistration(Resource):
         # create user account
         user_uuid = uuid.uuid4()
         new_user = User(
-            user_uuid, user_details['email'], user_details['password'])
+            user_uuid, user_details['email'], "password")
         new_user.save()
 
         # create user profile
@@ -62,10 +63,12 @@ class StaffRegistration(Resource):
         # Add staff to the appropriate table: i.e BRStaff, TRStaff, IAStaff
         # We also assign the staff roles at this stage,
         # depending on the entities they operate under, i.e BRSTF,IASTF,TASTF
-        self.add_staff(agency_id, new_user.id)
+        self.add_staff(role, agency_id, new_user.id)
+
+        # store staff permissions
+        self.set_permissions(user_details['permissions'], new_user.id)
 
         # send email to with the activation details for the staff
-
         response = helper.make_rest_success_response(
             "Registration successfull. Please check the staff email to activate your account.")
             
@@ -93,10 +96,8 @@ class StaffRegistration(Resource):
     @staticmethod
     def add_staff(role, agency_id, staff_id):
         if role == "BR":
-
             new_broker_staff = BRStaff(staff_id, agency_id)
             new_broker_staff.save()
-
             # Assign staff role
             staff_role = "BRSTF"
             new_user_role = UserRolePlacement(
@@ -106,7 +107,6 @@ class StaffRegistration(Resource):
         elif role == "TA":
             new_ta_staff = TAStaff(staff_id, agency_id)
             new_ta_staff.save()
-
             # assign staff role
             staff_role = "TASTF"
             new_user_role = UserRolePlacement(
@@ -122,3 +122,14 @@ class StaffRegistration(Resource):
             new_user_role = UserRolePlacement(
                 staff_id,
                 Role.fetch_role_by_name(staff_role))
+    
+    @staticmethod
+    def set_permissions(permissions, user_id):
+        # Split the permissions string and store in an array
+        permissions = [int(i) for i in list(permissions)]
+        # map the permissions to the user id and store them in UserPermissions table
+        for i in permissions:
+            user_permissions = UserPermissions(user_id, i)
+            user_permissions.save()
+        
+        

@@ -8,7 +8,6 @@ from resources.Users import AccountConfirmation
 from resources.Customers import CustomerOnBoarding
 from resources.StaffRegistration import StaffRegistration
 
-
 api.add_resource(UserRegister, '/api/user')
 api.add_resource(UserLogin, '/api/login')
 api.add_resource(CustomerOnBoarding, '/api/customer')

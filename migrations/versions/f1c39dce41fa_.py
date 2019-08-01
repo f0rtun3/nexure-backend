@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 3beaa70895fe
+Revision ID: f1c39dce41fa
 Revises: 
-Create Date: 2019-07-29 17:20:46.016663
+Create Date: 2019-08-01 13:23:14.958812
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '3beaa70895fe'
+revision = 'f1c39dce41fa'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -49,7 +49,7 @@ def upgrade():
     )
     op.create_table('role',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('role_name', sa.String(length=3), nullable=False),
+    sa.Column('role_name', sa.String(length=7), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('role_name')
     )
@@ -73,7 +73,7 @@ def upgrade():
     sa.Column('ira_license_number', sa.String(length=15), nullable=True),
     sa.Column('kra_pin', sa.String(length=15), nullable=True),
     sa.Column('website', sa.String(length=150), nullable=True),
-    sa.Column('mpesa_paybill', sa.BIGINT(), nullable=False),
+    sa.Column('mpesa_paybill', sa.BIGINT(), nullable=True),
     sa.Column('facebook', sa.String(length=150), nullable=True),
     sa.Column('instagram', sa.String(length=150), nullable=True),
     sa.Column('twitter', sa.String(length=150), nullable=True),
@@ -274,8 +274,7 @@ def upgrade():
     sa.Column('is_active', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['broker_id'], ['broker.broker_id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['staff_id'], ['br_staff.id'], onupdate='CASCADE'),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('customer_number')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('ia_customer',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),

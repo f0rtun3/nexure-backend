@@ -34,7 +34,7 @@ class Staging(Config):
 class Development(Config):
     DEVELOPMENT = True
     DEBUG = True
-    HOST = "0.0.0.0"
+    HOST = "127.0.0.1"
     PORT = 5000
     ALLOWED_HOSTS = "*"
     CONFIRMATION_ENDPOINT = "https://nexure-react.herokuapp.com/confirm"

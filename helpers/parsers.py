@@ -75,6 +75,10 @@ user_parser.add_argument(
     "role",
     type=str
 )
+user_parser.add_argument(
+    "permissions",
+    type=str
+)
 
 # Organization details
 user_parser.add_argument(
