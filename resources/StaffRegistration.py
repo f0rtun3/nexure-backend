@@ -79,7 +79,7 @@ class StaffRegistration(Resource):
         if role == "BR":
             # get brokerage by contact person
             broker = Broker.get_broker_by_contact_id(uid)
-            return broker.id
+            return broker.broker_id
         elif role == "TA":
             # get tied agency
             tied_agent = TiedAgents.get_tied_agent_by_user_id(uid)

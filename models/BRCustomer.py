@@ -8,7 +8,7 @@ class BRCustomer(db.Model):
     __tablename__ = 'br_customer'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
-    customer_number = db.Column(db.String(50), unique=True, nullable=True)
+    customer_number = db.Column(db.String(50), nullable=True)
     broker_id = db.Column(db.Integer, db.ForeignKey('broker.broker_id', onupdate='CASCADE', ondelete='CASCADE'))
     staff_id = db.Column(db.Integer, db.ForeignKey('br_staff.id', onupdate='CASCADE'), nullable=True)
     date_affiliated = db.Column(db.DateTime, default=db.func.now())
