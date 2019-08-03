@@ -11,7 +11,6 @@ def user_account_confirmation_token(identity):
     """
     generate a token to confirm user account
     :param identity:
-    :param role:
     :return:
     """
     expires = datetime.timedelta(minutes=20)
