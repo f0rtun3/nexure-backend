@@ -176,6 +176,8 @@ class CustomerOnBoarding(Resource):
 
         # update the customer agency relationship if activated
         self.delete_cust_agency_relationship(role, cust_no)
+        response = helper.make_rest_success_response("User was deleted")
+        return make_response(response, 200)
 
     @jwt_required
     def put(self):
@@ -195,6 +197,8 @@ class CustomerOnBoarding(Resource):
         # update the respective organization or individual details
         self.update_cust_details(cust_id, cust_no, cust_info)
         self.update_cust_agency_relationship(role, cust_no, cust_info['status'])
+        response = helper.make_rest_success_response("Update was successful")
+        return make_response(response, 200)
 
     @staticmethod
     def create_individual_customer(cust_id, salutation):
@@ -289,11 +293,12 @@ class CustomerOnBoarding(Resource):
 
         return customer
 
-    def delete_cust_agency_relationship(self, role, cust_no, status):
+    def delete_cust_agency_relationship(self, role, cust_no):
         customer = self.fetch_customer_by_relationship(role, cust_no)
         customer.delete()
 
-    def update_cust_details(self, cust_id, cust_no, cust_info):
+    @staticmethod
+    def update_cust_details(cust_id, cust_no, cust_info):
         cust_type = helper.get_customer_type(cust_no)
         if cust_type == 'IN':
             customer = IndividualCustomer.get_customer_by_user_id(cust_id)
