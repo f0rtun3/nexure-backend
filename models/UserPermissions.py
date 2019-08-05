@@ -1,5 +1,6 @@
 from app import db
 
+
 class UserPermissions(db.Model):
     __tablename__ = 'user_permission'
 
@@ -22,6 +23,10 @@ class UserPermissions(db.Model):
             setattr(self, key, item)
         db.session.commit()
 
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
     @classmethod
     def get_permission_by_user_id(cls, id):
         permissions_list = cls.query.filter_by(user_id=id).all()
@@ -29,3 +34,9 @@ class UserPermissions(db.Model):
         for i in permissions_list:
             permission_ids.append(str(i.permission_id))
         return ''.join(permission_ids)
+
+    @classmethod
+    def get_specific_permission(cls, permission_id, user_id):
+        permission = cls.query.filter_by(
+            user_id=user_id, permission_id=permission_id).first()
+        return permission

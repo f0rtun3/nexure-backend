@@ -54,8 +54,10 @@ class StaffRegistration(Resource):
         uid = get_jwt_identity()
 
         # get user role
-        claims = get_jwt_claims()
-        role = claims['role']
+        # claims = get_jwt_claims()
+        # role = claims['role']
+
+        role = 'BR'
 
         # get agency_id
         agency_id = self.get_agency_id(role, uid)
@@ -69,10 +71,54 @@ class StaffRegistration(Resource):
         self.set_permissions(user_details['permissions'], new_user.id)
 
         # send email to with the activation details for the staff
+        confirmation_code = token_handler.user_account_confirmation_token(
+            new_user.id)
         response = helper.make_rest_success_response(
-            "Registration successfull. Please check the staff email to activate your account.")
-            
+            "Registration successfull. Please check the staff email to activate your account.", {"authentication": confirmation_code})
         return make_response(response, 200)
+
+    def put(self):
+        """Update staff details, mostly permissions."""
+        staff_details = user_parser.parse_args()
+
+        # get staff id
+        staff_id = get_jwt_identity()
+        # check if staff exists
+        staff = User.get_user_by_id(staff_id)
+
+        if staff:
+            # get current permissions
+            current_permissions = list(UserPermissions.get_permission_by_user_id(
+                staff_id))
+            received_permissions = list(staff_details['permissions'])
+            # get permissions to update
+            new_permissions = [x for x in received_permissions if x not in current_permissions]
+            old_permissions = [x for x in current_permissions if x not in new_permissions]
+            # delete old permissions and update with new ones
+            for i in old_permissions:
+                UserPermissions.get_specific_permission(i,staff_id)
+                UserPermissions.delete()
+            # update with new ones
+            self.set_permissions(new_permissions)
+
+            # update other details
+            # get user profile
+            profile = UserProfile.get_profile_by_user_id(staff_id)
+            data = {
+                "first_name": staff_details['first_name'],
+                "last_name": staff_details['last_name'],
+                "phone": staff_details['mob']
+            }
+            profile.update(data)
+            # if update is successful
+            response_msg = helper.make_rest_success_response(
+                f"Update successful.")
+            return make_response(response_msg, 200)
+        else:
+            # if staff does not exist
+            response_msg = helper.make_rest_fail_response(
+                "User does not exist")
+            return make_response(response_msg, 404)
 
     @staticmethod
     def get_agency_id(role, uid):
@@ -103,6 +149,7 @@ class StaffRegistration(Resource):
             new_user_role = UserRolePlacement(
                 staff_id,
                 Role.fetch_role_by_name(staff_role))
+            new_user_role.save()
 
         elif role == "TA":
             new_ta_staff = TAStaff(staff_id, agency_id)
@@ -112,6 +159,7 @@ class StaffRegistration(Resource):
             new_user_role = UserRolePlacement(
                 staff_id,
                 Role.fetch_role_by_name(staff_role))
+            new_user_role.save()
 
         elif role == "IA":
             new_ia_staff = IAStaff(staff_id, agency_id)
@@ -122,7 +170,8 @@ class StaffRegistration(Resource):
             new_user_role = UserRolePlacement(
                 staff_id,
                 Role.fetch_role_by_name(staff_role))
-    
+            new_user_role.save()
+
     @staticmethod
     def set_permissions(permissions, user_id):
         # Split the permissions string and store in an array
@@ -131,5 +180,3 @@ class StaffRegistration(Resource):
         for i in permissions:
             user_permissions = UserPermissions(user_id, i)
             user_permissions.save()
-        
-        
