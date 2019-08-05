@@ -1,4 +1,4 @@
-from app import app
+from app import app, db
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
@@ -62,7 +62,7 @@ class StaffRegistration(Resource):
 
         # Add staff to the appropriate table: i.e BRStaff, TRStaff, IAStaff
         # We also assign the staff roles at this stage,
-        # depending on the entities they operate under, i.e BRSTF,IASTF,TASTF
+        # depending on the entities they operate under, i.e BRSTF, IASTF, TASTF
         self.add_staff(role, agency_id, new_user.id)
 
         # store staff permissions
@@ -70,7 +70,7 @@ class StaffRegistration(Resource):
 
         # send email to with the activation details for the staff
         response = helper.make_rest_success_response(
-            "Registration successfull. Please check the staff email to activate your account.")
+            "Registration successful. Please check the staff email to activate your account.")
             
         return make_response(response, 200)
 
@@ -122,7 +122,7 @@ class StaffRegistration(Resource):
             new_user_role = UserRolePlacement(
                 staff_id,
                 Role.fetch_role_by_name(staff_role))
-    
+
     @staticmethod
     def set_permissions(permissions, user_id):
         # Split the permissions string and store in an array

@@ -63,3 +63,14 @@ def get_customer_id(customer_number):
     customer_id = int(customer_number_array[2])
 
     return customer_id
+
+
+def get_customer_type(customer_number):
+    """ we might need to know whether the customer type is an individual or organization
+    :param customer_number:
+    :return:
+    """
+    cust_number_array = customer_number.split('/')
+    cust_type = cust_number_array[0]
+
+    return cust_type

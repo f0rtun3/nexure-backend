@@ -13,7 +13,7 @@ class BRCustomer(db.Model):
     staff_id = db.Column(db.Integer, db.ForeignKey('br_staff.id', onupdate='CASCADE'), nullable=True)
     date_affiliated = db.Column(db.DateTime, default=db.func.now())
     # we need to know whether the affiliation is active or not
-    is_active = db.Column(db.Boolean, default=True)
+    status = db.Column(db.Boolean, default=True)
 
     def __init__(self, customer_number, broker_id, staff_id=None):
         self.customer_number = customer_number
@@ -37,3 +37,7 @@ class BRCustomer(db.Model):
         if cls.query.filter_by(broker_id=broker_id, customer_number=customer_number).first():
             return True
         return False
+
+    @classmethod
+    def get_affiliation_by_customer(cls, cust_no):
+        return cls.query.filter_by(customer_number=cust_no).first()

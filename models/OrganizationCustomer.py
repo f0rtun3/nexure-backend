@@ -100,3 +100,7 @@ class OrganizationCustomer(db.Model):
     def get_all_organization_customers(cls):
         results = [org.serialize() for org in cls.query.all()]
         return results
+
+    @classmethod
+    def get_customer_by_contact(cls, uid):
+        return cls.query.filter_by(contact_person=uid).first()
