@@ -125,10 +125,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .idea/
-<<<<<<< HEAD
-=======
 todos.py
->>>>>>> customer_onboarding
 .vscode/
 helpers/__pycache__/
-migrations/
