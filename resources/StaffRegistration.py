@@ -37,8 +37,10 @@ class StaffRegistration(Resource):
 
         # create user account
         user_uuid = uuid.uuid4()
+        # Create temporary seven digit password
+        temporary_pass = helper.create_user_password()
         new_user = User(
-            user_uuid, user_details['email'], "password")
+            user_uuid, user_details['email'], temporary_pass)
         new_user.save()
 
         # create user profile
@@ -71,10 +73,22 @@ class StaffRegistration(Resource):
         self.set_permissions(user_details['permissions'], new_user.id)
 
         # send email to with the activation details for the staff
+        # Temporary password email
+        email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+                                                               temporary_pass)
+        subject = "Nexure Temporary Password"
+        helper.send_email(user_details['email'], subject, email_template)
+
+        #  Generate a user account activation email
         confirmation_code = token_handler.user_account_confirmation_token(
             new_user.id)
+        email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+                                                               confirmation_code)
+        subject = "Please confirm your account"
+        helper.send_email(
+            user_details['email'], subject, email_template)
         response = helper.make_rest_success_response(
-            "Registration successfull. Please check the staff email to activate your account.", {"authentication": confirmation_code})
+            "Registration successfull. Please check the staff email to activate your account.")
         return make_response(response, 200)
 
     @jwt_required
@@ -86,24 +100,25 @@ class StaffRegistration(Resource):
         staff_id = staff.id
 
         if staff:
-            # get current permissions
-            current_permissions = list(UserPermissions.get_permission_by_user_id(
-                staff_id))
-            received_permissions = list(staff_details['permissions'])
-            # get permissions to update
-            new_permissions = [
-                x for x in received_permissions if x not in current_permissions]
-            old_permissions = [
-                x for x in current_permissions if x not in received_permissions]
-            # delete old permissions and update with new ones
-            for i in old_permissions:
-                permissions = UserPermissions.get_specific_permission(
-                    i, staff_id)
-                permissions.delete()
-            # update with new ones
-            for i in new_permissions:
-                user_permissions = UserPermissions(staff_id, i)
-                user_permissions.save()
+            if staff_details['permissions']:
+                # get current permissions
+                current_permissions = list(UserPermissions.get_permission_by_user_id(
+                    staff_id))
+                received_permissions = list(staff_details['permissions'])
+                # get permissions to update
+                new_permissions = [
+                    x for x in received_permissions if x not in current_permissions]
+                old_permissions = [
+                    x for x in current_permissions if x not in received_permissions]
+                # delete old permissions and update with new ones
+                for i in old_permissions:
+                    permissions = UserPermissions.get_specific_permission(
+                        i, staff_id)
+                    permissions.delete()
+                # update with new ones
+                for i in new_permissions:
+                    user_permissions = UserPermissions(staff_id, i)
+                    user_permissions.save()
 
             # update other details
             # get user profile
@@ -113,8 +128,15 @@ class StaffRegistration(Resource):
                 "last_name": staff_details['last_name'],
                 "phone": staff_details['mob']
             }
-            profile.update(data)
+            if data:
+                profile.update(data)
             # if update is successful
+            
+            if staff_details['password']:
+                # set new password
+                new_password = staff.generate_password_hash(staff_details['password'])
+                staff.update_password(new_password)
+
             response_msg = helper.make_rest_success_response(
                 f"Update successful.")
             return make_response(response_msg, 200)
@@ -238,20 +260,16 @@ class StaffRegistration(Resource):
     def get_staff_details(user_id):
         # We want to fetch staff details based on their user id: first_name, last_name, phone, email, permissions
         data = {}
-
         user = User.get_user_by_id(user_id)
         # get email
         data.update({'email': user.email})
-
         # get profile details
         user_profile = UserProfile.get_profile_by_user_id(user_id)
         data.update({'first_name': user_profile.first_name})
         data.update({"last_name": user_profile.last_name})
         data.update({"phone": user_profile.phone})
-
         # get permissions
         user_permissions = UserPermissions.get_permission_by_user_id(user_id)
         data.update({"permissions": user_permissions})
-
-        # return all data for a particular staff member
+        # return dict containing all data for a particular staff member
         return data
