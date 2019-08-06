@@ -34,3 +34,7 @@ class IndividualCustomer(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    @classmethod
+    def get_customer_by_user_id(cls, uid):
+        return cls.query.filter_by(user_id=uid).first()

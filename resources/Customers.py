@@ -5,7 +5,7 @@ new customer onboarding
 from app import app
 from flask import make_response
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
 from models.User import User
 from models.IndividualCustomer import IndividualCustomer
 from models.UserProfile import UserProfile
@@ -28,6 +28,7 @@ from helpers.parsers import customer_parser
 from helpers.CustomerNumber import CustomerNumber
 import helpers.tokens as token_handler
 import uuid
+import json
 
 
 class CustomerOnBoarding(Resource):
@@ -151,7 +152,6 @@ class CustomerOnBoarding(Resource):
         response_msg = helper.make_rest_success_response("Customer has been onbarded successfully")
         return make_response(response_msg, 200)
 
-
     @jwt_required
     def get(self):
         data = OrganizationTypes.get_organization_customer_types()
@@ -163,6 +163,42 @@ class CustomerOnBoarding(Resource):
         message = "No data was found"
         response = helper.make_rest_fail_response(message)
         return make_response(response, 404)
+
+    @jwt_required
+    def delete(self):
+        """
+        deactivate the user account
+        :return:
+        """
+        role = get_jwt_claims()['role']
+        customer = json.dumps(customer_parser.parse_args())
+        cust_no = customer['cust_no']
+
+        # update the customer agency relationship if activated
+        self.delete_cust_agency_relationship(role, cust_no)
+        response = helper.make_rest_success_response("User was deleted")
+        return make_response(response, 200)
+
+    @jwt_required
+    def put(self):
+        """
+        Update customer details
+        activate or deactivate customer permissions
+        """
+        role = get_jwt_claims()['role']
+        cust_info = customer_parser.parse_args()
+        cust_no = cust_info['cust_no']
+        cust_id = helper.get_customer_id(cust_no)
+        cust_profile = UserProfile.get_profile_by_user_id(cust_id)
+        cust_auth = User.get_user_by_id(cust_id)
+        cust_profile.update(cust_info)
+        cust_auth.update(cust_info)
+
+        # update the respective organization or individual details
+        self.update_cust_details(cust_id, cust_no, cust_info)
+        self.update_cust_agency_relationship(role, cust_no, cust_info['status'])
+        response = helper.make_rest_success_response("Update was successful")
+        return make_response(response, 200)
 
     @staticmethod
     def create_individual_customer(cust_id, salutation):
@@ -240,15 +276,33 @@ class CustomerOnBoarding(Resource):
         customer_helper = CustomerNumber(org_type, user_id, country)
         return customer_helper.generate_customer_number()
 
-    @jwt_required
-    def delete(self):
-        """
-        deactivate the user account
-        :return:
-        """
-        pass
+    def update_cust_agency_relationship(self, role, cust_no, status):
+        customer = self.fetch_customer_by_relationship(role, cust_no)
+        customer.status = status
+        customer.update()
 
+    @staticmethod
+    def fetch_customer_by_relationship(role, cust_no):
+        customer = None
+        if role in ("BR", "BRSTF"):
+            customer = BRCustomer.get_affiliation_by_customer(cust_no)
+        elif role in ("TA", "TASTF"):
+            customer = TACustomer.get_affiliation_by_customer(cust_no)
+        elif role in ("IA", "IASTF"):
+            customer = IACustomer.get_affiliation_by_customer(cust_no)
 
-class OrganizationHandler(Resource):
-    def get(self):
-        pass
+        return customer
+
+    def delete_cust_agency_relationship(self, role, cust_no):
+        customer = self.fetch_customer_by_relationship(role, cust_no)
+        customer.delete()
+
+    @staticmethod
+    def update_cust_details(cust_id, cust_no, cust_info):
+        cust_type = helper.get_customer_type(cust_no)
+        if cust_type == 'IN':
+            customer = IndividualCustomer.get_customer_by_user_id(cust_id)
+            customer.update(cust_info)
+        else:
+            customer = OrganizationCustomer.get_customer_by_contact(cust_id)
+            customer.update(cust_info)

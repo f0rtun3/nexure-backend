@@ -19,7 +19,7 @@ class OrganizationTypes(db.Model):
         return {
             "label": self.type_name,
             "value": self.type_acronym
-        }, 200
+        }
 
     def save(self):
         db.session.add(self)

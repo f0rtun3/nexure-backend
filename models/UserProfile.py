@@ -1,6 +1,7 @@
 from app import db
 from datetime import datetime
 
+
 class UserProfile(db.Model):
     __tablename__ = 'user_profile'
 

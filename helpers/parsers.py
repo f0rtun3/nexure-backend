@@ -219,6 +219,10 @@ customer_parser.add_argument(
     "salutation",
     type=str
 )
+customer_parser.add_argument(
+    "is_active",
+    type=bool
+)
 
 # organization details
 customer_parser.add_argument(
@@ -237,7 +241,14 @@ customer_parser.add_argument(
     "reg_number",
     type=str
 )
-
+customer_parser.add_argument(
+    "cust_no",
+    type=str
+)
+customer_parser.add_argument(
+    "status",
+    type=bool
+)
 # social media info
 customer_parser.add_argument(
     "facebook",

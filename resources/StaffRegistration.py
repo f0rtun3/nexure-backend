@@ -1,4 +1,4 @@
-from app import app
+from app import app, db
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
@@ -64,7 +64,7 @@ class StaffRegistration(Resource):
 
         # Add staff to the appropriate table: i.e BRStaff, TRStaff, IAStaff
         # We also assign the staff roles at this stage,
-        # depending on the entities they operate under, i.e BRSTF,IASTF,TASTF
+        # depending on the entities they operate under, i.e BRSTF, IASTF, TASTF
         self.add_staff(role, agency_id, new_user.id)
 
         # store staff permissions
