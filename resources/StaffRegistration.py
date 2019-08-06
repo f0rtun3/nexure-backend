@@ -54,10 +54,10 @@ class StaffRegistration(Resource):
         uid = get_jwt_identity()
 
         # get user role
-        # claims = get_jwt_claims()
-        # role = claims['role']
+        claims = get_jwt_claims()
+        role = claims['role']
 
-        role = 'BR'
+        # role = 'BR'
 
         # get agency_id
         agency_id = self.get_agency_id(role, uid)
@@ -131,9 +131,9 @@ class StaffRegistration(Resource):
         uid = get_jwt_identity()
 
         # get user role so that you can use it to get the agency_id
-        # claims = get_jwt_claims()
-        # role = claims['role']
-        role = 'BR'
+        claims = get_jwt_claims()
+        role = claims['role']
+        # role = 'BR'
         # get company_id
         company_id = self.get_agency_id(role, uid)
         # get list of staff associated with company
