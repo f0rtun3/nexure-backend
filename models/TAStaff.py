@@ -30,6 +30,13 @@ class TAStaff(db.Model):
 
     @classmethod
     def fetch_agent_by_staff(cls, staff_id):
-        agent = cls.query.filter_by(staff_id=staff_id).first()
-
+        agent = cls.query.filter_by(user_id=staff_id).first()
         return agent.user_id
+    
+    @classmethod
+    def fetch_all_staff_ids(cls, agency_id):
+        staff = cls.query.filter_by(agent_id=agency_id)
+        staff_ids = []
+        for i in staff:
+            staff_ids.append(i.user_id)
+        return staff_ids

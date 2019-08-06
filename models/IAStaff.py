@@ -4,9 +4,12 @@ from app import db
 class IAStaff(db.Model):
     __tablename__ = 'ia_staff'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
-    agent_id = db.Column(db.Integer, db.ForeignKey('independent_agent.id', ondelete='CASCADE', onupdate='CASCADE'))
+    id = db.Column(db.Integer, primary_key=True,
+                   autoincrement=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id', ondelete='CASCADE', onupdate='CASCADE'))
+    agent_id = db.Column(db.Integer, db.ForeignKey(
+        'independent_agent.id', ondelete='CASCADE', onupdate='CASCADE'))
     ia_customer = db.relationship("IACustomer", backref="ia_customer_member")
 
     def __init__(self, user_id, agent_id):
@@ -29,7 +32,9 @@ class IAStaff(db.Model):
         return cls.query.filter_by(agent_id=agent_id).first()
 
     @classmethod
-    def fetch_agent_by_staff(cls, staff_id):
-        agent = cls.query.filter_by(staff_id=staff_id).first()
-
-        return agent.user_id
+    def fetch_all_staff_ids(cls, agency_id):
+        staff = cls.query.filter_by(agent_id=agency_id)
+        staff_ids = []
+        for i in staff:
+            staff_ids.append(i.user_id)
+        return staff_ids

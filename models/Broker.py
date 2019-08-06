@@ -95,4 +95,5 @@ class Broker(db.Model):
     
     @classmethod
     def get_broker_by_contact_id(cls, user_id):
-        return cls.query.filter_by(contact_person=user_id).first()
+        brokerage = cls.query.filter_by(contact_person=user_id).first()
+        return brokerage

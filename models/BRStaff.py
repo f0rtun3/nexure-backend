@@ -30,6 +30,13 @@ class BRStaff(db.Model):
 
     @classmethod
     def fetch_broker_by_staff(cls, staff_id):
-        broker = cls.query.filter_by(staff_id=staff_id).first()
-
+        broker = cls.query.filter_by(user_id=staff_id).first()
         return broker.user_id
+
+    @classmethod
+    def fetch_all_staff_ids(cls, agency_id):
+        staff = cls.query.filter_by(broker_id=agency_id)
+        staff_ids = []
+        for i in staff:
+            staff_ids.append(i.user_id)
+        return staff_ids

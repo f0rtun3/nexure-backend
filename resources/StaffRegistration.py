@@ -77,14 +77,13 @@ class StaffRegistration(Resource):
             "Registration successfull. Please check the staff email to activate your account.", {"authentication": confirmation_code})
         return make_response(response, 200)
 
+    @jwt_required
     def put(self):
         """Update staff details, mostly permissions."""
         staff_details = user_parser.parse_args()
-
-        # get staff id
-        staff_id = get_jwt_identity()
         # check if staff exists
-        staff = User.get_user_by_id(staff_id)
+        staff = User.get_user_by_email(staff_details['email'])
+        staff_id = staff.id
 
         if staff:
             # get current permissions
@@ -92,14 +91,19 @@ class StaffRegistration(Resource):
                 staff_id))
             received_permissions = list(staff_details['permissions'])
             # get permissions to update
-            new_permissions = [x for x in received_permissions if x not in current_permissions]
-            old_permissions = [x for x in current_permissions if x not in new_permissions]
+            new_permissions = [
+                x for x in received_permissions if x not in current_permissions]
+            old_permissions = [
+                x for x in current_permissions if x not in received_permissions]
             # delete old permissions and update with new ones
             for i in old_permissions:
-                UserPermissions.get_specific_permission(i,staff_id)
-                UserPermissions.delete()
+                permissions = UserPermissions.get_specific_permission(
+                    i, staff_id)
+                permissions.delete()
             # update with new ones
-            self.set_permissions(new_permissions)
+            for i in new_permissions:
+                user_permissions = UserPermissions(staff_id, i)
+                user_permissions.save()
 
             # update other details
             # get user profile
@@ -119,6 +123,25 @@ class StaffRegistration(Resource):
             response_msg = helper.make_rest_fail_response(
                 "User does not exist")
             return make_response(response_msg, 404)
+
+    @jwt_required
+    def get(self):
+        # get list of staff associated with a particular agency
+        # first get agent_id
+        uid = get_jwt_identity()
+
+        # get user role so that you can use it to get the agency_id
+        # claims = get_jwt_claims()
+        # role = claims['role']
+        role = 'BR'
+        # get company_id
+        company_id = self.get_agency_id(role, uid)
+        # get list of staff associated with company
+        company_staff = self.get_agency_staff(role, company_id)
+
+        response = helper.make_rest_success_response(
+            "Success", {"staff_list": company_staff})
+        return make_response(response, 200)
 
     @staticmethod
     def get_agency_id(role, uid):
@@ -180,3 +203,55 @@ class StaffRegistration(Resource):
         for i in permissions:
             user_permissions = UserPermissions(user_id, i)
             user_permissions.save()
+
+    def get_agency_staff(self, role, agency_id):
+        # get list depending on role i.e either BRSTF, TASTF, IASTF
+        if role == "BR":
+            staff_ids = BRStaff.fetch_all_staff_ids(agency_id)
+            # Get all staff properties
+            staff_list = []
+            for i in staff_ids:
+                staff = self.get_staff_details(i)
+                staff_list.append(staff)
+            return staff_list
+
+        elif role == "TA":
+            staff_ids = TAStaff.fetch_all_staff_ids(agency_id)
+            # get all staff details
+            staff_list = []
+            for i in staff_ids:
+                staff = self.get_staff_details(i)
+                staff_list.append(staff)
+            return staff_list
+
+        elif role == "IA":
+            # get staff details
+            staff_ids = IAStaff.fetch_all_staff_ids(agency_id)
+            # dictionary to store staff details
+            staff_list = []
+            for i in staff_ids:
+                staff = self.get_staff_details(i)
+                staff_list.append(staff)
+            return staff_list
+
+    @staticmethod
+    def get_staff_details(user_id):
+        # We want to fetch staff details based on their user id: first_name, last_name, phone, email, permissions
+        data = {}
+
+        user = User.get_user_by_id(user_id)
+        # get email
+        data.update({'email': user.email})
+
+        # get profile details
+        user_profile = UserProfile.get_profile_by_user_id(user_id)
+        data.update({'first_name': user_profile.first_name})
+        data.update({"last_name": user_profile.last_name})
+        data.update({"phone": user_profile.phone})
+
+        # get permissions
+        user_permissions = UserPermissions.get_permission_by_user_id(user_id)
+        data.update({"permissions": user_permissions})
+
+        # return all data for a particular staff member
+        return data
