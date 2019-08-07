@@ -21,6 +21,7 @@ class Config(object):
     AWS_ACCESS_KEY_ID = os.environ['AWS_SECRET_ACCESS_KEY']
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
     LOGIN_ENDPOINT = "https://nexure-react.herokuapp.com/login"
+    CONFIRMATION_ENDPOINT = "https://nexure-react.herokuapp.com/confirm"
 
 class Production(Config):
     DEBUG = False
