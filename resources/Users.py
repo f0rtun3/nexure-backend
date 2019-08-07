@@ -66,9 +66,12 @@ class UserRegister(Resource):
         email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                confirmation_code)
         subject = "Please confirm your account"
-        email_text=f"Please visit {app.config['CONFIRMATION_ENDPOINT']}/?token={confirmation_code} to confirm your " \
-                   f"account."
-        return helper.send_email([user_details['email']], subject, email_template, email_text)
+        
+        # ToDo: return appropriate response in api
+        helper.send_email(user_details['email'], subject, email_template)
+        
+        response_msg = helper.make_rest_success_response("Registration successful, kindly check your email for confirmation link")
+        return make_response(response_msg, 200)
 
 
     def get(self):

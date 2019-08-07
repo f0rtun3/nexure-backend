@@ -12,10 +12,10 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     MAIL_SERVER = 'email-smtp.us-east-1.amazonaws.com'
     MAIL_PORT = 465
-    MAIL_USERNAME = os.environ['EMAIL_USERNAME']
-    MAIL_DEFAULT_USER = 'no-reply@nexure.co.ke'
-    MAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
-    MAIL_USE_TLS = False
+    MAIL_USERNAME = os.environ['SMTP_USERNAME']
+    MAIL_DEFAULT_USER = 'info@nexure.co.ke'
+    MAIL_PASSWORD = os.environ['SMTP_PASSWORD']
+    MAIL_USE_TLS = True
     MAIL_USE_SSL = False
     AWS_REGION='us-east-1'
     AWS_ACCESS_KEY_ID = os.environ['AWS_SECRET_ACCESS_KEY']

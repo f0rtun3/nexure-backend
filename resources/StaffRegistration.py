@@ -77,9 +77,7 @@ class StaffRegistration(Resource):
         email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                temporary_pass)
         subject = "Nexure Temporary Password"
-        email_text = f"Please visit {app.config['LOGIN_ENDPOINT']} and use {temporary_pass}" \
-                     f" as your temporary password for your first time login"
-        helper.send_email(user_details['email'], subject, email_template, email_text)
+        helper.send_email(user_details['email'], subject, email_template)
 
         #  Generate a user account activation email
         confirmation_code = token_handler.user_account_confirmation_token(
@@ -87,10 +85,8 @@ class StaffRegistration(Resource):
         email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                confirmation_code)
         subject = "Please confirm your account"
-        email_text = f"Please visit {app.config['CONFIRMATION_ENDPOINT']}/?token={confirmation_code} to confirm your " \
-                     f"account."
         helper.send_email(
-            user_details['email'], subject, email_template, email_text)
+            user_details['email'], subject, email_template)
         response = helper.make_rest_success_response(
             "Registration successfull. Please check the staff email to activate your account.")
         return make_response(response, 200)
