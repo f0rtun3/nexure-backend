@@ -1,12 +1,12 @@
 from flask import Flask, make_response, jsonify
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
-from flask_mail import Mail
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 import os
+import boto3
 
 # automatically set the application's os environment
 # variables from the .env file
@@ -21,7 +21,12 @@ CORS(app, resources={r"/*": {"origins": app.config['ALLOWED_HOSTS']}})
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
-mail = Mail(app)
+ses = boto3.client(
+    "ses",
+    region_name=app.config['AWS_REGION'],
+    aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
+    aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY']
+)
 
 
 @jwt.expired_token_loader

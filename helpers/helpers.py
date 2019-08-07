@@ -1,9 +1,8 @@
 from flask import jsonify, render_template
-from flask_mail import Message
-from app import app, mail
+from botocore.exceptions import ClientError
+from app import app, ses
 import string
 import random
-
 
 def make_rest_fail_response(message):
     return jsonify({"status_message": "failed", "message": message})
@@ -30,15 +29,53 @@ def generate_temporary_password_template(url_endpoint, code):
     return html
 
 
-def send_email(recipient, subject, template):
-    msg = Message(
-        subject,
-        recipients=[recipient],
-        html=template,
-        sender=app.config['MAIL_DEFAULT_USER']
-    )
-    mail.send(msg)
-
+def send_email(recipient, subject, template, email_text):
+    """
+        ses.send_mail(
+            Source=sender,
+            Destination={
+                'ToAddress': recipient
+            },
+            Message={
+                'Subject':{
+                    'Data':subject
+                },
+                'Body':{
+                    'Text': {
+                        'Data': email_text
+                    },
+                    'Html': {
+                        'Data': template
+                    }
+                }
+            }
+        )
+        """
+    sender=app.config['MAIL_DEFAULT_USER']
+    try:
+        response = ses.send_email(
+            Source=sender,
+            Destination={
+                'ToAddresses': recipient
+            },
+            Message={
+                'Subject': {
+                    'Data': subject
+                },
+                'Body': {
+                    'Text': {
+                        'Data': email_text
+                    },
+                    "Html": {
+                        'Data': template
+                    }
+                }
+            }
+        )
+    except ClientError as e:
+        return e.response['Error']['Message']
+    else:
+        return response['MessageId']
 
 def create_user_password():
     """

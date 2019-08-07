@@ -80,17 +80,21 @@ class CustomerOnBoarding(Resource):
             )
             new_individual_profile.save()
 
-            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+            email_template = helper.generate_confirmation_template(app.config['LOGIN_ENDPOINT'],
                                                                 temporary_pass)
             subject = "Nexure Temporary Password"
-            helper.send_email(customer_details['org_email'], subject, email_template)
+            email_text = f"Please visit {app.config['LOGIN_ENDPOINT']} and use {temporary_pass}" \
+                         f" as your temporary password for your first time login"
+            helper.send_email(customer_details['org_email'], subject, email_template, email_text)
 
             #  Generate a user account activation email
             confirmation_code = token_handler.user_account_confirmation_token(customer_id)
             email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                 confirmation_code)
             subject = "Please confirm your account"
-            helper.send_email(customer_details['org_email'], subject, email_template)
+            email_text = f"Please visit {app.config['CONFIRMATION_ENDPOINT']}/?token={confirmation_code} to confirm your " \
+                         f"account."
+            helper.send_email(customer_details['org_email'], subject, email_template, email_text)
         else:
             customer_id = customer.id
 

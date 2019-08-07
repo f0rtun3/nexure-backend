@@ -3,6 +3,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
+    CHARSET='UTF-8'
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
@@ -16,7 +17,10 @@ class Config(object):
     MAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
     MAIL_USE_TLS = False
     MAIL_USE_SSL = False
-
+    AWS_REGION='us-east-1'
+    AWS_ACCESS_KEY_ID = os.environ['AWS_SECRET_ACCESS_KEY']
+    AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+    LOGIN_ENDPOINT = "https://nexure-react.herokuapp.com/login"
 
 class Production(Config):
     DEBUG = False
@@ -28,7 +32,7 @@ class Staging(Config):
     HOST = "0.0.0.0"
     PORT = 5000
     ALLOWED_HOSTS = "*"
-    CONFIRMATION_ENDPOINT = "https://nexure-react.herokuapp.com/confirm"
+
 
 
 class Development(Config):
@@ -37,7 +41,6 @@ class Development(Config):
     HOST = "127.0.0.1"
     PORT = 5000
     ALLOWED_HOSTS = "*"
-    CONFIRMATION_ENDPOINT = "https://nexure-react.herokuapp.com/confirm"
 
 
 class Testing(Config):
