@@ -73,7 +73,7 @@ def send_email(recipient, subject, template, email_text):
             }
         )
     except ClientError as e:
-        return e.response['Error']['Message']
+        return f"ERROR! {e.response['Error']['Message']}"
     else:
         return response['MessageId']
 
