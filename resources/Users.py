@@ -68,7 +68,7 @@ class UserRegister(Resource):
         subject = "Please confirm your account"
         email_text=f"Please visit {app.config['CONFIRMATION_ENDPOINT']}/?token={confirmation_code} to confirm your " \
                    f"account."
-        helper.send_email(user_details['email'], subject, email_template, email_text)
+        helper.send_email([user_details['email']], subject, email_template, email_text)
         # ToDo: Remove the key from here in production
         success_msg = f"You have been registered. Kindly check your email to confirm account {confirmation_code}"
         response = helper.make_rest_success_response(
