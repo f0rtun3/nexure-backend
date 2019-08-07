@@ -62,13 +62,12 @@ class UserRegister(Resource):
         #   Send a confirmation link to the user for account confirmation
         confirmation_code = token_handler.user_account_confirmation_token(
             new_user_authentication.id)
-
         email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                confirmation_code)
         subject = "Please confirm your account"
-        
-        # ToDo: return appropriate response in api
-        helper.send_email(user_details['email'], subject, email_template)
+        email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}?token={confirmation_code}" \
+                     f" to confirm your account"
+        helper.send_email(user_details['email'], subject, email_template, email_text)
         
         response_msg = helper.make_rest_success_response("Registration successful, kindly check your email for confirmation link")
         return make_response(response_msg, 200)
