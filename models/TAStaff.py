@@ -28,18 +28,24 @@ class TAStaff(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    @staticmethod
+    def deactivate_staff(self, company_id, staff_id):
+        staff = self.query.filter_by(user_id=staff_id, agent_id=company_id)
+        staff.active = False
+        self.save()
+
     @classmethod
     def fetch_staff_by_id(cls, agent_id):
-        return cls.query.filter_by(agent_id=agent_id).first()
+        return cls.query.filter_by(agent_id=agent_id, active=True).first()
 
     @classmethod
     def fetch_agent_by_staff(cls, staff_id):
-        agent = cls.query.filter_by(user_id=staff_id).first()
+        agent = cls.query.filter_by(user_id=staff_id, active=True).first()
         return agent.user_id
 
     @classmethod
     def fetch_all_staff_ids(cls, agency_id):
-        staff = cls.query.filter_by(agent_id=agency_id)
+        staff = cls.query.filter_by(agent_id=agency_id, active=True)
         staff_ids = []
         for i in staff:
             staff_ids.append(i.user_id)

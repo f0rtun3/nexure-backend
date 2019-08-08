@@ -221,10 +221,9 @@ class UserRegister(Resource):
         elif role == "IC":
             # if it's an insurance company
             new_insurance_company = InsuranceCompany(
-                user_details["org_name"],
-                user_details["org_email"],
                 user_details["org_phone"],
-                user_id
+                user_id,
+                user_details['company_id'],
             )
             new_insurance_company.save()
 

@@ -127,6 +127,14 @@ user_parser.add_argument(
     "instagram",
     type=str
 )
+user_parser.add_argument(
+    "company_id",
+    type=str
+)
+user_parser.add_argument(
+    "staff_id",
+    type=str
+)
 # change password
 user_parser.add_argument(
     "new_password",

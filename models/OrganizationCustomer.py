@@ -32,7 +32,7 @@ class OrganizationCustomer(db.Model):
     updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
     def __init__(self, org_type, org_name, org_phone, email, org_registration_number, physical_address, postal_address,
-                 postal_code,postal_town, county, facebook, instagram, twitter, constituency, ward, contact_person):
+                 postal_code, postal_town, county, facebook, instagram, twitter, constituency, ward, contact_person):
         self.org_type = org_type
         self.org_name = org_name
         self.org_phone = org_phone

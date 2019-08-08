@@ -6,6 +6,7 @@ from models.County import County
 from models.InsuranceClass import InsuranceClass
 from models.InsuranceSubclass import InsuranceSubclass
 from models.Ward import Ward
+from models.CompanyDetails import CompanyDetails
 
 # Import the CSV files into python using read_csv
 # fetch car makes data and send it to its models
@@ -122,6 +123,11 @@ def ward():
         new_ward = Ward(row.Ward_Name, constituency, county_id)
         new_ward.save()
 
+def insurance_details():
+    df = pd.read_csv("data/insurance-companies.csv")
+    for row in df.itertuples():
+        new_company = CompanyDetails(row.org_name, row.email, row.physical_address, row.website)
+        new_company.save()
 
 if __name__ == '__main__':
     car_makes()
@@ -131,3 +137,4 @@ if __name__ == '__main__':
     counties()
     constituencies()
     ward()
+    insurance_details()

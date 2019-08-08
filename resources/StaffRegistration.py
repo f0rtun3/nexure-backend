@@ -131,10 +131,11 @@ class StaffRegistration(Resource):
             if data:
                 profile.update(data)
             # if update is successful
-            
+
             if staff_details['password']:
                 # set new password
-                new_password = staff.generate_password_hash(staff_details['password'])
+                new_password = staff.generate_password_hash(
+                    staff_details['password'])
                 staff.update_password(new_password)
 
             response_msg = helper.make_rest_success_response(
@@ -164,9 +165,10 @@ class StaffRegistration(Resource):
         response = helper.make_rest_success_response(
             "Success", {"staff_list": company_staff})
         return make_response(response, 200)
-    
+
     @jwt_required
     def delete(self):
+        staff_details = user_parser.parse_args()
         # remove staff from agency
         # deactivate the staff's affiliation
         # get agent id and role so as to fetch the staff's affiliation
@@ -178,9 +180,18 @@ class StaffRegistration(Resource):
         # role = 'BR'
         # get company_id
         company_id = self.get_agency_id(role, uid)
-        
-        
 
+        # deactivate staff instead of deleting
+        if role == "BR":
+            BRStaff.deactivate_staff(company_id, staff_details['staff_id'])
+        elif role = "TA":
+            TAStaff.deactivate_staff(company_id, staff_details['staff_id'])
+        elif role = "IA":
+            IAStaff.deactivate_staff(company_id, staff_details['staff_id'])
+
+        response = helper.make_rest_success_response(
+            "Staff deleted succesfully")
+        return make_response(response, 200)
 
     @staticmethod
     def get_agency_id(role, uid):
@@ -278,6 +289,7 @@ class StaffRegistration(Resource):
         # We want to fetch staff details based on their user id: first_name, last_name, phone, email, permissions
         data = {}
         user = User.get_user_by_id(user_id)
+        data.update({'id': user_id})
         # get email
         data.update({'email': user.email})
         # get profile details
