@@ -14,6 +14,7 @@ class Config(object):
     MAIL_DEFAULT_USER = 'no-reply@nexure.co.ke'
     MAIL_USE_TLS = False
     MAIL_USE_SSL = False
+    AWS_REGION='us-east-1'
     AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
     CONFIRMATION_ENDPOINT = 'https://nexure.co.ke/confirm'
