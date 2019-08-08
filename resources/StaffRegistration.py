@@ -164,6 +164,23 @@ class StaffRegistration(Resource):
         response = helper.make_rest_success_response(
             "Success", {"staff_list": company_staff})
         return make_response(response, 200)
+    
+    @jwt_required
+    def delete(self):
+        # remove staff from agency
+        # deactivate the staff's affiliation
+        # get agent id and role so as to fetch the staff's affiliation
+        uid = get_jwt_identity()
+
+        # get user role so that you can use it to get the agency_id
+        claims = get_jwt_claims()
+        role = claims['role']
+        # role = 'BR'
+        # get company_id
+        company_id = self.get_agency_id(role, uid)
+        
+        
+
 
     @staticmethod
     def get_agency_id(role, uid):

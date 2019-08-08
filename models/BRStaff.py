@@ -8,6 +8,7 @@ class BRStaff(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
     broker_id = db.Column(db.Integer, db.ForeignKey('broker.broker_id', ondelete='CASCADE', onupdate='CASCADE'))
     br_customer = db.relationship("BRCustomer", backref="br_customer_member")
+    active = db.Column(db.Boolean, default=True)
 
     def __init__(self, user_id, broker_id):
         self.user_id = user_id
