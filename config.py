@@ -11,11 +11,13 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     MAIL_SERVER = 'email-smtp.us-east-1.amazonaws.com'
     MAIL_PORT = 465
-    MAIL_USERNAME = os.environ['EMAIL_USERNAME']
     MAIL_DEFAULT_USER = 'no-reply@nexure.co.ke'
-    MAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
     MAIL_USE_TLS = False
     MAIL_USE_SSL = False
+    AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+    CONFIRMATION_ENDPOINT = 'https://nexure.co.ke/confirm'
+    LOGIN_ENDPOINT = 'https://nexure.co.ke/login'
 
 
 class Production(Config):
@@ -28,7 +30,6 @@ class Staging(Config):
     HOST = "0.0.0.0"
     PORT = 5000
     ALLOWED_HOSTS = "*"
-    CONFIRMATION_ENDPOINT = "https://nexure-react.herokuapp.com/confirm"
 
 
 class Development(Config):
@@ -37,7 +38,6 @@ class Development(Config):
     HOST = "127.0.0.1"
     PORT = 5000
     ALLOWED_HOSTS = "*"
-    CONFIRMATION_ENDPOINT = "https://nexure-react.herokuapp.com/confirm"
 
 
 class Testing(Config):
