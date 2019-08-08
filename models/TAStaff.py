@@ -4,10 +4,14 @@ from app import db
 class TAStaff(db.Model):
     __tablename__ = 'ta_staff'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
-    agent_id = db.Column(db.Integer, db.ForeignKey('tied_agent.id', ondelete='CASCADE', onupdate='CASCADE'))
+    id = db.Column(db.Integer, primary_key=True,
+                   autoincrement=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id', ondelete='CASCADE', onupdate='CASCADE'))
+    agent_id = db.Column(db.Integer, db.ForeignKey(
+        'tied_agent.id', ondelete='CASCADE', onupdate='CASCADE'))
     ta_customer = db.relationship("TACustomer", backref="ta_customer_member")
+    active = db.Column(db.Boolean, default=True)
 
     def __init__(self, user_id, agent_id):
         self.user_id = user_id
@@ -32,7 +36,7 @@ class TAStaff(db.Model):
     def fetch_agent_by_staff(cls, staff_id):
         agent = cls.query.filter_by(user_id=staff_id).first()
         return agent.user_id
-    
+
     @classmethod
     def fetch_all_staff_ids(cls, agency_id):
         staff = cls.query.filter_by(agent_id=agency_id)

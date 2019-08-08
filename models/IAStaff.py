@@ -11,6 +11,7 @@ class IAStaff(db.Model):
     agent_id = db.Column(db.Integer, db.ForeignKey(
         'independent_agent.id', ondelete='CASCADE', onupdate='CASCADE'))
     ia_customer = db.relationship("IACustomer", backref="ia_customer_member")
+    active = db.Column(db.Boolean, default=True)
 
     def __init__(self, user_id, agent_id):
         self.user_id = user_id
