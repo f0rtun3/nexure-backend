@@ -65,13 +65,13 @@ class UserRegister(Resource):
         email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                confirmation_code)
         subject = "Please confirm your account"
-        email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}?token={confirmation_code}" \
+        email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                      f" to confirm your account"
         helper.send_email(user_details['email'], subject, email_template, email_text)
         
-        response_msg = helper.make_rest_success_response("Registration successful, kindly check your email for confirmation link")
+        response_msg = helper.make_rest_success_response("Registration successful, kindly"
+                                                         " check your email for confirmation link")
         return make_response(response_msg, 200)
-
 
     def get(self):
         """
@@ -286,7 +286,9 @@ class AccountConfirmation(Resource):
             email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                    confirmation_code)
             subject = "Please confirm your account"
-            helper.send_email(user_row.email, subject, email_template)
+            email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
+                         f" to confirm your account"
+            helper.send_email(user_row.email, subject, email_template, email_text)
             response = helper.make_rest_success_response("Please check your email to confirm your account")
             return make_response(response, 200)
 

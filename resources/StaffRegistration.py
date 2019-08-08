@@ -86,12 +86,12 @@ class StaffRegistration(Resource):
         email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                confirmation_code)
         subject = "Please confirm your account"
-        email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}?token={confirmation_code} " \
-                     f"to confirm your account"
+        email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
+                     f" to confirm your account"
         helper.send_email(
             user_details['email'], subject, email_template, email_text)
         response = helper.make_rest_success_response(
-            "Registration successfull. Please check the staff email to activate your account.")
+            "Registration successful. Please check the staff email to activate your account.")
         return make_response(response, 200)
 
     @jwt_required
