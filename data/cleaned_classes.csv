@@ -1,0 +1,14 @@
+,Sector,Class_Insurance
+0,General_Insurance,Aviation
+9,General_Insurance,Engineering
+12,General_Insurance,Fire Domestic
+18,General_Insurance,Fire Industrial
+24,General_Insurance,Liability
+28,General_Insurance,Marine
+33,General_Insurance,Motor Private
+39,General_Insurance,Motor Commercial
+44,General_Insurance,Personal Accident
+51,General_Insurance,Theft
+56,General_Insurance,Workmen Compensation
+61,General_Insurance,Medical
+74,General_Insurance,Miscellaneous

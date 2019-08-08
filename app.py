@@ -4,7 +4,7 @@ from flask_cors import CORS
 from flask_mail import Mail
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Api
+from flask_migrate import Migrate
 
 import os
 
@@ -19,7 +19,7 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app, resources={r"/*": {"origins": app.config['ALLOWED_HOSTS']}})
 db = SQLAlchemy(app)
-api = Api(app)
+migrate = Migrate(app, db)
 jwt = JWTManager(app)
 mail = Mail(app)
 
@@ -63,16 +63,7 @@ def fresh_token_loader_handler():
     }
     return make_response(jsonify(response), 401)
 
-
-from resources import UserRegister
-from resources import UserLogin
-from resources import UserAccountConfirmation
-
-
-api.add_resource(UserRegister, '/register')
-api.add_resource(UserLogin, '/login')
-api.add_resource(UserAccountConfirmation, '/confirm')
-
+import api
 
 if __name__ == '__main__':
-    app.run(port=app.config['PORT'], debug=app.config['DEBUG'])
+    app.run()
