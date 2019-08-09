@@ -184,9 +184,9 @@ class StaffRegistration(Resource):
         # deactivate staff instead of deleting
         if role == "BR":
             BRStaff.deactivate_staff(company_id, staff_details['staff_id'])
-        elif role = "TA":
+        elif role == "TA":
             TAStaff.deactivate_staff(company_id, staff_details['staff_id'])
-        elif role = "IA":
+        elif role == "IA":
             IAStaff.deactivate_staff(company_id, staff_details['staff_id'])
 
         response = helper.make_rest_success_response(
