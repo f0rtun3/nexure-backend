@@ -29,7 +29,7 @@ class IAStaff(db.Model):
         db.session.commit()
 
     @staticmethod
-    def deactivate_staff(self, company_id, staff_id):
+    def deactivate_staff(company_id, staff_id):
         staff = self.query.filter_by(user_id=staff_id, agent_id=company_id)
         staff.active = False
         self.save()

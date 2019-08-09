@@ -1,8 +1,9 @@
 from flask import jsonify, render_template
-from flask_mail import Message
-from app import app, mail
+from botocore.exceptions import ClientError
+from app import app, ses
 import string
 import random
+# from helpers import Mailer
 
 
 def make_rest_fail_response(message):
@@ -19,7 +20,7 @@ def make_rest_success_response(message=None, payload=None):
 def generate_confirmation_template(url_endpoint, code):
     html = render_template('activate.html',
                            url_endpoint=url_endpoint,
-                           confirm_code=code)
+                           confirm_token=code)
     return html
 
 
@@ -30,14 +31,40 @@ def generate_temporary_password_template(url_endpoint, code):
     return html
 
 
-def send_email(recipient, subject, template):
-    msg = Message(
-        subject,
-        recipients=[recipient],
-        html=template,
-        sender=app.config['MAIL_DEFAULT_USER']
-    )
-    mail.send(msg)
+def send_email(recipient, subject, template, email_text):
+    sender=app.config['MAIL_DEFAULT_USER']
+    recipient = [recipient]
+    try:
+        response = ses.send_email(
+            Source=sender,
+            Destination={
+                'ToAddresses': recipient
+            },
+            Message={
+                'Subject': {
+                    'Data': subject
+                },
+                'Body': {
+                    'Text': {
+                        'Data': email_text
+                    },
+                    "Html": {
+                        'Data': template
+                    }
+                }
+            }
+        )
+    except ClientError as e:
+        return f"{e.response['Error']['Message']}"
+    else:
+        return "success"
+    """
+    if not from_addr:
+        from_addr = app.config['MAIL_DEFAULT_USER']
+    email = Mailer.Email(recipient, subject)
+    email.html(template)
+    email.send(from_addr)
+    """
 
 
 def create_user_password():

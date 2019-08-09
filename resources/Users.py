@@ -62,17 +62,16 @@ class UserRegister(Resource):
         #   Send a confirmation link to the user for account confirmation
         confirmation_code = token_handler.user_account_confirmation_token(
             new_user_authentication.id)
-
         email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                confirmation_code)
         subject = "Please confirm your account"
-        helper.send_email(user_details['email'], subject, email_template)
-        # ToDo: Remove the key from here in production
-        success_msg = f"You have been registered. Kindly check your email to confirm account {confirmation_code}"
-        response = helper.make_rest_success_response(
-            success_msg)
-
-        return make_response(response, 200)
+        email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
+                     f" to confirm your account"
+        helper.send_email(user_details['email'], subject, email_template, email_text)
+        
+        response_msg = helper.make_rest_success_response("Registration successful, kindly"
+                                                         " check your email for confirmation link")
+        return make_response(response_msg, 200)
 
     def get(self):
         """
@@ -286,7 +285,9 @@ class AccountConfirmation(Resource):
             email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                    confirmation_code)
             subject = "Please confirm your account"
-            helper.send_email(user_row.email, subject, email_template)
+            email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
+                         f" to confirm your account"
+            helper.send_email(user_row.email, subject, email_template, email_text)
             response = helper.make_rest_success_response("Please check your email to confirm your account")
             return make_response(response, 200)
 

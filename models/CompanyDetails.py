@@ -3,14 +3,14 @@ from app import db
 
 class CompanyDetails(db.Model):
     """Store info about the insurance company, to be associated at login"""
-    __tablename = "company_details"
+    __tablename__ = "company_details"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     company_name = db.Column(db.String(100), unique=True, nullable=False)
     company_email = db.Column(db.String(100), nullable=False, unique=True)
     physical_address = db.Column(db.String(300))
     website = db.Column(db.String(150))
-    avatar = db.Column(db.String(50), nullable=False, unique=True)
+    avatar = db.Column(db.String(50), nullable=True)
     company = db.relationship("InsuranceCompany", backref="associated_company")
 
     def __init__(self, company_name, company_email, physical_address, website, avatar):

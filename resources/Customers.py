@@ -38,6 +38,7 @@ class CustomerOnBoarding(Resource):
     otherwise we add a new user create a temporary password, generate customer number for them and associate the new
     user with the affiliated agent/broker
     """
+
     @jwt_required
     def post(self):
         customer_details = customer_parser.parse_args()
@@ -80,17 +81,21 @@ class CustomerOnBoarding(Resource):
             )
             new_individual_profile.save()
 
-            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
-                                                                temporary_pass)
+            email_template = helper.generate_confirmation_template(app.config['LOGIN_ENDPOINT'],
+                                                                   temporary_pass)
             subject = "Nexure Temporary Password"
-            helper.send_email(customer_details['org_email'], subject, email_template)
+            email_text = f"Follow {app.config['LOGIN_ENDPOINT']} to login and use {temporary_pass} " \
+                         f"as your temporary password"
+            helper.send_email(customer_details['org_email'], subject, email_template, email_text)
 
             #  Generate a user account activation email
             confirmation_code = token_handler.user_account_confirmation_token(customer_id)
             email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
-                                                                confirmation_code)
+                                                                   confirmation_code)
             subject = "Please confirm your account"
-            helper.send_email(customer_details['org_email'], subject, email_template)
+            email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
+                         f" to confirm your account"
+            helper.send_email(customer_details['org_email'], subject, email_template, email_text)
         else:
             customer_id = customer.id
 
@@ -148,7 +153,7 @@ class CustomerOnBoarding(Resource):
             else:
                 response_msg = helper.make_rest_fail_response("This affiliation was already created")
                 return make_response(response_msg, 409)
-        
+
         response_msg = helper.make_rest_success_response("Customer has been onbarded successfully")
         return make_response(response_msg, 200)
 
