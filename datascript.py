@@ -126,8 +126,9 @@ def ward():
 def insurance_details():
     df = pd.read_csv("data/insurance-companies.csv")
     for row in df.itertuples():
-        new_company = CompanyDetails(row.org_name, row.email, row.physical_address, row.website)
+        new_company = CompanyDetails(row.org_name, row.email, row.physical_address, row.website, row.avatar)
         new_company.save()
+
 
 if __name__ == '__main__':
     car_makes()
