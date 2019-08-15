@@ -11,6 +11,9 @@ class CarModel(db.Model):
     series = db.Column(db.String(100), nullable=False)
     make = db.Column(db.Integer, db.ForeignKey('car_make.make_id', ondelete='CASCADE', onupdate='CASCADE'))
 
+    # describe the relationship with the vehicle_details of a policy holder
+    vehicle_details = db.relationship("VehicleDetails", backref="car_model")
+
     def __init__(self, model_name, series, make):
         self. model_name = model_name
         self.series = series
