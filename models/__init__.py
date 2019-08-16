@@ -2,4 +2,5 @@ __all__ = ["Broker", "CarMake", "CarModel", "Constituency", "County", "TACustome
            "IndependentAgent", "IndividualCustomer", "InsuranceClass", "InsuranceCompany",
            "InsuranceSubclass", "OrganizationCustomer", "OrganizationTypes", "Role", "IAStaff", "TAStaff", "BRStaff",
            "TiedAgent", "User", "UserProfile", "UserRolePlacement", "Ward", "Permissions", "UserPermissions",
-           "CompanyDetails", "VehicleDetails", "MasterPolicy"]
+           "CompanyDetails", "VehicleDetails", "MasterPolicy", "ChildPolicy", "Benefits", "Loadings", "ICBenefits", 
+           "ICExtensions", "ICLoadings", "PolicyBenefits", "PolicyExtensions", "Extensions"]
