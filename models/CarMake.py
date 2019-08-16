@@ -1,5 +1,6 @@
 from app import db
 
+
 class CarMake(db.Model):
     """
     Stores the car make and the make id
@@ -11,12 +12,17 @@ class CarMake(db.Model):
     def __init__(self, make_id, make_name):
         self.make_id = make_id
         self.make_name = make_name
-    
+
     def save(self):
         db.session.add(self)
         db.session.commit()
-    
+
     @classmethod
     def get_car_make_by_name(cls, name):
         car = cls.query.filter_by(make_name=name).first()
         return car.make_id
+
+    @classmethod
+    def get_all_car_makes(cls):
+        cars = cls.query.all()
+        return cars

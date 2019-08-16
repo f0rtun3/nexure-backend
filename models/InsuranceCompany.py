@@ -3,7 +3,7 @@ from app import db
 
 class InsuranceCompany(db.Model):
     __tablename__ = "insurance_company"
-    insurance_company_id = db.Column(
+    company_id = db.Column(
         db.Integer, autoincrement=True, primary_key=True)
     contact_person = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))

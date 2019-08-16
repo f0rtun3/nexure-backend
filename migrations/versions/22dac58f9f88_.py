@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 18257ec514c6
+Revision ID: 22dac58f9f88
 Revises: 
-Create Date: 2019-08-06 23:28:38.380472
+Create Date: 2019-08-09 17:52:12.073187
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '18257ec514c6'
+revision = '22dac58f9f88'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,6 +23,17 @@ def upgrade():
     sa.Column('make_name', sa.String(length=50), nullable=False),
     sa.PrimaryKeyConstraint('make_id'),
     sa.UniqueConstraint('make_name')
+    )
+    op.create_table('company_details',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('company_name', sa.String(length=100), nullable=False),
+    sa.Column('company_email', sa.String(length=100), nullable=False),
+    sa.Column('physical_address', sa.String(length=300), nullable=True),
+    sa.Column('website', sa.String(length=150), nullable=True),
+    sa.Column('avatar', sa.String(length=50), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('company_email'),
+    sa.UniqueConstraint('company_name')
     )
     op.create_table('county',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
@@ -138,24 +149,21 @@ def upgrade():
     )
     op.create_table('insurance_company',
     sa.Column('insurance_company_id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('company_name', sa.String(length=100), nullable=False),
     sa.Column('contact_person', sa.Integer(), nullable=True),
     sa.Column('company_phone', sa.BIGINT(), nullable=False),
-    sa.Column('company_email', sa.String(length=100), nullable=False),
     sa.Column('ira_registration_number', sa.String(length=15), nullable=True),
     sa.Column('ira_license_number', sa.String(length=15), nullable=True),
     sa.Column('kra_pin', sa.String(length=15), nullable=True),
     sa.Column('website', sa.String(length=150), nullable=True),
     sa.Column('bank_account', sa.BIGINT(), nullable=True),
     sa.Column('mpesa_paybill', sa.BIGINT(), nullable=True),
+    sa.Column('company_details', sa.Integer(), nullable=True),
     sa.Column('facebook', sa.String(length=150), nullable=True),
     sa.Column('instagram', sa.String(length=150), nullable=True),
     sa.Column('twitter', sa.String(length=150), nullable=True),
-    sa.Column('avatar_url', sa.String(length=150), nullable=True),
+    sa.ForeignKeyConstraint(['company_details'], ['company_details.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['contact_person'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('insurance_company_id'),
-    sa.UniqueConstraint('company_email'),
-    sa.UniqueConstraint('company_name'),
     sa.UniqueConstraint('company_phone'),
     sa.UniqueConstraint('ira_license_number'),
     sa.UniqueConstraint('ira_registration_number'),
@@ -250,6 +258,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('broker_id', sa.Integer(), nullable=True),
+    sa.Column('active', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['broker_id'], ['broker.broker_id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
@@ -258,6 +267,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('agent_id', sa.Integer(), nullable=True),
+    sa.Column('active', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['agent_id'], ['independent_agent.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
@@ -266,6 +276,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('agent_id', sa.Integer(), nullable=True),
+    sa.Column('active', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['agent_id'], ['tied_agent.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
@@ -342,5 +353,6 @@ def downgrade():
     op.drop_table('organization_type')
     op.drop_table('insurance_class')
     op.drop_table('county')
+    op.drop_table('company_details')
     op.drop_table('car_make')
     # ### end Alembic commands ###

@@ -275,4 +275,3 @@ customer_parser.add_argument(
     type=str
 )
 
-

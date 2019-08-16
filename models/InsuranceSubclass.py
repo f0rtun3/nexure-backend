@@ -7,7 +7,7 @@ class InsuranceSubclass(db.Model):
     name = db.Column(db.String(50), nullable=False)
     parent_class = db.Column(db.Integer, db.ForeignKey('insurance_class.class_id', ondelete='CASCADE', onupdate='CASCADE'))
 
-    def __init__(self, class_code,name, parent_class):
+    def __init__(self, class_code, name, parent_class):
         self.name = name
         self.class_code = class_code
         self.parent_class = parent_class

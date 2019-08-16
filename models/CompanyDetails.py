@@ -13,7 +13,7 @@ class CompanyDetails(db.Model):
     avatar = db.Column(db.String(50), nullable=True)
     company = db.relationship("InsuranceCompany", backref="associated_company")
 
-    def __init__(self, company_name, company_email, physical_address, website, avatar):
+    def __init__(self, company_name, company_email, physical_address, website, avatar=None):
         self.company_name = company_name
         self.company_email = company_email
         self.physical_address = physical_address

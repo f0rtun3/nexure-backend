@@ -19,3 +19,8 @@ class CarModel(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+    
+    @classmethod
+    def get_models_by_make_id(cls, make_id):
+        car_models = cls.query.filter_by(make=make_id)
+        return car_models
