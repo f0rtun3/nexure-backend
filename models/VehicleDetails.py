@@ -11,7 +11,7 @@ class VehicleDetails(db.Model):
     reg_number = db.Column(db.String(8))
     model = db.Column(db.Integer, db.ForeignKey('car_model.model_id', ondelete='CASCADE', onupdate='CASCADE'))
     color = db.Column(db.String(20))
-    body_type = db.column(db.String(20))
+    body_type = db.Column(db.String(20))
     origin = db.Column(db.String(20), nullable=True)
     sum_insured = db.Column(db.Integer, nullable=False)
     policy_id = db.Column(db.Integer, db.ForeignKey('child_policy.id', ondelete='CASCADE', onupdate='CASCADE'))

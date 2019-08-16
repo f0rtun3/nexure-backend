@@ -33,7 +33,7 @@ class ChildPolicy(db.Model):
         'master_policy.id', onupdate='CASCADE', ondelete='CASCADE'))
 
     def __init__(self, vehicle, customer_number, rate, date_created, date_expiry, premium_amount, transaction_type,
-                agency_id, agency_role, master_policy):
+                 agency_id, agency_role, master_policy):
         self.vehicle = vehicle
         self.customer_number = customer_number
         self.rate = rate
@@ -58,11 +58,11 @@ class ChildPolicy(db.Model):
         db.session.remove(self)
         db.session.commit()
 
-    def add_benefits(self):
+    def add_benefits(self, benefit_id, limit, premium):
+        self.benefits.append(benefit_id, limit, premium)
+
+    def add_loadings(self, ):
         pass
-    
-    def add_loadings(self):
-        pass
-    
+
     def add_extension(self):
         pass
