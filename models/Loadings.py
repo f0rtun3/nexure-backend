@@ -2,7 +2,7 @@ from app import db
 
 class Loadings(db.Model):
     __tablename__ = 'loading'
-    """Contains extensions for a particular child polict"""
+    """Contains loadings for a particular child policy"""
     id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
     name = db.Column(db.String(100))
 
