@@ -8,7 +8,7 @@ class ICLoadings(db.Model):
     id = db.Column(db.Integer, autoincrement=True,
                    primary_key=True, nullable=False)
     insurance_company = db.Column(db.Integer, db.ForeignKey(
-        'insurance_company.company_id', onupdate='CASCADE', ondelete='CASCADE'))
+        'insurance_company.id', onupdate='CASCADE', ondelete='CASCADE'))
     loading = db.Column(db.Integer, db.ForeignKey(
         'loading.id', onupdate='CASCADE', ondelete='CASCADE'))
     rate = db.Column(db.Float, nullable=False)
@@ -30,5 +30,20 @@ class ICLoadings(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+    
+    @classmethod
+    def get_loadings_by_company_id(cls, company_id):
+        """
+        Returns id, loading_id and rate for
+        every list of loadings under a particular company 
+        """
+        loading_rows = cls.query.filter_by(insurance_company=company_id).all()
+        loadings = [
+            {
+                "id": loading.id,
+                "loading_id": loading.loading,
+                "rate": loading.rate}
+            for loading in loading_rows]
+        return loadings
 
     

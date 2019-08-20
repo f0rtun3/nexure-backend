@@ -3,7 +3,7 @@ from app import db
 
 class InsuranceCompany(db.Model):
     __tablename__ = "insurance_company"
-    company_id = db.Column(
+    id = db.Column(
         db.Integer, autoincrement=True, primary_key=True)
     contact_person = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))
@@ -16,6 +16,7 @@ class InsuranceCompany(db.Model):
     mpesa_paybill = db.Column(db.BIGINT, nullable=True, unique=True)
     company_details = db.Column(db.Integer, db.ForeignKey(
         'company_details.id', ondelete='CASCADE', onupdate='CASCADE'))
+    rate = db.Column(db.Float, nullable=False)
 
     # social media handles
     facebook = db.Column(db.String(150))
@@ -24,7 +25,7 @@ class InsuranceCompany(db.Model):
 
     def __init__(self, company_phone, contact_person, company_details, ira_registration_number=None,
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
-                 mpesa_paybill=None):
+                 mpesa_paybill=None, rate=None):
 
         self.company_phone = company_phone
         self.contact_person = contact_person
@@ -37,6 +38,7 @@ class InsuranceCompany(db.Model):
         self.twitter = twitter
         self.mpesa_paybill = mpesa_paybill
         self.company_details = company_details
+        self.rate = rate
 
     def __repr__(self):
         return f"{self.company_details}"
@@ -74,7 +76,8 @@ class InsuranceCompany(db.Model):
 
     @classmethod
     def get_company_by_contact_person(cls, user_id):
-        return cls.filter_by(contact_person=user_id).first()
+        company = cls.filter_by(contact_person=user_id).first()
+        return company
 
     @classmethod
     def get_all_companies(cls):

@@ -9,14 +9,16 @@ class VehicleDetails(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     reg_number = db.Column(db.String(8))
-    model = db.Column(db.Integer, db.ForeignKey('car_model.model_id', ondelete='CASCADE', onupdate='CASCADE'))
+    model = db.Column(db.Integer, db.ForeignKey(
+        'car_model.model_id', ondelete='CASCADE', onupdate='CASCADE'))
     color = db.Column(db.String(20))
     body_type = db.Column(db.String(20))
     origin = db.Column(db.String(20), nullable=True)
     sum_insured = db.Column(db.Integer, nullable=False)
-    policy_id = db.Column(db.Integer, db.ForeignKey('child_policy.id', ondelete='CASCADE', onupdate='CASCADE'))
+    driver = db.Column(db.Integer, db.ForeignKey(
+        'driver.id', ondelete='CASCADE', onupdate='CASCADE'))
 
-    def __init__(self, reg_number, model, color, body_type, origin, policy_id, sum_insured):
+    def __init__(self, reg_number, model, color, body_type, origin, policy_id, sum_insured, driver):
         self.reg_number = reg_number
         self.model = model
         self.color = color
@@ -24,6 +26,7 @@ class VehicleDetails(db.Model):
         self.origin = origin
         self.policy_id = policy_id
         self.sum_insured = sum_insured
+        self.driver = driver
 
     def save(self):
         db.session.add(self)

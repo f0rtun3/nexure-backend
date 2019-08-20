@@ -24,3 +24,21 @@ class Loadings(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+    
+    @classmethod
+    def get_loading_id_by_name(cls, loading_name):
+        loading = cls.query.filter_by(name=loading_name).first()
+        return loading.id
+    
+    @classmethod
+    def get_name_by_id(cls, loading_id):
+        loading = cls.query.filter_by(id=loading_id).first()
+        return loading.name
+        
+    @classmethod
+    def get_all_loadings(cls):
+        loading_rows = cls.query.all()
+        loadings = []
+        for i in loading_rows:
+            loadings.append(i.name)
+        return loadings

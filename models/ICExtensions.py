@@ -9,7 +9,7 @@ class ICExtensions(db.Model):
     id = db.Column(db.Integer, autoincrement=True,
                    primary_key=True, nullable=False)
     insurance_company = db.Column(db.Integer, db.ForeignKey(
-        'insurance_company.company_id', onupdate='CASCADE', ondelete='CASCADE'))
+        'insurance_company.id', onupdate='CASCADE', ondelete='CASCADE'))
     extension = db.Column(db.Integer, db.ForeignKey(
         'extension.id', onupdate='CASCADE', ondelete='CASCADE'))
     free_limit = db.Column(db.Float, nullable=False)
@@ -35,3 +35,21 @@ class ICExtensions(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    @classmethod
+    def get_extensions_by_company_id(cls, company_id):
+        """
+        Returns id, extension_id, free_limit, max_limit and rate for
+        every list of extensions under a particular company 
+        """
+        extension_rows = cls.query.filter_by(insurance_company=company_id).all()
+        extensions = [
+            {
+                "id": extension.id,
+                "extension_id": extension.extension,
+                "free_limit": extension.free_limit,
+                "max_limit": extension.max_limit,
+                "rate": extension.rate}
+            for extension in extension_rows]
+        return extensions
+

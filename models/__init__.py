@@ -1,6 +1,5 @@
-__all__ = ["Broker", "CarMake", "CarModel", "Constituency", "County", "TACustomer", "BRCustomer", "IACustomer",
-           "IndependentAgent", "IndividualCustomer", "InsuranceClass", "InsuranceCompany",
-           "InsuranceSubclass", "OrganizationCustomer", "OrganizationTypes", "Role", "IAStaff", "TAStaff", "BRStaff",
-           "TiedAgent", "User", "UserProfile", "UserRolePlacement", "Ward", "Permissions", "UserPermissions",
-           "CompanyDetails", "VehicleDetails", "MasterPolicy", "ChildPolicy", "Benefits", "Loadings", "ICBenefits", 
-           "ICExtensions", "ICLoadings", "PolicyBenefits", "PolicyExtensions", "Extensions"]
+__all__ = ["Role", "User", "UserProfile", "UserRolePlacement", "Broker", "CarMake", "CarModel", "Constituency", "County", "TACustomer", "BRCustomer", "IACustomer",
+           "IndependentAgent", "IndividualCustomer", "InsuranceClass", "Driver", "InsuranceCompany",
+           "InsuranceSubclass", "OrganizationCustomer", "OrganizationTypes", "IAStaff", "TAStaff", "BRStaff",
+           "TiedAgent", "Ward", "CompanyDetails", "Permissions", "UserPermissions", "VehicleDetails", "MasterPolicy", "ChildPolicy", "Benefits", "Loadings", "ICBenefits",
+           "ICExtensions", "ICLoadings", "PolicyBenefits", "PolicyExtensions", "PolicyLoadings", "Extensions"]

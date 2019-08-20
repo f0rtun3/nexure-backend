@@ -1,5 +1,6 @@
 from app import db
-    
+
+
 class InsuranceClass(db.Model):
     """
     Insurance class
@@ -11,6 +12,7 @@ class InsuranceClass(db.Model):
     acronym = db.Column(db.String(3), unique=True, nullable=False)
     sector = db.Column(db.String(100), nullable=False)
     subclass = db.relationship("InsuranceSubclass", backref="subclass")
+    benefits = db.relationship("Benefit", backref="insurance_benefits")
 
     def __init__(self, class_id, class_name, acronym, sector):
         self.class_id = class_id
@@ -25,4 +27,4 @@ class InsuranceClass(db.Model):
     @classmethod
     def get_class_by_name(cls, name):
         parent_class = cls.query.filter_by(class_name=name).first()
-        return parent_class.class_id
+        return parent_class

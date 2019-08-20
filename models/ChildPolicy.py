@@ -7,8 +7,7 @@ class ChildPolicy(db.Model):
     __tablename__ = 'child_policy'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    vehicle = db.Column(db.Integer, db.ForeignKey(
-        'vehicle_details.id', ondelete='CASCADE', onupdate='CASCADE'))
+    vehicle = db.Column(db.Integer, db.ForeignKey('vehicle_details.id', ondelete='CASCADE', onupdate='CASCADE'))
     # links to the association table for benefits
     benefits = db.relationship('ICBenefits', secondary='policy_benefits',
                                lazy='dynamic', backref=db.backref('benefits', lazy='dynamic'))
@@ -32,12 +31,11 @@ class ChildPolicy(db.Model):
     master_policy = db.Column(db.Integer, db.ForeignKey(
         'master_policy.id', onupdate='CASCADE', ondelete='CASCADE'))
 
-    def __init__(self, vehicle, customer_number, rate, date_created, date_expiry, premium_amount, transaction_type,
+    def __init__(self, vehicle, customer_number, rate, date_expiry, premium_amount, transaction_type,
                  agency_id, agency_role, master_policy):
         self.vehicle = vehicle
         self.customer_number = customer_number
         self.rate = rate
-        self.date_created = date_created
         self.date_expiry = date_expiry
         self.premium_amount = premium_amount
         self.transaction_type = transaction_type
@@ -58,11 +56,11 @@ class ChildPolicy(db.Model):
         db.session.remove(self)
         db.session.commit()
 
-    def add_benefits(self, benefit_id, limit, premium):
-        self.benefits.append(benefit_id, limit, premium)
+    def add_benefit(self, benefit_id, amount_paid):
+        self.benefits.append(benefit_id, amount_paid)
 
-    def add_loadings(self, ):
-        pass
+    def add_loading(self, loading_id, amount_paid):
+        self.loadings.append(loading_id, amount)
 
-    def add_extension(self):
-        pass
+    def add_extension(self, extension_id, amount_paid):
+        self.extensions.append(extension_id, amount_paid)

@@ -274,4 +274,84 @@ customer_parser.add_argument(
     "avatar_url",
     type=str
 )
+# Underwriting parser
+"""Contains customer details"""
+underwriting_parser = reqparse.RequestParser()
+
+underwriting_parser.add_argument(
+    "transaction_type",
+    type=str
+)
+underwriting_parser.add_argument(
+    "customer_details",
+    type=dict
+)
+underwriting_parser.add_argument(
+    "driver_details",
+    type=dict
+)
+underwriting_parser.add_argument(
+    "customer_number",
+    type=str
+)
+underwriting_parser.add_argument(
+    "vehicle_details",
+    type=dict
+)
+underwriting_parser.add_argument(
+    "driver",
+    type=dict
+)
+underwriting_parser.add_argument(
+    "benefits",
+    type=dict,
+    action='append'
+)
+underwriting_parser.add_argument(
+    "extensions",
+    type=dict,
+    action='append'
+)
+underwriting_parser.add_argument(
+    "loadings",
+    type=dict,
+    action='append'
+)
+underwriting_parser.add_argument(
+    "expiry_date",
+    type=str
+)
+underwriting_parser.add_argument(
+    "insurance_subclass",
+    type=str
+)
+underwriting_parser.add_argument(
+    "insurance_class",
+    type=str
+)
+underwriting_parser.add_argument(
+    "rate",
+    type=str
+)
+
+# Insurance Policy handler parser
+"""Contains details that are specific to a particular company for a particular policy such as benefits, extensions, loadings"""
+
+policy_parser = reqparse.RequestParser()
+policy_parser.add_argument(
+    "rate",
+    type=str
+)
+policy_parser.add_argument(
+    "name",
+    type=str
+)
+policy_parser.add_argument(
+    "free_limit",
+    type=str
+)
+policy_parser.add_argument(
+    "max_limit",
+    type=str
+)
 
