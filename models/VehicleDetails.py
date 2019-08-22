@@ -17,12 +17,15 @@ class VehicleDetails(db.Model):
     sum_insured = db.Column(db.Integer, nullable=False)
     driver = db.Column(db.Integer, db.ForeignKey(
         'driver.id', ondelete='CASCADE', onupdate='CASCADE'))
-    # no of seats
-    # year of manufacture
-    # engine capacity
-    # modifications: accessory, make, estimated_value, serial_no
+    no_of_seats = db.Column(db.Integer, nullable=False)
+    manufacture_year = db.Column(db.Integer, nullable=False)
+    engine_capacity = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, reg_number, model, color, body_type, origin, policy_id, sum_insured, driver):
+    # link to vehicle modifications
+    modifications = db.relationship("VehicleModifications", backref="user")
+    
+    def __init__(self, reg_number, model, color, body_type, origin, policy_id, sum_insured, driver,
+                 no_of_seats, manufacture_year, engine_capacity):
         self.reg_number = reg_number
         self.model = model
         self.color = color
@@ -31,6 +34,9 @@ class VehicleDetails(db.Model):
         self.policy_id = policy_id
         self.sum_insured = sum_insured
         self.driver = driver
+        self.no_of_seats = no_of_seats
+        self.manufacture_year = manufacture_year
+        self.engine_capacity = engine_capacity
 
     def save(self):
         db.session.add(self)

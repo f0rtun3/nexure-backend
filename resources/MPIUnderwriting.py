@@ -21,9 +21,10 @@ from models.TAStaff import TAStaff
 from models.IAStaff import IAStaff
 from models.Role import Role
 from models.InsuranceClass import InsuranceClass
-from models.InsuranceSubClass import InsuranceSubClass
+from models.InsuranceSubclass import InsuranceSubclass
 from models.InsuranceCompany import InsuranceCompany
 from models.OrganizationCustomer import OrganizationCustomer
+from models.VehicleModifications import VehicleModifications
 from models.Driver import Driver
 import helpers.helpers as helper
 from helpers.parsers import underwriting_parser
@@ -35,7 +36,7 @@ import json
 
 
 class MPIUnderwriting(Resource):
-    @get_jwt_identity
+    @jwt_required
     def post(self):
         # get the current agency details
         uid = get_jwt_identity()
@@ -74,9 +75,19 @@ class MPIUnderwriting(Resource):
                 vehicle.body_type,
                 vehicle.origin,
                 vehicle.sum_insured,
-                new_driver.id
+                new_driver.id,
+                vehicle.no_of_seats,
+                vehicle.manufacture_year,
+                vehicle.engine_capacity
             )
             new_vehicle.save()
+
+            # store modifications
+            modifications = policy_details['modifications']
+            for i in modifications:
+                new_accessory = VehicleModifications(
+                    i.accessory_name, i.make, i.estimated_value, i.serial_no, new_vehicle.id)
+                new_accessory.save()
 
             # create master policy
             # first generate mp number
@@ -87,7 +98,7 @@ class MPIUnderwriting(Resource):
             new_policy.set_mpi(class_details.acronym)
             ms_policy_number = new_policy.generate_policy_no()
             master_policy = MasterPolicy(
-                ms_policy_number, customer_number, policy_details['expiry_date'])
+                ms_policy_number, customer_number, policy_details['expiry_date'], policy_details['insurance_company'])
             master_policy.save()
 
             # create child policy
@@ -107,7 +118,6 @@ class MPIUnderwriting(Resource):
                 policy_details['rate'],
                 policy_details['expiry_date'],
                 policy_details['premium_amount'],
-                policy_details['expiry_date'],
                 policy_details['transaction_type'],
                 master_policy.id
             )
@@ -181,7 +191,7 @@ class MPIUnderwriting(Resource):
             # get Independent agency by contact person
             ind_agent = IndependentAgent.get_agency_by_contact_person(uid)
             return ind_agent.id
-        
+
         elif role == "IC":
             insurance = InsuranceCompany.get_company_by_contact_person(uid)
             return insurance.id

@@ -54,31 +54,3 @@ class LoadingsHandler(Resource):
     def put(self):
         """Update loading, change rate etc."""
         pass
-
-    @jwt_required
-    def get(self, company_id):
-        """Get list of loadings associated with a particular company"""
-        loadings_list = {}
-
-        loadings = ICLoadings.get_loadings_by_company_id(company_id)
-
-        if loadings:
-            for i in loadings:
-                # first get the extension name since ICExtension model only returns the benefit id
-                loading_name = Loadings.get_name_by_id(i.loading_id)
-                data = {
-                    "id": i.id,
-                    "loading_name": loading_name,
-                    "rate": i.rate
-                }
-                loadings_list.update(data)
-
-            message = "Request successful"
-            response = helper.make_rest_success_response(
-                message, loadings_list)
-            return make_response(response, 200)
-
-        else:
-            message = "No data was found"
-            response = helper.make_rest_fail_response(message)
-            return make_response(response, 404)

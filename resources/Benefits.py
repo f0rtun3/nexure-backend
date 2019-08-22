@@ -58,32 +58,3 @@ class BenefitHandler(Resource):
         """Update benefit, change the free limit, or max limit, change rate etc."""
         pass
 
-    @jwt_required
-    def get(self, company_id):
-        """Get list of benefits associated with a particular company"""
-        benefits_list = {}
-
-        benefits = ICBenefits.get_benefits_by_company_id(company_id)
-
-        if benefits:
-            for i in benefits:
-                # first get the benefit name since ICBenefits model only returns the benefit id
-                benefit_name = Benefit.get_name_by_id(i.benefit_id)
-                data = {
-                    "id": i.id,
-                    "benefit_name": benefit_name,
-                    "free_limit": i.free_limit,
-                    "max_limit": i.max_limit,
-                    "rate": i.rate
-                }
-                benefits_list.update(data)
-
-            message = "Request successful"
-            response = helper.make_rest_success_response(
-                message, benefits_list)
-            return make_response(response, 200)
-
-        else:
-            message = "No data was found"
-            response = helper.make_rest_fail_response(message)
-            return make_response(response, 404)

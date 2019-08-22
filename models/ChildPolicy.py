@@ -19,7 +19,7 @@ class ChildPolicy(db.Model):
                                lazy='dynamic', backref=db.backref('loadings', lazy='dynamic'))
     customer_number = db.Column(db.String(50))
     rate = db.Column(db.Float, nullable=False)
-    date_created = db.Column(db.DateTime, default=db.func.now())
+    date_registered = db.Column(db.DateTime, default=db.func.now())
     date_expiry = db.Column(db.DateTime)
     premium_amount = db.Column(db.Float, nullable=False)
     transaction_type = db.Column(db.String(50), nullable=False)
@@ -62,7 +62,7 @@ class ChildPolicy(db.Model):
         self.benefits.append(benefit_id, amount_paid)
 
     def add_loading(self, loading_id, amount_paid):
-        self.loadings.append(loading_id, amount)
+        self.loadings.append(loading_id, amount_paid)
 
     def add_extension(self, extension_id, amount_paid):
         self.extensions.append(extension_id, amount_paid)

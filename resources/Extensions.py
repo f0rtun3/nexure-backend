@@ -55,34 +55,3 @@ class ExtensionHandler(Resource):
     def put(self):
         """Update benefit, change the free limit, or max limit, change rate etc."""
         pass
-
-    @jwt_required
-    def get(self, company_id):
-        """Get list of extensions associated with a particular company"""
-        
-        extensions_list = {}
-
-        extensions = ICExtensions.get_extensions_by_company_id(company_id)
-
-        if extensions:
-            for i in extensions:
-                # first get the extension name since ICExtension model only returns the benefit id
-                extension_name = Extension.get_name_by_id(i.benefit_id)
-                data = {
-                    "id": i.id,
-                    "extension_name": extension_name,
-                    "free_limit": i.free_limit,
-                    "max_limit": i.max_limit,
-                    "rate": i.rate
-                }
-                extensions_list.update(data)
-
-            message = "Request successful"
-            response = helper.make_rest_success_response(
-                message, extensions_list)
-            return make_response(response, 200)
-
-        else:
-            message = "No data was found"
-            response = helper.make_rest_fail_response(message)
-            return make_response(response, 404)

@@ -44,7 +44,10 @@ class CustomerDetails(Resource):
         # get user id from customer email
         customer = User.get_user_by_email(email)
         # get customer details
-        customer_number = self.get_customer_details_by_user_id(customer.id)
+        customer_details = self.get_customer_details_by_user_id(customer.id)
+        
+        response_msg = helper.make_rest_success_response("Success", customer_details)
+        return make_response(response_msg, 200)
 
     @staticmethod
     def get_customer_details_by_user_id(user_id):
