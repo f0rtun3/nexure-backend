@@ -59,16 +59,11 @@ class BenefitHandler(Resource):
         pass
 
     @jwt_required
-    def get(self):
+    def get(self, company_id):
         """Get list of benefits associated with a particular company"""
-        # get the current agency details
-        uid = get_jwt_identity()
-        # use the uid to get company through the company contact_id
-        company = InsuranceCompany.get_company_by_contact_person(uid)
-        # data to be returned with the list of benefits as a dict.
         benefits_list = {}
 
-        benefits = ICBenefits.get_benefits_by_company_id(company.id)
+        benefits = ICBenefits.get_benefits_by_company_id(company_id)
 
         if benefits:
             for i in benefits:

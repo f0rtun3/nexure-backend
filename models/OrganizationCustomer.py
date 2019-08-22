@@ -8,6 +8,7 @@ class OrganizationCustomer(db.Model):
     __tablename__ = 'organization_customer'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    customer_number = db.Column(db.String(50))
     org_type = db.Column(db.String(100), nullable=False)
     org_name = db.Column(db.String(100), unique=True)
     org_phone = db.Column(db.BIGINT)
@@ -20,19 +21,18 @@ class OrganizationCustomer(db.Model):
     county = db.Column(db.String(30))
     constituency = db.Column(db.String(30))
     ward = db.Column(db.String(30))
-
     # organization contact person details
     contact_person = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
     # social media handles
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
-
     created_on = db.Column(db.DateTime, default=db.func.now())
     updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
     def __init__(self, org_type, org_name, org_phone, email, org_registration_number, physical_address, postal_address,
-                 postal_code, postal_town, county, facebook, instagram, twitter, constituency, ward, contact_person):
+                 postal_code, postal_town, county, facebook, instagram, twitter, constituency, ward, contact_person,
+                 customer_number):
         self.org_type = org_type
         self.org_name = org_name
         self.org_phone = org_phone
@@ -49,6 +49,7 @@ class OrganizationCustomer(db.Model):
         self.instagram = instagram
         self.twitter = twitter
         self.contact_person = contact_person
+        self.customer_number = customer_number
 
     def __repr__(self):
         return f"{self.org_name}"

@@ -34,7 +34,7 @@ class LoadingsHandler(Resource):
         if loading_name not in existing_loadings:
             new_loading = Loadings(loading_name)
             new_loading.save()
-        
+
         """
         Store loadings offered by a particular company together with limit
         """
@@ -47,7 +47,8 @@ class LoadingsHandler(Resource):
         """
         Send success response
         """
-        response_msg = helper.make_rest_success_response("Loading added successfully")
+        response_msg = helper.make_rest_success_response(
+            "Loading added successfully")
         return make_response(response_msg, 200)
 
     def put(self):
@@ -55,16 +56,11 @@ class LoadingsHandler(Resource):
         pass
 
     @jwt_required
-    def get(self):
+    def get(self, company_id):
         """Get list of loadings associated with a particular company"""
-        # get the current agency details
-        uid = get_jwt_identity()
-        # use the uid to get company through the company contact_id
-        company = InsuranceCompany.get_company_by_contact_person(uid)
-        # data to be returned with the list of loadings as a dict.
         loadings_list = {}
 
-        loadings = ICLoadings.get_loadings_by_company_id(company.id)
+        loadings = ICLoadings.get_loadings_by_company_id(company_id)
 
         if loadings:
             for i in loadings:
@@ -78,16 +74,11 @@ class LoadingsHandler(Resource):
                 loadings_list.update(data)
 
             message = "Request successful"
-            response = helper.make_rest_success_response(message, loadings_list)
+            response = helper.make_rest_success_response(
+                message, loadings_list)
             return make_response(response, 200)
-        
+
         else:
             message = "No data was found"
             response = helper.make_rest_fail_response(message)
             return make_response(response, 404)
-
-            
-            
-
-        
-        

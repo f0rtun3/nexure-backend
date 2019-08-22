@@ -118,5 +118,4 @@ class UserProfile(db.Model):
         if date is not None:
             format_str = '%d/%m/%Y'
             converted_date = datetime.strptime(date, format_str)
-            return converted_date.date()
-        return 
+            return converted_date.date() 

@@ -35,6 +35,7 @@ import json
 
 
 class MPIUnderwriting(Resource):
+    @get_jwt_identity
     def post(self):
         # get the current agency details
         uid = get_jwt_identity()
@@ -154,7 +155,7 @@ class MPIUnderwriting(Resource):
         elif transaction_type == 'CANCELLATION':
             pass
 
-    def get(self):
+    def get(self, ):
         # fetch list of child policies associated with a particular user, using their email
         pass
 
@@ -180,6 +181,7 @@ class MPIUnderwriting(Resource):
             # get Independent agency by contact person
             ind_agent = IndependentAgent.get_agency_by_contact_person(uid)
             return ind_agent.id
-    
-    @staticmethod
-    
+        
+        elif role == "IC":
+            insurance = InsuranceCompany.get_company_by_contact_person(uid)
+            return insurance.id

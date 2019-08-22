@@ -12,8 +12,10 @@ from resources.Cars import CarHandler
 from resources.Extensions import ExtensionHandler
 from resources.Loadings import LoadingsHandler
 from resources.Benefits import BenefitHandler
+from resources.InsuranceCompany import Companies
 
 
+api.add_resource(Companies, '/api/companies')
 api.add_resource(UserRegister, '/api/user')
 api.add_resource(UserLogin, '/api/login')
 api.add_resource(CustomerOnBoarding, '/api/customer')

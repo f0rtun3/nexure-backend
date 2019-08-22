@@ -103,7 +103,7 @@ class CustomerOnBoarding(Resource):
         if customer_details['type'] == "Individual":
             #   create a new individual customer detail
             customer_acc_number = self.create_customer_number("IN", customer_id, customer_details['country'])
-            self.create_individual_customer(customer_id, customer_details['salutation'])
+            self.create_individual_customer(customer_id, customer_acc_number, customer_details['salutation'])
             self.role_placement(customer_id, "IND")
         elif customer_details['type'] == "Organization":
             customer_acc_number = self.create_customer_number(customer_details['org_type'],
@@ -124,7 +124,8 @@ class CustomerOnBoarding(Resource):
                 customer_details['facebook'],
                 customer_details['instagram'],
                 customer_details['twitter'],
-                customer_id
+                customer_id,
+                customer_acc_number
             )
             new_org_customer.save()
             self.role_placement(customer_id, "ORG")
@@ -206,8 +207,8 @@ class CustomerOnBoarding(Resource):
         return make_response(response, 200)
 
     @staticmethod
-    def create_individual_customer(cust_id, salutation):
-        new_individual_cust = IndividualCustomer(cust_id, salutation)
+    def create_individual_customer(cust_id, customer_number, salutation):
+        new_individual_cust = IndividualCustomer(cust_id, customer_number, salutation)
         new_individual_cust.save()
 
     def get_role_name(self, uid):

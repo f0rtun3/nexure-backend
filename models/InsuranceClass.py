@@ -12,7 +12,6 @@ class InsuranceClass(db.Model):
     acronym = db.Column(db.String(3), unique=True, nullable=False)
     sector = db.Column(db.String(100), nullable=False)
     subclass = db.relationship("InsuranceSubclass", backref="subclass")
-    benefits = db.relationship("Benefit", backref="insurance_benefits")
 
     def __init__(self, class_id, class_name, acronym, sector):
         self.class_id = class_id

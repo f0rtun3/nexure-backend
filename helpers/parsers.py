@@ -334,7 +334,7 @@ underwriting_parser.add_argument(
     type=str
 )
 
-# Insurance Policy handler parser
+# Insurance Policy products handler parser
 """Contains details that are specific to a particular company for a particular policy such as benefits, extensions, loadings"""
 
 policy_parser = reqparse.RequestParser()
@@ -353,5 +353,9 @@ policy_parser.add_argument(
 policy_parser.add_argument(
     "max_limit",
     type=str
+)
+policy_parser.add_argument(
+    "product",
+    type=dict
 )
 

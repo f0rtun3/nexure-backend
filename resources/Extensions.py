@@ -57,16 +57,12 @@ class ExtensionHandler(Resource):
         pass
 
     @jwt_required
-    def get(self):
+    def get(self, company_id):
         """Get list of extensions associated with a particular company"""
-        # get the current agency details
-        uid = get_jwt_identity()
-        # use the uid to get company through the company contact_id
-        company = InsuranceCompany.get_company_by_contact_person(uid)
-        # data to be returned with the list of extensions as a dict.
+        
         extensions_list = {}
 
-        extensions = ICExtensions.get_extensions_by_company_id(company.id)
+        extensions = ICExtensions.get_extensions_by_company_id(company_id)
 
         if extensions:
             for i in extensions:

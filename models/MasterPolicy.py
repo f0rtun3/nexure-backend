@@ -22,7 +22,7 @@ class MasterPolicy(db.Model):
     # the status of the policy holder's policy
     # it may be changed depending on various circumstances
     status = db.Column(db.Boolean, nullable=False, default=True)
-    child_policy = db.relationship("ChildPolicy", backref="master_policy")
+    child_policy = db.relationship("ChildPolicy", backref="child_policy")
 
     def __init__(self, mp_number, customer, date_expiry):
         self.mp_number = mp_number

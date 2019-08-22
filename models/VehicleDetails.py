@@ -17,6 +17,10 @@ class VehicleDetails(db.Model):
     sum_insured = db.Column(db.Integer, nullable=False)
     driver = db.Column(db.Integer, db.ForeignKey(
         'driver.id', ondelete='CASCADE', onupdate='CASCADE'))
+    # no of seats
+    # year of manufacture
+    # engine capacity
+    # modifications: accessory, make, estimated_value, serial_no
 
     def __init__(self, reg_number, model, color, body_type, origin, policy_id, sum_insured, driver):
         self.reg_number = reg_number

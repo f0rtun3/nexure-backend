@@ -72,7 +72,7 @@ class InsuranceCompany(db.Model):
 
     @classmethod
     def get_company_by_id(cls, insurance_company_id):
-        return cls.query.filter_by(insurance_company_id=insurance_company_id).first()
+        return cls.query.filter_by(id=insurance_company_id).first()
 
     @classmethod
     def get_company_by_contact_person(cls, user_id):
@@ -83,6 +83,7 @@ class InsuranceCompany(db.Model):
     def get_all_companies(cls):
         company_rows = cls.query.all()
         companies = [{
+            "id": company.id,
             "contact_person": company.contact_person,
             "company_number": company.company_phone,
             "ira_registration_number": company.ira_registration_number,
@@ -91,7 +92,8 @@ class InsuranceCompany(db.Model):
             "website": company.website,
             "facebook": company.facebook,
             "instagram": company.instagram,
-            "twitter": company.twitter
+            "twitter": company.twitter,
+            "rate": company.rate
         } for company in company_rows]
-
+                
         return companies

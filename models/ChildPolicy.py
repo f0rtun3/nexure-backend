@@ -30,6 +30,8 @@ class ChildPolicy(db.Model):
         'role.id', onupdate='CASCADE', ondelete='CASCADE'))
     master_policy = db.Column(db.Integer, db.ForeignKey(
         'master_policy.id', onupdate='CASCADE', ondelete='CASCADE'))
+    date_activated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    is_active = db.Column(db.Boolean, default=False)
 
     def __init__(self, vehicle, customer_number, rate, date_expiry, premium_amount, transaction_type,
                  agency_id, agency_role, master_policy):

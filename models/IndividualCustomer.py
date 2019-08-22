@@ -1,7 +1,6 @@
 from app import db
 
 
-
 class IndividualCustomer(db.Model):
     """
     Individual customer user
@@ -11,6 +10,7 @@ class IndividualCustomer(db.Model):
     __tablename__ = 'individual_customer'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    customer_number = db.Column(db.String(50))
     user_id = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))
     salutation = db.Column(db.String(4), nullable=False)
@@ -18,9 +18,10 @@ class IndividualCustomer(db.Model):
     def __repr__(self):
         return f"{self.user}"
 
-    def __init__(self, user_id, salutation):
+    def __init__(self, user_id, customer_number, salutation):
         self.user_id = user_id
         self.salutation = salutation
+        self.customer_number = customer_number
 
     def save(self):
         db.session.add(self)
@@ -38,3 +39,8 @@ class IndividualCustomer(db.Model):
     @classmethod
     def get_customer_by_user_id(cls, uid):
         return cls.query.filter_by(user_id=uid).first()
+
+    @classmethod
+    def get_customer_number(cls, uid):
+        customer = cls.query.filter_by(user_id=uid).first()
+        return customer.customer_number
