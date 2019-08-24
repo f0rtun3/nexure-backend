@@ -8,6 +8,5 @@ policy_benefits = db.Table('policy_benefits',
                                      db.ForeignKey('child_policy.id')),
                            db.Column('ic_benefit_id', db.Integer,
                                      db.ForeignKey('ic_benefit.id')),
-                           db.Column('limit', db.Float, nullable=False),
-                           db.Column('premium', db.Float, nullable=False)
+                           db.Column('amount', db.Float, nullable=False),
                            )

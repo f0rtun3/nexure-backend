@@ -31,7 +31,7 @@ class CompanyDetails(Resource):
                 benefit_name = Benefit.get_name_by_id(i.benefit_id)
                 data = {
                     "id": i.id,
-                    "benefit_name": benefit_name,
+                    "name": benefit_name,
                     "free_limit": i.free_limit,
                     "max_limit": i.max_limit,
                     "rate": i.rate
@@ -49,7 +49,7 @@ class CompanyDetails(Resource):
                 loading_name = Loadings.get_name_by_id(i.loading_id)
                 data = {
                     "id": i.id,
-                    "loading_name": loading_name,
+                    "name": loading_name,
                     "rate": i.rate
                 }
                 loadings_list.append(data)
@@ -65,7 +65,7 @@ class CompanyDetails(Resource):
                 extension_name = Extension.get_name_by_id(i.benefit_id)
                 data = {
                     "id": i.id,
-                    "extension_name": extension_name,
+                    "name": extension_name,
                     "free_limit": i.free_limit,
                     "max_limit": i.max_limit,
                     "rate": i.rate

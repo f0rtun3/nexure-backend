@@ -296,18 +296,21 @@ underwriting_parser.add_argument(
     type=str
 )
 underwriting_parser.add_argument(
-    "class_name",
+    "class_id",
     type=str
 )
 underwriting_parser.add_argument(
-    "subclass_name",
+    "subclass_id",
+    type=str
+)
+underwriting_parser.add_argument(
+    "pricing_model",
     type=str
 )
 underwriting_parser.add_argument(
     "driver_details",
     type=dict
 )
-
 underwriting_parser.add_argument(
     "vehicle_details",
     type=dict
@@ -337,14 +340,6 @@ underwriting_parser.add_argument(
 )
 underwriting_parser.add_argument(
     "expiry_date",
-    type=str
-)
-underwriting_parser.add_argument(
-    "insurance_subclass",
-    type=str
-)
-underwriting_parser.add_argument(
-    "insurance_class",
     type=str
 )
 underwriting_parser.add_argument(

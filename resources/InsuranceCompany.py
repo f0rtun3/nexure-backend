@@ -20,7 +20,8 @@ class Companies(Resource):
     def get(self):
         """
         Get all insurance companies, together with the company details
-        """
+        """     
+        
         # fetch all companies, then their details.
 
         companies_list = InsuranceCompany.get_all_companies()
@@ -44,5 +45,3 @@ class Companies(Resource):
             response = helper.make_rest_success_response(
                 "No company registered yet")
             return make_response(response, 404)
-            
-            

@@ -149,9 +149,7 @@ class UserRegister(Resource):
                     user_id)
                 # update their account
                 data = {
-                    "company_name": user_details['org_name'],
-                    "company_number": user_details['org_phone_number'],
-                    "company_email": user_details['org_email'],
+                    "company_phone": user_details['org_phone_number'],
                     "bank_account": user_details['bank_account'],
                     "mpesa_paybill": user_details['mpesa_paybill'],
                     "ira_registration_number": user_details['ira_reg_no'],
@@ -163,7 +161,7 @@ class UserRegister(Resource):
                     "twitter": user_details['twitter']
                 }
                 company.update(data)
-
+                
             # for independent agents
             elif role == 'IA':
                 """
@@ -220,7 +218,6 @@ class UserRegister(Resource):
         elif role == "IC":
             # if it's an insurance company
             new_insurance_company = InsuranceCompany(
-                user_details["org_phone"],
                 user_id,
                 user_details['company_id'],
             )

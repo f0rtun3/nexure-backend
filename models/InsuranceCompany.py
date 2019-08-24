@@ -7,7 +7,7 @@ class InsuranceCompany(db.Model):
         db.Integer, autoincrement=True, primary_key=True)
     contact_person = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))
-    company_phone = db.Column(db.BIGINT, unique=True, nullable=False)
+    company_phone = db.Column(db.BIGINT, unique=True, nullable=True)
     ira_registration_number = db.Column(db.String(15), unique=True)
     ira_license_number = db.Column(db.String(15), unique=True)
     kra_pin = db.Column(db.String(15), unique=True)
@@ -23,9 +23,9 @@ class InsuranceCompany(db.Model):
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
 
-    def __init__(self, company_phone, contact_person, company_details, ira_registration_number=None,
+    def __init__(self, contact_person, company_details, ira_registration_number=None,
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
-                 mpesa_paybill=None, rate=None):
+                 mpesa_paybill=None, rate=None, company_phone=None):
 
         self.company_phone = company_phone
         self.contact_person = contact_person

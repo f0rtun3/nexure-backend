@@ -24,6 +24,6 @@ class InsuranceClass(db.Model):
         db.session.commit()
 
     @classmethod
-    def get_class_by_name(cls, name):
-        parent_class = cls.query.filter_by(class_name=name).first()
+    def get_class_by_id(cls, id):
+        parent_class = cls.query.filter_by(class_id=id).first()
         return parent_class

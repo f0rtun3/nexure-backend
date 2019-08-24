@@ -14,6 +14,7 @@ class ChildPolicy(db.Model):
     # links to the association table for extensions
     extensions = db.relationship('ICExtensions', secondary='policy_extensions',
                                  lazy='dynamic', backref=db.backref('extensions', lazy='dynamic'))
+    cp_number = db.Column(db.String(22), nullable=False, unique=True)
     # links to the association table for loadings
     loadings = db.relationship('ICLoadings', secondary='policy_loadings',
                                lazy='dynamic', backref=db.backref('loadings', lazy='dynamic'))
@@ -30,12 +31,16 @@ class ChildPolicy(db.Model):
         'role.id', onupdate='CASCADE', ondelete='CASCADE'))
     master_policy = db.Column(db.Integer, db.ForeignKey(
         'master_policy.id', onupdate='CASCADE', ondelete='CASCADE'))
+    company = db.Column(db.Integer, db.ForeignKey(
+        'insurance_company.id', onupdate='CASCADE', ondelete='CASCADE'))
+    pricing_model = db.Column(db.String(50), nullable=False)
     date_activated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
     is_active = db.Column(db.Boolean, default=False)
 
-    def __init__(self, vehicle, customer_number, rate, date_expiry, premium_amount, transaction_type,
-                 agency_id, agency_role, master_policy):
+    def __init__(self, cp_number, vehicle, customer_number, rate, date_expiry, premium_amount, transaction_type,
+                 agency_id, agency_role, company, pricing_model, master_policy):
         self.vehicle = vehicle
+        self.cp_number = cp_number
         self.customer_number = customer_number
         self.rate = rate
         self.date_expiry = date_expiry
@@ -44,6 +49,8 @@ class ChildPolicy(db.Model):
         self.agency_id = agency_id
         self.agency_role = agency_role
         self.master_policy = master_policy
+        self.company = company
+        self.pricing_model = pricing_model
 
     def save(self):
         db.session.add(self)
@@ -66,3 +73,8 @@ class ChildPolicy(db.Model):
 
     def add_extension(self, extension_id, amount_paid):
         self.extensions.append(extension_id, amount_paid)
+    
+    @classmethod
+    def get_child_by_id(cls, id):
+        child = cls.query.filter_by(id=id).first()
+        return child

@@ -17,6 +17,6 @@ class InsuranceSubclass(db.Model):
         db.session.commit()
 
     @classmethod
-    def get_class_by_name(cls, name):
-        subclass = cls.query.filter_by(name=name).first()
+    def get_class_by_id(cls, code):
+        subclass = cls.query.filter_by(class_code=code).first()
         return subclass
