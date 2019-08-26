@@ -16,7 +16,7 @@ from models.IACustomer import IACustomer
 from models.ICProducts import ICProducts
 from models.Role import Role
 from models.InsuranceClass import InsuranceClass
-from models.InsuranceSubClass import InsuranceSubClass
+from models.InsuranceSubclass import InsuranceSubclass
 from models.InsuranceCompany import InsuranceCompany
 from models.Driver import Driver
 import helpers.helpers as helper
@@ -34,7 +34,7 @@ class InsuranceProducts(Resource):
     The post request recieves the product id, which represents the insurance class, and the products children,
     which represents the insurance subclasses
     """
-
+    @jwt_required
     def post(self):
         # get the insurance company details
         uid = get_jwt_identity()
@@ -48,12 +48,9 @@ class InsuranceProducts(Resource):
 
         policy_details = policy_parser.parse_args()
 
-        # get the product code
-        product_details = policy_details['product']
-
         # store the products affiliated with a particular company
         new_product = ICProducts(
-            company_id, product_details.insurance_class, product_details.sub_class)
+            company_id, policy_details['insurance_class'], policy_details['sub_class'])
         new_product.save()
         response = helper.make_rest_success_response(
             "Product added successfully")
@@ -68,6 +65,11 @@ class InsuranceProducts(Resource):
             # get brokerage by contact person
             broker = Broker.get_broker_by_contact_id(uid)
             return broker.broker_id
+
+        elif role == "IC":
+            insurance = InsuranceCompany.get_company_by_contact_person(uid)
+            return insurance.id
+
         elif role == "TA":
             # get tied agency
             tied_agent = TiedAgents.get_tied_agent_by_user_id(uid)
@@ -77,6 +79,3 @@ class InsuranceProducts(Resource):
             # get Independent agency by contact person
             ind_agent = IndependentAgent.get_agency_by_contact_person(uid)
             return ind_agent.id
-        elif role == "IC":
-            insurance = InsuranceCompany.get_company_by_contact_person(uid)
-            return insurance.id

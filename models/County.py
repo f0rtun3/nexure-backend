@@ -18,3 +18,13 @@ class County(db.Model):
     def get_county_by_name(cls, name):
         county = cls.query.filter_by(county_name=name).first()
         return county.id
+
+    @classmethod
+    def get_county_by_id(cls, id):
+        county = cls.query.filter_by(id=id).first()
+        return county
+    
+    @classmethod
+    def get_all_counties(cls):
+        counties = cls.query.all()
+        return counties

@@ -27,3 +27,8 @@ class InsuranceClass(db.Model):
     def get_class_by_id(cls, id):
         parent_class = cls.query.filter_by(class_id=id).first()
         return parent_class
+    
+    @classmethod
+    def get_class_by_name(cls, name):
+        iclass = cls.query.filter_by(class_name=name).first()
+        return iclass.class_id

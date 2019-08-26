@@ -41,12 +41,12 @@ class ICBenefits(db.Model):
         every list of benefits under a particular company 
         """
         benefit_rows = cls.query.filter_by(insurance_company=company_id).all()
-        benefits = [
-            {
-                "id": benefit.id,
-                "benefit_id": benefit.benefit,
-                "free_limit": benefit.free_limit,
-                "max_limit": benefit.max_limit,
-                "rate": benefit.rate}
-            for benefit in benefit_rows]
-        return benefits
+        # benefits = [
+        #     {
+        #         "id": benefit.id,
+        #         "benefit_id": benefit.benefit,
+        #         "free_limit": benefit.free_limit,
+        #         "max_limit": benefit.max_limit,
+        #         "rate": benefit.rate}
+        #     for benefit in benefit_rows]
+        return benefit_rows

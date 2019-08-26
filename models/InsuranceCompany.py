@@ -8,15 +8,16 @@ class InsuranceCompany(db.Model):
     contact_person = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))
     company_phone = db.Column(db.BIGINT, unique=True, nullable=True)
-    ira_registration_number = db.Column(db.String(15), unique=True)
-    ira_license_number = db.Column(db.String(15), unique=True)
-    kra_pin = db.Column(db.String(15), unique=True)
+    ira_registration_number = db.Column(db.String(50), unique=True)
+    ira_license_number = db.Column(db.String(50), unique=True)
+    kra_pin = db.Column(db.String(50), unique=True)
     website = db.Column(db.String(150), unique=True)
-    bank_account = db.Column(db.BIGINT, nullable=True)
-    mpesa_paybill = db.Column(db.BIGINT, nullable=True, unique=True)
+    bank_account = db.Column(db.String(50), unique=True)
+    mpesa_paybill = db.Column(db.String(50), unique=True)
     company_details = db.Column(db.Integer, db.ForeignKey(
         'company_details.id', ondelete='CASCADE', onupdate='CASCADE'))
-    rate = db.Column(db.Float, nullable=False)
+    rate = db.Column(db.Float, nullable=True)
+    year = db.Column(db.Float, nullable=True)
 
     # social media handles
     facebook = db.Column(db.String(150))
@@ -76,7 +77,7 @@ class InsuranceCompany(db.Model):
 
     @classmethod
     def get_company_by_contact_person(cls, user_id):
-        company = cls.filter_by(contact_person=user_id).first()
+        company = cls.query.filter_by(contact_person=user_id).first()
         return company
 
     @classmethod

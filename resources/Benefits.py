@@ -1,3 +1,5 @@
+from models.ICExtensions import ICExtensions
+from models.Extensions import Extension
 from flask import make_response
 from flask_restful import Resource
 from app import app
@@ -11,6 +13,7 @@ from models.ICBenefits import ICBenefits
 
 from helpers.parsers import policy_parser
 import helpers.helpers as helper
+from flask import make_response
 
 
 class BenefitHandler(Resource):
@@ -57,4 +60,21 @@ class BenefitHandler(Resource):
     def put(self):
         """Update benefit, change the free limit, or max limit, change rate etc."""
         pass
+    
+    def get(self):
+        """
+        Get all benefits
+        """
+        benefits_list = []
+        benefits = Benefit.get_all_benefits()
+        if benefits:
+            for i in benefits:
+                data = {
+                    "id": i.id,
+                    "name": i.name
+                }
+                benefits_list.append(data)
 
+        response_msg = helper.make_rest_success_response(
+            "Benefits", benefits_list)
+        return make_response(response_msg, 200)

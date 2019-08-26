@@ -38,12 +38,6 @@ class ICLoadings(db.Model):
         every list of loadings under a particular company 
         """
         loading_rows = cls.query.filter_by(insurance_company=company_id).all()
-        loadings = [
-            {
-                "id": loading.id,
-                "loading_id": loading.loading,
-                "rate": loading.rate}
-            for loading in loading_rows]
-        return loadings
+        return loading_rows
 
     

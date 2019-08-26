@@ -3,7 +3,7 @@ from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
 from models.Role import Role
-from models.InsuranceCompany import InsuranceCompany
+from models.CompanyDetails import CompanyDetails
 from models.UserRolePlacement import UserRolePlacement
 import helpers.helpers as helper
 from helpers.parsers import customer_parser
@@ -19,27 +19,21 @@ class Companies(Resource):
 
     def get(self):
         """
-        Get all insurance companies, together with the company details
-        """     
-        
+        Get all insurance companies, together with the company details"""   
         # fetch all companies, then their details.
-
-        companies_list = InsuranceCompany.get_all_companies()
+        companies_list = CompanyDetails.get_companies()
         if companies_list:
             # get company details
             list_of_companies = []
             for company in companies_list:
                 data = {
                     "id": company.id,
-                    "name": company.company_details.company_name,
-                    "email": company.company_details.company_email,
-                    "phone_number": company.company_phone,
-                    "rate": company.rate
+                    "name": company.company_name,
                 }
                 list_of_companies.append(data)
 
             response = helper.make_rest_success_response(
-                "Success", {"insurance_companies": list_of_companies})
+                "Success", list_of_companies)
             return make_response(response, 200)
         else:
             response = helper.make_rest_success_response(

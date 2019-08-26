@@ -28,7 +28,7 @@ class CompanyDetails(Resource):
         if benefits:
             for i in benefits:
                 # first get the benefit name since ICBenefits model only returns the benefit id
-                benefit_name = Benefit.get_name_by_id(i.benefit_id)
+                benefit_name = Benefit.get_name_by_id(i.benefit)
                 data = {
                     "id": i.id,
                     "name": benefit_name,
@@ -46,7 +46,7 @@ class CompanyDetails(Resource):
         if loadings:
             for i in loadings:
                 # first get the extension name since ICExtension model only returns the benefit id
-                loading_name = Loadings.get_name_by_id(i.loading_id)
+                loading_name = Loadings.get_name_by_id(i.loading)
                 data = {
                     "id": i.id,
                     "name": loading_name,
@@ -62,7 +62,7 @@ class CompanyDetails(Resource):
         if extensions:
             for i in extensions:
                 # first get the extension name since ICExtension model only returns the benefit id
-                extension_name = Extension.get_name_by_id(i.benefit_id)
+                extension_name = Extension.get_name_by_id(i.extension)
                 data = {
                     "id": i.id,
                     "name": extension_name,
@@ -70,22 +70,24 @@ class CompanyDetails(Resource):
                     "max_limit": i.max_limit,
                     "rate": i.rate
                 }
-                extensions_list.update(data)
+                extensions_list.append(data)
 
-            company_data.append({"extensions": extensions_list})
+            company_data.update({"extensions": extensions_list})
 
         # get the levies
         levies = Levies.get_all_levies()
+        
         levies_list = []
-        for i in levies:
-            data = {
-                "id": i.id,
-                "name": i.name,
-                "rate": i.rate
-            }
-            levies_list.append(data)
+        if levies:
+            for i in levies:
+                data = {
+                    "id": i.id,
+                    "name": i.name,
+                    "rate": i.rate
+                }
+                levies_list.append(data)
 
-        company_data.update({"levies": levies_list})
+            company_data.update({"levies": levies_list})
         company_data.update({"company_id": company_id})
 
         # return results

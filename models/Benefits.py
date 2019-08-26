@@ -33,17 +33,13 @@ class Benefit(db.Model):
     def get_benefit_by_name(cls, benefit_name):
         benefit = cls.query.filter_by(name=benefit_name).first()
         return benefit.id
-    
+
     @classmethod
     def get_name_by_id(cls, benefit_id):
         benefit = cls.query.filter_by(id=benefit_id).first()
         return benefit.name
-        
+
     @classmethod
     def get_all_benefits(cls):
         benefit_rows = cls.query.all()
-        benefits = []
-        for i in benefit_rows:
-            benefits.append(i.name)
-        return benefits
-
+        return benefit_rows

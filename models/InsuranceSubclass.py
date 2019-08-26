@@ -20,3 +20,5 @@ class InsuranceSubclass(db.Model):
     def get_class_by_id(cls, code):
         subclass = cls.query.filter_by(class_code=code).first()
         return subclass
+
+    

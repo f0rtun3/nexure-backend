@@ -30,7 +30,7 @@ class Levies(db.Model):
     
     @classmethod
     def get_all_levies(cls):
-        levies = cls.query.all
+        levies = cls.query.all()
         return levies
 
     

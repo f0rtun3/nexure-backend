@@ -39,7 +39,4 @@ class Extension(db.Model):
     @classmethod
     def get_all_extensions(cls):
         extension_rows = cls.query.all()
-        extensions = []
-        for i in extension_rows:
-            extensions.append(i.name)
-        return extensions
+        return extension_rows

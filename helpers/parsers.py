@@ -102,6 +102,10 @@ user_parser.add_argument(
     type=str
 )
 user_parser.add_argument(
+    "org_kra_pin",
+    type=str
+)
+user_parser.add_argument(
     "website",
     type=str
 )
@@ -129,7 +133,7 @@ user_parser.add_argument(
 )
 user_parser.add_argument(
     "company_id",
-    type=str
+    type=int
 )
 user_parser.add_argument(
     "staff_id",
@@ -368,7 +372,10 @@ policy_parser.add_argument(
     type=str
 )
 policy_parser.add_argument(
-    "product",
-    type=dict
+    "insurance_class",
+    type=int
 )
-
+policy_parser.add_argument(
+    "sub_class",
+    type=int
+)
