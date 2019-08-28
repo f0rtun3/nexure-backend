@@ -44,4 +44,9 @@ class ICExtensions(db.Model):
         """
         extension_rows = cls.query.filter_by(insurance_company=company_id).all()
         return extension_rows
+    
+    @classmethod
+    def get_ic_extension(cls, extension_id):
+        extension = cls.query.filter_by(extension=extension_id).first()
+        return extension
 

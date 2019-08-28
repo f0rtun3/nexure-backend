@@ -35,4 +35,5 @@ class UserRolePlacement(db.Model):
 
     @classmethod
     def fetch_role_by_user_id(cls, user_id):
-        return cls.query.filter_by(user_id=user_id).first()
+        role = cls.query.filter_by(user_id=user_id).first()
+        return role.role_id

@@ -12,6 +12,7 @@ from models.Levies import Levies
 from models.Extensions import Extension
 from models.ICExtensions import ICExtensions
 from models.ICBenefits import ICBenefits
+from models.ICProducts import ICProducts
 from models.InsuranceCompany import InsuranceCompany
 from models.UserRolePlacement import UserRolePlacement
 import helpers.helpers as helper
@@ -74,9 +75,22 @@ class CompanyDetails(Resource):
 
             company_data.update({"extensions": extensions_list})
 
+        # get products the company sells
+        products = ICProducts.get_products_by_company(company_id)
+        products_list = []
+        if products:
+            for product in products:
+                data = {
+                    "class": product.insurance_class,
+                    "subclass": product.sub_class
+                }
+                products_list.append(data)
+
+            company_data.update({"products": products_list})
+
         # get the levies
         levies = Levies.get_all_levies()
-        
+
         levies_list = []
         if levies:
             for i in levies:

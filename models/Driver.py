@@ -1,4 +1,5 @@
 from app import db
+from datetime import datetime
 
 class Driver(db.Model):
     """
@@ -6,14 +7,14 @@ class Driver(db.Model):
     """
     __tablename__ = 'driver'
 
-    id = id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     gender = db.Column(db.String(1))
     # we need to store the user mobile number
     # for subsequent communication
     phone = db.Column(db.BIGINT, unique=True)
-    birth_date = db.Column(db.Date)
+    birth_date = db.Column(db.DateTime)
     driver = db.relationship("VehicleDetails", backref="user")
 
     def __init__(self, first_name, last_name, gender, phone, birth_date):
@@ -25,7 +26,7 @@ class Driver(db.Model):
 
     def save(self):
         db.session.add(self)
-        db.session.commit(self)
+        db.session.commit()
 
     def update(self, data):
         for key, item in data.items():

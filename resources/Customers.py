@@ -86,7 +86,7 @@ class CustomerOnBoarding(Resource):
             subject = "Nexure Temporary Password"
             email_text = f"Follow {app.config['LOGIN_ENDPOINT']} to login and use {temporary_pass} " \
                          f"as your temporary password"
-            helper.send_email(customer_details['org_email'], subject, email_template, email_text)
+            helper.send_email(customer_details['email'], subject, email_template, email_text)
 
             #  Generate a user account activation email
             confirmation_code = token_handler.user_account_confirmation_token(customer_id)
@@ -95,7 +95,7 @@ class CustomerOnBoarding(Resource):
             subject = "Please confirm your account"
             email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                          f" to confirm your account"
-            helper.send_email(customer_details['org_email'], subject, email_template, email_text)
+            helper.send_email(customer_details['email'], subject, email_template, email_text)
         else:
             customer_id = customer.id
 

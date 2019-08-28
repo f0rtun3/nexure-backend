@@ -10,9 +10,6 @@ class Extension(db.Model):
     def __init__(self, name):
         self.name = name
     
-    def __repr__(self):
-        return f"{self.name}"
-    
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -29,7 +26,7 @@ class Extension(db.Model):
     @classmethod
     def get_extension_id_by_name(cls, extension_name):
         extension = cls.query.filter_by(name=extension_name).first()
-        return extension.id
+        return extension
     
     @classmethod
     def get_name_by_id(cls, extension_id):

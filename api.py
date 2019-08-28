@@ -17,9 +17,11 @@ from resources.CompanyDetails import CompanyDetails
 from resources.MPIUnderwriting import MPIUnderwriting
 from resources.Location import Location
 from resources.InsuranceProducts import InsuranceProducts
+from resources.CustomerDetails import CustomerDetails
 
 
 api.add_resource(Companies, '/api/companies/all')
+api.add_resource(CustomerDetails, '/api/customer_details/<email>')
 api.add_resource(CompanyDetails, '/api/company_details/<company_id>')
 api.add_resource(UserRegister, '/api/user')
 api.add_resource(UserLogin, '/api/login')

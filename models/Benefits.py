@@ -32,7 +32,7 @@ class Benefit(db.Model):
     @classmethod
     def get_benefit_by_name(cls, benefit_name):
         benefit = cls.query.filter_by(name=benefit_name).first()
-        return benefit.id
+        return benefit
 
     @classmethod
     def get_name_by_id(cls, benefit_id):

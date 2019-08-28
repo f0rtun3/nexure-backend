@@ -335,6 +335,5 @@ class UserLogin(Resource):
     @staticmethod
     def get_user_role(user_id):
         role = UserRolePlacement.fetch_role_by_user_id(user_id)
-        role_name = Role.fetch_role_by_id(role.role_id)
-
+        role_name = Role.fetch_role_by_id(role)
         return role_name

@@ -29,6 +29,7 @@ class CustomerDetails(Resource):
     def post(self):
         pass
 
+    @jwt_required
     def get(self, email):
         """
         Get customer details using an attribute such as email
@@ -40,11 +41,12 @@ class CustomerDetails(Resource):
         # get user role
         claims = get_jwt_claims()
         role = claims['role']
-        company_id = self.get_agency_id(role, contact_id)
+        # company_id = self.get_agency_id(role, contact_id)
         # get user id from customer email
         customer = User.get_user_by_email(email)
         # get customer details
         customer_details = self.get_customer_details_by_user_id(customer.id)
+        customer_details.update({"email": email})
         
         response_msg = helper.make_rest_success_response("Success", customer_details)
         return make_response(response_msg, 200)
@@ -65,7 +67,7 @@ class CustomerDetails(Resource):
                     "last_name": user_profile.last_name,
                     "phone_number": user_profile.phone,
                     "kra_pin": user_profile.kra_pin,
-                    "id_passport": user_profile.id_passport
+                    "id_passport": user_profile.id_passport,
                 }
                 return data
             else:

@@ -1,4 +1,5 @@
 from flask_restful import reqparse
+import json
 
 user_parser = reqparse.RequestParser()
 
@@ -286,6 +287,7 @@ underwriting_parser.add_argument(
     "transaction_type",
     type=str
 )
+
 underwriting_parser.add_argument(
     "modifications",
     type=list,
@@ -308,7 +310,7 @@ underwriting_parser.add_argument(
     type=str
 )
 underwriting_parser.add_argument(
-    "pricing_model",
+    "pricing_module",
     type=str
 )
 underwriting_parser.add_argument(
@@ -321,29 +323,25 @@ underwriting_parser.add_argument(
 )
 underwriting_parser.add_argument(
     "insurance_company",
-    type=str
-)
-underwriting_parser.add_argument(
-    "driver",
-    type=dict
+    type=int
 )
 underwriting_parser.add_argument(
     "benefits",
-    type=list,
+    type=dict,
     action='append'
 )
 underwriting_parser.add_argument(
     "extensions",
-    type=list,
+    type=dict,
     action='append'
 )
 underwriting_parser.add_argument(
     "loadings",
-    type=list,
+    type=dict,
     action='append'
 )
 underwriting_parser.add_argument(
-    "expiry_date",
+    "date_expiry",
     type=str
 )
 underwriting_parser.add_argument(
