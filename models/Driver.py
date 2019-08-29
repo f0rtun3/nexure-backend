@@ -6,7 +6,7 @@ class Driver(db.Model):
     """
     __tablename__ = 'driver'
 
-    id = id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     gender = db.Column(db.String(1))
