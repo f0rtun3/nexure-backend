@@ -17,6 +17,8 @@ class Config(object):
     AWS_REGION='us-east-1'
     AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+    S3_BUCKET = os.environ['S3_BUCKET']
+    S3_LOCATION=f"https://{os.environ['S3_BUCKET']}.s3.amazonaws.com/"
     CONFIRMATION_ENDPOINT = 'https://nexure.co.ke/confirm'
     LOGIN_ENDPOINT = 'https://nexure.co.ke/login'
 
