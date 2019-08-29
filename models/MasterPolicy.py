@@ -35,7 +35,7 @@ class MasterPolicy(db.Model):
 
     def save(self):
         db.session.add(self)
-        db.session.commit(self)
+        db.session.commit()
 
     def update(self, data):
         for key, item in data.items():

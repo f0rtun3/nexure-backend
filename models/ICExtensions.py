@@ -43,13 +43,10 @@ class ICExtensions(db.Model):
         every list of extensions under a particular company 
         """
         extension_rows = cls.query.filter_by(insurance_company=company_id).all()
-        extensions = [
-            {
-                "id": extension.id,
-                "extension_id": extension.extension,
-                "free_limit": extension.free_limit,
-                "max_limit": extension.max_limit,
-                "rate": extension.rate}
-            for extension in extension_rows]
-        return extensions
+        return extension_rows
+    
+    @classmethod
+    def get_ic_extension(cls, extension_id):
+        extension = cls.query.filter_by(extension=extension_id).first()
+        return extension
 

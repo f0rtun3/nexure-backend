@@ -12,6 +12,7 @@ from models.Levies import Levies
 from models.Extensions import Extension
 from models.ICExtensions import ICExtensions
 from models.ICBenefits import ICBenefits
+from models.ICProducts import ICProducts
 from models.InsuranceCompany import InsuranceCompany
 from models.UserRolePlacement import UserRolePlacement
 import helpers.helpers as helper
@@ -28,10 +29,10 @@ class CompanyDetails(Resource):
         if benefits:
             for i in benefits:
                 # first get the benefit name since ICBenefits model only returns the benefit id
-                benefit_name = Benefit.get_name_by_id(i.benefit_id)
+                benefit_name = Benefit.get_name_by_id(i.benefit)
                 data = {
                     "id": i.id,
-                    "benefit_name": benefit_name,
+                    "name": benefit_name,
                     "free_limit": i.free_limit,
                     "max_limit": i.max_limit,
                     "rate": i.rate
@@ -46,10 +47,10 @@ class CompanyDetails(Resource):
         if loadings:
             for i in loadings:
                 # first get the extension name since ICExtension model only returns the benefit id
-                loading_name = Loadings.get_name_by_id(i.loading_id)
+                loading_name = Loadings.get_name_by_id(i.loading)
                 data = {
                     "id": i.id,
-                    "loading_name": loading_name,
+                    "name": loading_name,
                     "rate": i.rate
                 }
                 loadings_list.append(data)
@@ -62,30 +63,45 @@ class CompanyDetails(Resource):
         if extensions:
             for i in extensions:
                 # first get the extension name since ICExtension model only returns the benefit id
-                extension_name = Extension.get_name_by_id(i.benefit_id)
+                extension_name = Extension.get_name_by_id(i.extension)
                 data = {
                     "id": i.id,
-                    "extension_name": extension_name,
+                    "name": extension_name,
                     "free_limit": i.free_limit,
                     "max_limit": i.max_limit,
                     "rate": i.rate
                 }
-                extensions_list.update(data)
+                extensions_list.append(data)
 
-            company_data.append({"extensions": extensions_list})
+            company_data.update({"extensions": extensions_list})
+
+        # get products the company sells
+        products = ICProducts.get_products_by_company(company_id)
+        products_list = []
+        if products:
+            for product in products:
+                data = {
+                    "class": product.insurance_class,
+                    "subclass": product.sub_class
+                }
+                products_list.append(data)
+
+            company_data.update({"products": products_list})
 
         # get the levies
         levies = Levies.get_all_levies()
-        levies_list = []
-        for i in levies:
-            data = {
-                "id": i.id,
-                "name": i.name,
-                "rate": i.rate
-            }
-            levies_list.append(data)
 
-        company_data.update({"levies": levies_list})
+        levies_list = []
+        if levies:
+            for i in levies:
+                data = {
+                    "id": i.id,
+                    "name": i.name,
+                    "rate": i.rate
+                }
+                levies_list.append(data)
+
+            company_data.update({"levies": levies_list})
         company_data.update({"company_id": company_id})
 
         # return results

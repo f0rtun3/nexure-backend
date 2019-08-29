@@ -11,7 +11,9 @@ class CompanyDetails(db.Model):
     physical_address = db.Column(db.String(300))
     website = db.Column(db.String(150))
     avatar = db.Column(db.String(50), nullable=True)
-    # company = db.relationship("InsuranceCompany", backref="insurance_company")
+    company = db.relationship("InsuranceCompany", backref="details")
+    benefits = db.relationship('InsuranceClass', secondary='licenced_classes',
+                               lazy='dynamic', backref=db.backref('licenced_companies', lazy='dynamic'))
 
     def __init__(self, company_name, company_email, physical_address, website, avatar=None):
         self.company_name = company_name
@@ -36,8 +38,9 @@ class CompanyDetails(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def get_companies(self):
-        return self.query.all()
+    @classmethod
+    def get_companies(cls):
+        return cls.query.all()
 
     @classmethod
     def get_company_by_id(cls, id):

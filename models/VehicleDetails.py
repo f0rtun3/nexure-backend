@@ -23,15 +23,14 @@ class VehicleDetails(db.Model):
 
     # link to vehicle modifications
     modifications = db.relationship("VehicleModifications", backref="user")
-    
-    def __init__(self, reg_number, model, color, body_type, origin, policy_id, sum_insured, driver,
+
+    def __init__(self, reg_number, model, color, body_type, origin, sum_insured, driver,
                  no_of_seats, manufacture_year, engine_capacity):
         self.reg_number = reg_number
         self.model = model
         self.color = color
         self.body_type = body_type
         self.origin = origin
-        self.policy_id = policy_id
         self.sum_insured = sum_insured
         self.driver = driver
         self.no_of_seats = no_of_seats

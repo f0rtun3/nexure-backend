@@ -391,9 +391,7 @@ def upgrade():
     sa.Column('premium_amount', sa.Float(), nullable=False),
     sa.Column('transaction_type', sa.String(length=50), nullable=False),
     sa.Column('agency_id', sa.Integer(), nullable=False),
-    sa.Column('agency_role', sa.Integer(), nullable=True),
     sa.Column('master_policy', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['agency_role'], ['role.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['master_policy'], ['master_policy.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['vehicle'], ['vehicle_details.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')

@@ -39,7 +39,7 @@ class LoadingsHandler(Resource):
         Store loadings offered by a particular company together with limit
         """
         # get the extension_id
-        loading_id = Loadings.get_extension_id_by_name(loading_name)
+        loading_id = Loadings.get_loading_id_by_name(loading_name)
 
         company_loading = ICLoadings(company.id, loading_id, details['rate'])
         company_loading.save()
@@ -54,3 +54,21 @@ class LoadingsHandler(Resource):
     def put(self):
         """Update loading, change rate etc."""
         pass
+        
+    def get(self):
+        """
+        Get all loadings
+        """
+        loadings_list = []
+        loadings = Loadings.get_all_loadings()
+        if loadings:
+            for i in loadings:
+                data = {
+                    "id": i.id,
+                    "name": i.name
+                }
+                loadings_list.append(data)
+
+        response_msg = helper.make_rest_success_response(
+            "Benefits", loadings_list)
+        return make_response(response_msg, 200)

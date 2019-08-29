@@ -1,4 +1,5 @@
 from flask_restful import reqparse
+import json
 
 user_parser = reqparse.RequestParser()
 
@@ -102,6 +103,10 @@ user_parser.add_argument(
     type=str
 )
 user_parser.add_argument(
+    "org_kra_pin",
+    type=str
+)
+user_parser.add_argument(
     "website",
     type=str
 )
@@ -129,7 +134,7 @@ user_parser.add_argument(
 )
 user_parser.add_argument(
     "company_id",
-    type=str
+    type=int
 )
 user_parser.add_argument(
     "staff_id",
@@ -282,6 +287,7 @@ underwriting_parser.add_argument(
     "transaction_type",
     type=str
 )
+
 underwriting_parser.add_argument(
     "modifications",
     type=list,
@@ -296,55 +302,46 @@ underwriting_parser.add_argument(
     type=str
 )
 underwriting_parser.add_argument(
-    "class_name",
+    "class_id",
     type=str
 )
 underwriting_parser.add_argument(
-    "subclass_name",
+    "subclass_id",
+    type=str
+)
+underwriting_parser.add_argument(
+    "pricing_module",
     type=str
 )
 underwriting_parser.add_argument(
     "driver_details",
     type=dict
 )
-
 underwriting_parser.add_argument(
     "vehicle_details",
     type=dict
 )
 underwriting_parser.add_argument(
     "insurance_company",
-    type=str
-)
-underwriting_parser.add_argument(
-    "driver",
-    type=dict
+    type=int
 )
 underwriting_parser.add_argument(
     "benefits",
-    type=list,
+    type=dict,
     action='append'
 )
 underwriting_parser.add_argument(
     "extensions",
-    type=list,
+    type=dict,
     action='append'
 )
 underwriting_parser.add_argument(
     "loadings",
-    type=list,
+    type=dict,
     action='append'
 )
 underwriting_parser.add_argument(
-    "expiry_date",
-    type=str
-)
-underwriting_parser.add_argument(
-    "insurance_subclass",
-    type=str
-)
-underwriting_parser.add_argument(
-    "insurance_class",
+    "date_expiry",
     type=str
 )
 underwriting_parser.add_argument(
@@ -373,7 +370,10 @@ policy_parser.add_argument(
     type=str
 )
 policy_parser.add_argument(
-    "product",
-    type=dict
+    "insurance_class",
+    type=int
 )
-
+policy_parser.add_argument(
+    "sub_class",
+    type=int
+)

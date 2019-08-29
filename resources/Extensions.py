@@ -55,3 +55,21 @@ class ExtensionHandler(Resource):
     def put(self):
         """Update benefit, change the free limit, or max limit, change rate etc."""
         pass
+
+    def get(self):
+        """
+        Get all extensions
+        """
+        extensions_list = []
+        extensions = Extension.get_all_extensions()
+        if extensions:
+            for i in extensions:
+                data = {
+                    "id": i.id,
+                    "name": i.name
+                }
+                extensions_list.append(data)
+
+        response_msg = helper.make_rest_success_response(
+            "Extensions", extensions_list)
+        return make_response(response_msg, 200)

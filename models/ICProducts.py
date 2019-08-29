@@ -29,3 +29,8 @@ class ICProducts(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+    
+    @classmethod
+    def get_products_by_company(cls, company_id):
+        products = cls.query.filter_by(company=company_id).all()
+        return products

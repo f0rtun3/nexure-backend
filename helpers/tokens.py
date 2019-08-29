@@ -13,7 +13,7 @@ def user_account_confirmation_token(identity):
     :param identity:
     :return:
     """
-    expires = datetime.timedelta(minutes=20)
+    expires = datetime.timedelta(minutes=60)
     user_confirmation_token = create_access_token(identity=identity, expires_delta=expires)
 
     return user_confirmation_token
@@ -37,7 +37,7 @@ def create_user_token(identity, role):
     :param role:
     :return: dictionary
     """
-    expires = datetime.timedelta(minutes=20)
+    expires = datetime.timedelta(minutes=40)
     user_access_token = create_access_token(identity=identity, user_claims={"role": role},
                                             fresh=True, expires_delta=expires)
     user_refresh_token = create_refresh_token(identity=identity)
@@ -52,7 +52,7 @@ def refresh_user_token(identity, role):
     :param role:
     :return: string
     """
-    expires = datetime.timedelta(minutes=20)
+    expires = datetime.timedelta(minutes=40)
     user_refresh_token = create_access_token(identity=identity, user_claims={"role": role},
                                              fresh=False, expires_delta=expires)
     return user_refresh_token

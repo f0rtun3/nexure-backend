@@ -131,11 +131,11 @@ def insurance_details():
 
 
 if __name__ == '__main__':
-#     car_makes()
-#     car_models()
-#     insurance_classes()
-#     insurance_subclass()
-#     counties()
-#     constituencies()
-#     ward()
-    insurance_details()
+    # car_makes()
+    # car_models()
+    # insurance_classes()
+    insurance_subclass()
+    counties()
+    constituencies()
+    ward()
+    # insurance_details()

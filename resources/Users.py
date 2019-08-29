@@ -1,7 +1,7 @@
 from app import app
 from flask import make_response
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
 from models.User import User
 from models.UserProfile import UserProfile
 from models.IndependentAgent import IndependentAgent
@@ -97,6 +97,8 @@ class UserRegister(Resource):
         if user:
             # get their role
             role = UserRolePlacement.fetch_role_by_user_id(user_id)
+            claims = get_jwt_claims()
+            role = claims['role']
             # update their profile
             format_date_str = '%d/%m/%Y'
             birth_date = datetime.strptime(user_details['birth_date'], format_date_str)
@@ -114,16 +116,16 @@ class UserRegister(Resource):
                     "postal_town": user_details['postal_town'],
                     "county": user_details['county'],
                     "constituency": user_details['constituency'],
-                    "ward": user_details['ward'],
-                    "facebook": user_details['facebook'],
-                    "twitter": user_details['twitter'],
-                    "instagram": user_details['instagram']
+                    "ward": user_details['ward']
+                    # "facebook": user_details['facebook'],
+                    # "twitter": user_details['twitter'],
+                    # "instagram": user_details['instagram']
                 }
             )
             """
-                update the client account depending on their role: 
-                Note: that for tied agents, we only update their profiles
-                """
+            update the client account depending on their role: 
+            Note: that for tied agents, we only update their profiles
+            """
             # for brokers
             if role == 'BR':
                 # get broker by id
@@ -135,7 +137,7 @@ class UserRegister(Resource):
                     "broker_email": user_details['org_email'],
                     "ira_registration_number": user_details['ira_reg_no'],
                     "ira_license_number": user_details['ira_license_no'],
-                    "kra_pin": user_details['kra_pin'],
+                    "kra_pin": user_details['org_kra_pin'],
                     "website": user_details['website'],
                     "facebook": user_details['facebook'],
                     "instagram": user_details['twitter'],
@@ -149,21 +151,18 @@ class UserRegister(Resource):
                     user_id)
                 # update their account
                 data = {
-                    "company_name": user_details['org_name'],
-                    "company_number": user_details['org_phone_number'],
-                    "company_email": user_details['org_email'],
-                    "bank_account": user_details['bank_account'],
+                    "bank_account": user_details['bank_account_number'],
                     "mpesa_paybill": user_details['mpesa_paybill'],
                     "ira_registration_number": user_details['ira_reg_no'],
                     "ira_license_number": user_details['ira_license_no'],
-                    "kra_pin": user_details['kra_pin'],
+                    "kra_pin": user_details['org_kra_pin'],
                     "website": user_details['website'],
                     "facebook": user_details['facebook'],
                     "instagram": user_details['instagram'],
                     "twitter": user_details['twitter']
                 }
                 company.update(data)
-
+                
             # for independent agents
             elif role == 'IA':
                 """
@@ -176,7 +175,7 @@ class UserRegister(Resource):
                     "agency_email": user_details['org_email'],
                     "ira_registration_number": user_details['ira_reg_no'],
                     "ira_license_number": user_details['ira_license_no'],
-                    "kra_pin": user_details['kra_pin'],
+                    "kra_pin": user_details['org_kra_pin'],
                     "website": user_details['website'],
                     "facebook": user_details['facebook'],
                     "instagram": user_details['instagram'],
@@ -220,7 +219,6 @@ class UserRegister(Resource):
         elif role == "IC":
             # if it's an insurance company
             new_insurance_company = InsuranceCompany(
-                user_details["org_phone"],
                 user_id,
                 user_details['company_id'],
             )
@@ -337,6 +335,5 @@ class UserLogin(Resource):
     @staticmethod
     def get_user_role(user_id):
         role = UserRolePlacement.fetch_role_by_user_id(user_id)
-        role_name = Role.fetch_role_by_id(role.role_id)
-
+        role_name = Role.fetch_role_by_id(role)
         return role_name
