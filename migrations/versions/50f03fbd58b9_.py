@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 9b9374ba6fba
+Revision ID: 50f03fbd58b9
 Revises: 
-Create Date: 2019-08-20 15:41:07.808309
+Create Date: 2019-08-29 14:36:12.174169
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '9b9374ba6fba'
+revision = '50f03fbd58b9'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -52,7 +52,7 @@ def upgrade():
     sa.Column('last_name', sa.String(length=50), nullable=False),
     sa.Column('gender', sa.String(length=1), nullable=True),
     sa.Column('phone', sa.BIGINT(), nullable=True),
-    sa.Column('birth_date', sa.Date(), nullable=True),
+    sa.Column('birth_date', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('phone')
     )
@@ -70,20 +70,16 @@ def upgrade():
     sa.UniqueConstraint('acronym'),
     sa.UniqueConstraint('class_name')
     )
+    op.create_table('levies',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('name', sa.String(length=100), nullable=True),
+    sa.Column('rate', sa.Float(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('loading',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('master_policy',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('mp_number', sa.String(length=22), nullable=False),
-    sa.Column('customer', sa.String(length=22), nullable=False),
-    sa.Column('date_created', sa.DateTime(), nullable=True),
-    sa.Column('date_expiry', sa.DateTime(), nullable=True),
-    sa.Column('status', sa.Boolean(), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('mp_number')
     )
     op.create_table('organization_type',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
@@ -177,6 +173,7 @@ def upgrade():
     )
     op.create_table('individual_customer',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('customer_number', sa.String(length=50), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('salutation', sa.String(length=4), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
@@ -185,21 +182,23 @@ def upgrade():
     op.create_table('insurance_company',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('contact_person', sa.Integer(), nullable=True),
-    sa.Column('company_phone', sa.BIGINT(), nullable=False),
-    sa.Column('ira_registration_number', sa.String(length=15), nullable=True),
-    sa.Column('ira_license_number', sa.String(length=15), nullable=True),
-    sa.Column('kra_pin', sa.String(length=15), nullable=True),
+    sa.Column('company_phone', sa.BIGINT(), nullable=True),
+    sa.Column('ira_registration_number', sa.String(length=50), nullable=True),
+    sa.Column('ira_license_number', sa.String(length=50), nullable=True),
+    sa.Column('kra_pin', sa.String(length=50), nullable=True),
     sa.Column('website', sa.String(length=150), nullable=True),
-    sa.Column('bank_account', sa.BIGINT(), nullable=True),
-    sa.Column('mpesa_paybill', sa.BIGINT(), nullable=True),
+    sa.Column('bank_account', sa.String(length=50), nullable=True),
+    sa.Column('mpesa_paybill', sa.String(length=50), nullable=True),
     sa.Column('company_details', sa.Integer(), nullable=True),
-    sa.Column('rate', sa.Float(), nullable=False),
+    sa.Column('rate', sa.Float(), nullable=True),
+    sa.Column('year', sa.Float(), nullable=True),
     sa.Column('facebook', sa.String(length=150), nullable=True),
     sa.Column('instagram', sa.String(length=150), nullable=True),
     sa.Column('twitter', sa.String(length=150), nullable=True),
     sa.ForeignKeyConstraint(['company_details'], ['company_details.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['contact_person'], ['user.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('bank_account'),
     sa.UniqueConstraint('company_phone'),
     sa.UniqueConstraint('ira_license_number'),
     sa.UniqueConstraint('ira_registration_number'),
@@ -214,8 +213,15 @@ def upgrade():
     sa.ForeignKeyConstraint(['parent_class'], ['insurance_class.class_id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('class_code')
     )
+    op.create_table('licenced_classes',
+    sa.Column('company', sa.Integer(), nullable=True),
+    sa.Column('class', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['class'], ['insurance_class.class_id'], ),
+    sa.ForeignKeyConstraint(['company'], ['company_details.id'], )
+    )
     op.create_table('organization_customer',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('customer_number', sa.String(length=50), nullable=True),
     sa.Column('org_type', sa.String(length=100), nullable=False),
     sa.Column('org_name', sa.String(length=100), nullable=True),
     sa.Column('org_phone', sa.BIGINT(), nullable=True),
@@ -339,6 +345,28 @@ def upgrade():
     sa.ForeignKeyConstraint(['loading'], ['loading.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('ic_products',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('company', sa.Integer(), nullable=True),
+    sa.Column('insurance_class', sa.Integer(), nullable=True),
+    sa.Column('sub_class', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['company'], ['insurance_company.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['insurance_class'], ['insurance_class.class_id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['sub_class'], ['insurance_subclass.class_code'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('master_policy',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('mp_number', sa.String(length=22), nullable=False),
+    sa.Column('customer', sa.String(length=22), nullable=False),
+    sa.Column('date_created', sa.DateTime(), nullable=True),
+    sa.Column('date_expiry', sa.DateTime(), nullable=True),
+    sa.Column('status', sa.Boolean(), nullable=False),
+    sa.Column('company', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['company'], ['insurance_company.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('mp_number')
+    )
     op.create_table('ta_staff',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
@@ -357,6 +385,9 @@ def upgrade():
     sa.Column('origin', sa.String(length=20), nullable=True),
     sa.Column('sum_insured', sa.Integer(), nullable=False),
     sa.Column('driver', sa.Integer(), nullable=True),
+    sa.Column('no_of_seats', sa.Integer(), nullable=False),
+    sa.Column('manufacture_year', sa.Integer(), nullable=False),
+    sa.Column('engine_capacity', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['driver'], ['driver.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['model'], ['car_model.model_id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
@@ -384,17 +415,24 @@ def upgrade():
     op.create_table('child_policy',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('vehicle', sa.Integer(), nullable=True),
+    sa.Column('cp_number', sa.String(length=22), nullable=False),
     sa.Column('customer_number', sa.String(length=50), nullable=True),
     sa.Column('rate', sa.Float(), nullable=False),
-    sa.Column('date_created', sa.DateTime(), nullable=True),
+    sa.Column('date_registered', sa.DateTime(), nullable=True),
     sa.Column('date_expiry', sa.DateTime(), nullable=True),
     sa.Column('premium_amount', sa.Float(), nullable=False),
     sa.Column('transaction_type', sa.String(length=50), nullable=False),
     sa.Column('agency_id', sa.Integer(), nullable=False),
     sa.Column('master_policy', sa.Integer(), nullable=True),
+    sa.Column('company', sa.Integer(), nullable=True),
+    sa.Column('pricing_model', sa.String(length=50), nullable=False),
+    sa.Column('date_activated', sa.DateTime(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=True),
+    sa.ForeignKeyConstraint(['company'], ['insurance_company.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['master_policy'], ['master_policy.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['vehicle'], ['vehicle_details.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('cp_number')
     )
     op.create_table('ia_customer',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
@@ -418,37 +456,42 @@ def upgrade():
     sa.ForeignKeyConstraint(['staff_id'], ['ta_staff.id'], onupdate='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('vehicle_modifications',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('accessory_name', sa.String(length=200), nullable=True),
+    sa.Column('make', sa.String(length=100), nullable=True),
+    sa.Column('estimated_value', sa.Float(), nullable=True),
+    sa.Column('serial_no', sa.String(length=200), nullable=True),
+    sa.Column('vehicle', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['vehicle'], ['vehicle_details.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('policy_benefits',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('policy_id', sa.Integer(), nullable=True),
-    sa.Column('ic_benefit_id', sa.Integer(), nullable=True),
-    sa.Column('limit', sa.Float(), nullable=False),
-    sa.Column('premium', sa.Float(), nullable=False),
-    sa.ForeignKeyConstraint(['ic_benefit_id'], ['ic_benefit.id'], ),
-    sa.ForeignKeyConstraint(['policy_id'], ['child_policy.id'], )
-    )
-    op.create_table('policy_extensions',
-    sa.Column('policy_id', sa.Integer(), nullable=True),
-    sa.Column('ic_extension_id', sa.Integer(), nullable=True),
-    sa.Column('limit', sa.Float(), nullable=False),
-    sa.Column('premium', sa.Float(), nullable=False),
-    sa.ForeignKeyConstraint(['ic_extension_id'], ['ic_extension.id'], ),
-    sa.ForeignKeyConstraint(['policy_id'], ['child_policy.id'], )
-    )
-    op.create_table('policy_loadings',
-    sa.Column('policy_id', sa.Integer(), nullable=True),
-    sa.Column('ic_loadings_id', sa.Integer(), nullable=True),
+    sa.Column('ic_benefit', sa.Integer(), nullable=True),
     sa.Column('amount', sa.Float(), nullable=False),
-    sa.ForeignKeyConstraint(['ic_loadings_id'], ['ic_loadings.id'], ),
-    sa.ForeignKeyConstraint(['policy_id'], ['child_policy.id'], )
+    sa.ForeignKeyConstraint(['ic_benefit'], ['ic_benefit.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['policy_id'], ['child_policy.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('policy_extension',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('policy_id', sa.Integer(), nullable=True),
+    sa.Column('ic_extension', sa.Integer(), nullable=True),
+    sa.Column('amount', sa.Float(), nullable=False),
+    sa.ForeignKeyConstraint(['ic_extension'], ['ic_extension.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['policy_id'], ['child_policy.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_table('policy_loadings')
-    op.drop_table('policy_extensions')
+    op.drop_table('policy_extension')
     op.drop_table('policy_benefits')
+    op.drop_table('vehicle_modifications')
     op.drop_table('ta_customer')
     op.drop_table('ia_customer')
     op.drop_table('child_policy')
@@ -456,6 +499,8 @@ def downgrade():
     op.drop_table('ward')
     op.drop_table('vehicle_details')
     op.drop_table('ta_staff')
+    op.drop_table('master_policy')
+    op.drop_table('ic_products')
     op.drop_table('ic_loadings')
     op.drop_table('ic_extension')
     op.drop_table('ic_benefit')
@@ -466,6 +511,7 @@ def downgrade():
     op.drop_table('user_permission')
     op.drop_table('tied_agent')
     op.drop_table('organization_customer')
+    op.drop_table('licenced_classes')
     op.drop_table('insurance_subclass')
     op.drop_table('insurance_company')
     op.drop_table('individual_customer')
@@ -477,8 +523,8 @@ def downgrade():
     op.drop_table('role')
     op.drop_table('permission')
     op.drop_table('organization_type')
-    op.drop_table('master_policy')
     op.drop_table('loading')
+    op.drop_table('levies')
     op.drop_table('insurance_class')
     op.drop_table('extension')
     op.drop_table('driver')

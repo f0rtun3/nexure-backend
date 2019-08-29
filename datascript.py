@@ -123,6 +123,7 @@ def ward():
         new_ward = Ward(row.Ward_Name, constituency, county_id)
         new_ward.save()
 
+
 def insurance_details():
     df = pd.read_csv("data/insurance-companies.csv")
     for row in df.itertuples():
@@ -131,11 +132,11 @@ def insurance_details():
 
 
 if __name__ == '__main__':
-    # car_makes()
-    # car_models()
-    # insurance_classes()
+    car_makes()
+    car_models()
+    insurance_classes()
     insurance_subclass()
     counties()
     constituencies()
     ward()
-    # insurance_details()
+    insurance_details()

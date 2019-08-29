@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 from app import app
 
 
-class S3FileHandler():
+class S3FileHandler:
     """
     s3 File handler class
     describes the general way to generate pre-signed
