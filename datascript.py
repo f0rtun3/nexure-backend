@@ -172,7 +172,6 @@ def sum_insured_data():
 
 
 if __name__ == '__main__':
-    """
     car_makes()
     car_models()
     insurance_classes()
@@ -180,7 +179,6 @@ if __name__ == '__main__':
     counties()
     constituencies()
     ward()
-    """
     insurance_details()
     age_data()
     locations_data()
