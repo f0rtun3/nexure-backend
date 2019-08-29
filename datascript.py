@@ -7,6 +7,10 @@ from models.InsuranceClass import InsuranceClass
 from models.InsuranceSubclass import InsuranceSubclass
 from models.Ward import Ward
 from models.CompanyDetails import CompanyDetails
+from models.AgeData import AgeData
+from models.LocationData import LocationData
+from models.MakeOrigin import MakeOrigin
+from models.SumInsuredRates import SumInsuredRates
 
 # Import the CSV files into python using read_csv
 # fetch car makes data and send it to its models
@@ -98,6 +102,8 @@ def insurance_subclass():
         new_sub_class.save()
 
 # Counties
+
+
 def counties():
     df = pd.read_csv("data/County_Insurance.csv")
     for row in df.itertuples():
@@ -119,23 +125,60 @@ def ward():
     df = pd.read_csv("data/Ward_Insurance.csv")
     for row in df.itertuples():
         county_id = County.get_county_by_name(row.County_Name)
-        constituency = Constituency.get_constituency_by_name(row.Constituency_Name)
+        constituency = Constituency.get_constituency_by_name(
+            row.Constituency_Name)
         new_ward = Ward(row.Ward_Name, constituency, county_id)
         new_ward.save()
+
 
 def insurance_details():
     df = pd.read_csv("data/insurance-companies.csv")
     for row in df.itertuples():
-        new_company = CompanyDetails(row.org_name, row.email, row.physical_address, row.website, row.avatar)
+        new_company = CompanyDetails(
+            row.org_name, row.email, row.physical_address, row.website, row.avatar)
         new_company.save()
 
 
+def age_data():
+    df = pd.read_csv("data/age_data.csv")
+    for row in df.itertuples():
+        new_data = AgeData(row.Data, row.LowerLimit,
+                           row.UpperLimit, row.Relativity)
+        new_data.save()
+
+
+def locations_data():
+    df = pd.read_csv("data/locations.csv")
+
+    for row in df.itertuples():
+        constituency = Constituency.get_constituency_by_name(row.Constituency)
+        ward = Ward.get_ward_id_by_name(row.Ward)
+        new_data = LocationData(constituency, ward, row.Relativity)
+        new_data.save()
+
+def make_origin():
+    df = pd.read_csv("data/make_origin.csv")
+    for row in df.itertuples():
+        new_data = MakeOrigin(row.Make_Origin, row.Relativity)
+        new_data.save()
+
+def sum_insured_data():
+    df = pd.read_csv("data/sum_insured_rates.csv")
+    for row in df.itertuples():
+        new_data = SumInsuredRates(row.LowerLimit, row.UpperLimit, row.Relativity, row.Rate)
+        new_data.save()
+
+
 if __name__ == '__main__':
-    # car_makes()
-    # car_models()
-    # insurance_classes()
+    car_makes()
+    car_models()
+    insurance_classes()
     insurance_subclass()
     counties()
     constituencies()
     ward()
-    # insurance_details()
+    insurance_details()
+    age_data()
+    locations_data()
+    make_origin()
+    sum_insured_data()

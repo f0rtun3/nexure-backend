@@ -14,7 +14,7 @@ class ChildPolicy(db.Model):
     cp_number = db.Column(db.String(22), nullable=False, unique=True)
     # links to the association table for loadings
     customer_number = db.Column(db.String(50))
-    rate = db.Column(db.Float, nullable=False)
+    rate = db.Column(db.Float, nullable=True)
     date_registered = db.Column(db.DateTime, default=db.func.now())
     date_expiry = db.Column(db.DateTime)
     premium_amount = db.Column(db.Float, nullable=False)
@@ -26,7 +26,7 @@ class ChildPolicy(db.Model):
     master_policy = db.Column(db.Integer, db.ForeignKey(
         'master_policy.id', onupdate='CASCADE', ondelete='CASCADE'))
     company = db.Column(db.Integer, db.ForeignKey(
-        'insurance_company.id', onupdate='CASCADE', ondelete='CASCADE'))
+        'company_details.id', onupdate='CASCADE', ondelete='CASCADE'))
     pricing_model = db.Column(db.String(50), nullable=False)
     date_activated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
     is_active = db.Column(db.Boolean, default=False)

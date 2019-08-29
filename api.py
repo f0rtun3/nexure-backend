@@ -36,7 +36,3 @@ api.add_resource(LoadingsHandler, '/api/loadings')
 api.add_resource(ExtensionHandler, '/api/extensions')
 api.add_resource(Location, '/api/locations')
 api.add_resource(InsuranceProducts, '/api/products')
-
-
-
-

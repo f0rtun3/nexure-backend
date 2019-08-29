@@ -1,0 +1,1441 @@
+,Constituency,Ward,Relativity
+1,Westlands,Kitisuru,0.95
+2,Westlands,Parklands/Highridge,0.95
+3,Westlands,Karura,0.95
+4,Westlands,Kangemi,1.005
+5,Westlands,Mountain View,1.0
+6,Dagoretti North,Kilimani,1.0
+7,Dagoretti North,Gatina,1.005
+8,Dagoretti North,Kileleshwa,1.0
+9,Dagoretti South,Kawangware,1.005
+10,Dagoretti South,Kabiro,1.005
+11,Dagoretti South,Mutuini,1.005
+12,Dagoretti South,Ngando,1.005
+13,Dagoretti South,Riruta,1.005
+14,Dagoretti South,Uthiru/Ruthimitu,1.005
+15,Dagoretti South,Waithaka,1.01
+16,Langata,Karen,1.0
+17,Langata,Nairobi West,1.005
+18,Langata,Mugumo-Ini,1.005
+19,Langata,South C,1.005
+20,Kibra,Nyayo Highrise,1.005
+21,Kibra,Laini Saba,1.005
+22,Kibra,Lindi,1.005
+23,Kibra,Makina,1.005
+24,Kibra,Woodley/Kenyatta Golf Course,1.0
+25,Kibra,Sarang'Ombe,1.005
+26,Roysambu,Githurai,1.01
+27,Roysambu,Kahawa West,1.01
+28,Roysambu,Zimmerman,1.01
+29,Roysambu,Roysambu,1.01
+30,Roysambu,Kahawa,1.01
+31,Kasarani,Claycity,1.01
+32,Kasarani,Mwiki,1.015
+33,Kasarani,Kasarani,1.015
+34,Kasarani,Njiru,1.015
+35,Kasarani,Ruai,1.015
+36,Ruaraka,Baba Dogo,1.015
+37,Ruaraka,Utalii,1.015
+38,Ruaraka,Mathare North,1.015
+39,Ruaraka,Lucky Summer,1.015
+40,Ruaraka,Korogocho,1.015
+41,Embakasi South,Imara Daima,1.01
+42,Embakasi South,Kwa Njenga,1.015
+43,Embakasi South,Kwa Reuben,1.015
+44,Embakasi South,Pipeline,1.015
+45,Embakasi South,Kware,1.015
+46,Embakasi North,Kariobangi North,1.015
+47,Embakasi North,Dandora Area I,1.02
+48,Embakasi North,Dandora Area Ii,1.02
+49,Embakasi North,Dandora Area Iii,1.02
+50,Embakasi North,Dandora Area Iv,1.02
+51,Embakasi Central,Kayole North,1.02
+52,Embakasi Central,Kayole Central,1.02
+53,Embakasi Central,Kayole South,1.02
+54,Embakasi Central,Komarock,1.015
+55,Embakasi Central,Matopeni/Spring Valley,1.015
+56,Embakasi East,Upper Savannah,1.015
+57,Embakasi East,Lower Savannah,1.015
+58,Embakasi East,Embakasi,1.01
+59,Embakasi East,Utawala,1.01
+60,Embakasi East,Mihango,1.01
+61,Embakasi West,Umoja I,1.001
+62,Embakasi West,Umoja Ii,1.001
+63,Embakasi West,Mowlem,1.001
+64,Embakasi West,Kariobangi South,1.015
+65,Makadara,Maringo/Hamza,1.015
+66,Makadara,Viwandani,1.015
+67,Makadara,Harambee,1.015
+68,Makadara,Makongeni,1.015
+69,Kamukunji,Pumwani,1.015
+70,Kamukunji,Eastleigh North,1.01
+71,Kamukunji,Eastleigh South,1.01
+72,Kamukunji,Airbase,1.01
+73,Kamukunji,California,1.01
+74,Starehe,Nairobi Central,1.0
+75,Starehe,Ngara,1.0
+76,Starehe,Pangani,1.0
+77,Starehe,Ziwani/Kariokor,1.01
+78,Starehe,Landimawe,1.01
+79,Starehe,Nairobi South,1.01
+80,Mathare,Hospital,1.01
+81,Mathare,Mabatini,1.01
+82,Mathare,Huruma,1.01
+83,Mathare,Mlango Kubwa,1.01
+84,Mathare,Kiamaiko,1.01
+85,Changamwe,Port Reitz,1.0
+86,Changamwe,Kipevu,1.0
+87,Changamwe,Airport,1.0
+88,Changamwe,Changamwe,1.0
+89,Changamwe,Chaani,1.0
+90,Jomvu,Jomvu Kuu,1.0
+91,Jomvu,Miritini,1.0
+92,Jomvu,Mikindani,1.0
+93,Kisauni,Mjambere,1.0
+94,Kisauni,Junda,1.0
+95,Kisauni,Bamburi,1.0
+96,Kisauni,Mwakirunge,1.0
+97,Kisauni,Mtopanga,1.0
+98,Kisauni,Magogoni,1.0
+99,Kisauni,Shanzu,1.0
+100,Nyali,Frere Town,1.0
+101,Nyali,Ziwa La Ng'Ombe,1.0
+102,Nyali,Mkomani,1.0
+103,Nyali,Kongowea,1.0
+104,Nyali,Kadzandani,1.0
+105,Likoni,Mtongwe,1.0
+106,Likoni,Shika Adabu,1.0
+107,Likoni,Bofu,1.0
+108,Likoni,Likoni,1.0
+109,Likoni,Timbwani,1.0
+110,Mvita,Mji Wa Kale/Makadara,1.0
+111,Mvita,Tudor,1.0
+112,Mvita,Tononoka,1.0
+113,Mvita,Shimanzi/Ganjoni,1.0
+114,Mvita,Majengo,1.0
+115,Msambweni,Gombato Bongwe,1.0
+116,Msambweni,Ukunda,1.0
+117,Msambweni,Kinondo,1.0
+118,Msambweni,Ramisi,1.0
+119,Lungalunga,Pongwe/Kikoneni,1.0
+120,Lungalunga,Dzombo,1.0
+121,Lungalunga,Mwereni,1.0
+122,Lungalunga,Vanga,1.0
+123,Matuga,Tsimba Golini,1.0
+124,Matuga,Waa,1.0
+125,Matuga,Tiwi,1.0
+126,Matuga,Kubo South,1.0
+127,Matuga,Mkongani,1.0
+128,Kinango,Ndavaya,1.0
+129,Kinango,Puma,1.0
+130,Kinango,Kinango,1.0
+131,Kinango,Mackinnon Road,1.0
+132,Kinango,Chengoni/Samburu,1.0
+133,Kinango,Mwavumbo,1.0
+134,Kinango,Kasemeni,1.0
+135,Kilifi North,Tezo,1.0
+136,Kilifi North,Sokoni,1.0
+137,Kilifi North,Kibarani,1.0
+138,Kilifi North,Dabaso,1.0
+139,Kilifi North,Matsangoni,1.0
+140,Kilifi North,Watamu,1.0
+141,Kilifi North,Mnarani,1.0
+142,Kilifi South,Junju,1.0
+143,Kilifi South,Mwarakaya,1.0
+144,Kilifi South,Shimo La Tewa,1.0
+145,Kilifi South,Chasimba,1.0
+146,Kilifi South,Mtepeni,1.0
+147,Kaloleni,Mariakani,1.0
+148,Kaloleni,Kayafungo,1.0
+149,Kaloleni,Kaloleni,1.0
+150,Kaloleni,Mwanamwinga,1.0
+151,Rabai,Mwawesa,1.0
+152,Rabai,Ruruma,1.0
+153,Rabai,Kambe/Ribe,1.0
+154,Rabai,Rabai/Kisurutini,1.0
+155,Ganze,Ganze,1.0
+156,Ganze,Bamba,1.0
+157,Ganze,Jaribuni,1.0
+158,Ganze,Sokoke,1.0
+159,Malindi,Jilore,1.0
+160,Malindi,Kakuyuni,1.0
+161,Malindi,Ganda,1.0
+162,Malindi,Malindi Town,1.0
+163,Malindi,Shella,1.0
+164,Malindi,Sabaki,1.0
+165,Magarini,Marafa,1.0
+166,Magarini,Magarini,1.0
+167,Magarini,Gongoni,1.0
+168,Magarini,Adu,1.0
+169,Magarini,Garashi,1.0
+170,Garsen,Kipini East,1.0
+171,Garsen,Garsen South,1.0
+172,Garsen,Kipini West,1.0
+173,Garsen,Garsen Central,1.0
+174,Garsen,Garsen West,1.0
+175,Garsen,Garsen North,1.0
+176,Galole,Kinakomba,1.0
+177,Galole,Mikinduni,1.0
+178,Galole,Chewani,1.0
+179,Galole,Wayu,1.0
+180,Bura,Chewele,1.0
+181,Bura,Bura,1.0
+182,Bura,Bangale,1.0
+183,Bura,Sala,1.0
+184,Bura,Madogo,1.0
+185,Lamu East,Faza,1.0
+186,Lamu East,Kiunga,1.0
+187,Lamu East,Basuba,1.0
+188,Lamu West,Shella,1.0
+189,Lamu West,Mkomani,1.0
+190,Lamu West,Hindi,1.0
+191,Lamu West,Mkunumbi,1.0
+192,Lamu West,Hongwe,1.0
+193,Lamu West,Witu,1.0
+194,Lamu West,Bahari,1.0
+195,Taveta,Chala,1.0
+196,Taveta,Mahoo,1.0
+197,Taveta,Bomani,1.0
+198,Taveta,Mboghoni,1.0
+199,Taveta,Mata,1.0
+200,Wundanyi,Wundanyi/Mbale,1.0
+201,Wundanyi,Werugha,1.0
+202,Wundanyi,Wumingu/Kishushe,1.0
+203,Wundanyi,Mwanda/Mgange,1.0
+204,Mwatate,Rong'E,1.0
+205,Mwatate,Mwatate,1.0
+206,Mwatate,Bura(Mwatate),1.0
+207,Mwatate,Chawia,1.0
+208,Mwatate,Wusi/Kishamba,1.0
+209,Voi,Mbololo,1.0
+210,Voi,Sagala,1.0
+211,Voi,Kaloleni,1.0
+212,Voi,Marungu,1.0
+213,Voi,Kasigau,1.0
+214,Voi,Ngolia,1.0
+215,Garissa Township,Waberi,1.0
+216,Garissa Township,Galbet,1.0
+217,Garissa Township,Township,1.0
+218,Garissa Township,Iftin,1.0
+219,Balambala,Balambala,1.0
+220,Balambala,Danyere,1.0
+221,Balambala,Jara Jara,1.0
+222,Balambala,Saka,1.0
+223,Balambala,Sankuri,1.0
+224,Lagdera,Modogashe,1.0
+225,Lagdera,Benane,1.0
+226,Lagdera,Goreale,1.0
+227,Lagdera,Maalimin,1.0
+228,Lagdera,Sabena,1.0
+229,Lagdera,Baraki,1.0
+230,Daadab,Dertu,1.0
+231,Daadab,Dadaab,1.0
+232,Daadab,Labasigale,1.0
+233,Daadab,Damajale,1.0
+234,Daadab,Liboi,1.0
+235,Daadab,Abakaile,1.0
+236,Fafi,Bura,1.0
+237,Fafi,Dekaharia,1.0
+238,Fafi,Jarajila,1.0
+239,Fafi,Fafi,1.0
+240,Fafi,Nanighi,1.0
+241,Ijara,Hulugho,1.0
+242,Ijara,Sangailu,1.0
+243,Ijara,Ijara,1.0
+244,Ijara,Masalani,1.0
+245,Wajir North,Gurar,1.0
+246,Wajir North,Bute,1.0
+247,Wajir North,Korondile,1.0
+248,Wajir North,Malkagufu,1.0
+249,Wajir North,Batalu,1.0
+250,Wajir North,Danaba,1.0
+251,Wajir North,Godoma,1.0
+252,Wajir East,Wagberi,1.0
+253,Wajir East,Township,1.0
+254,Wajir East,Barwago,1.0
+255,Wajir East,Khorof/Harar,1.0
+256,Tarbaj,Elben,1.0
+257,Tarbaj,Sarman,1.0
+258,Tarbaj,Tarbaj,1.0
+259,Tarbaj,Wargadud,1.0
+260,Wajir West,Arbajahan,1.0
+261,Wajir West,Hadado/Athibohol,1.0
+262,Wajir West,Ademasajide,1.0
+263,Wajir West,Ganyure/Wagalla,1.0
+264,Eldas,Eldas,1.0
+265,Eldas,Della,1.0
+266,Eldas,Lakoley South/Basir,1.0
+267,Eldas,Elnur/Tula Tula,1.0
+268,Wajir South,Benane,1.0
+269,Wajir South,Burder,1.0
+270,Wajir South,Dadaja Bulla,1.0
+271,Wajir South,Habasswein,1.0
+272,Wajir South,Lagboghol South,1.0
+273,Wajir South,Ibrahim Ure,1.0
+274,Wajir South,Diif,1.0
+275,Mandera West,Takaba South,1.0
+276,Mandera West,Takaba,1.0
+277,Mandera West,Lagsure,1.0
+278,Mandera West,Dandu,1.0
+279,Mandera West,Gither,1.0
+280,Banissa,Banissa,1.0
+281,Banissa,Derkhale,1.0
+282,Banissa,Guba,1.0
+283,Banissa,Malkamari,1.0
+284,Banissa,Kiliwehiri,1.0
+285,Mandera North,Ashabito,1.0
+286,Mandera North,Guticha,1.0
+287,Mandera North,Morothile,1.0
+288,Mandera North,Rhamu,1.0
+289,Mandera North,Rhamu Dimtu,1.0
+290,Mandera South,Wargudud,1.0
+291,Mandera South,Kutulo,1.0
+292,Mandera South,Elwak South,1.0
+293,Mandera South,Elwak North,1.0
+294,Mandera South,Shimbir Fatuma,1.0
+295,Mandera East,Arabia,1.0
+296,Mandera East,Bulla Mpya,1.0
+297,Mandera East,Khalalio,1.0
+298,Mandera East,Neboi,1.0
+299,Mandera East,Township,1.0
+300,Mandera East,Fino,1.0
+301,Lafey,Libehia,1.0
+302,Lafey,Lafey,1.0
+303,Lafey,Warankara,1.0
+304,Lafey,Alango Gof,1.0
+305,Moyale,Butiye,1.0
+306,Moyale,Sololo,1.0
+307,Moyale,Heilu/Manyatta,1.0
+308,Moyale,Golbo,1.0
+309,Moyale,Moyale Township,1.0
+310,Moyale,Uran,1.0
+311,Moyale,Obbu,1.0
+312,North Horr,Dukana,1.0
+313,North Horr,Maikona,1.0
+314,North Horr,Turbi,1.0
+315,North Horr,North Horr,1.0
+316,North Horr,Illeret,1.0
+317,Saku,Sagante/Jaldesa,1.0
+318,Saku,Karare,1.0
+319,Saku,Marsabit Central,1.0
+320,Laisamis,Loiyangalani,1.0
+321,Laisamis,Kargi/South Horr,1.0
+322,Laisamis,Korr/Ngurunit,1.0
+323,Laisamis,Logologo,1.0
+324,Laisamis,Laisamis,1.0
+325,Isiolo North,Wabera,1.0
+326,Isiolo North,Bulla Pesa,1.0
+327,Isiolo North,Chari,1.0
+328,Isiolo North,Cherab,1.0
+329,Isiolo North,673,1.0
+330,Isiolo North,Burat,1.0
+331,Isiolo North,Oldonyiro,1.0
+332,Isiolo South,Garba Tulla,1.0
+333,Isiolo South,Kinna,1.0
+334,Isiolo South,Sericho,1.0
+335,Igembe South,Maua,1.0
+336,Igembe South,Kiegoi/Antubochiu,1.0
+337,Igembe South,Athiru Gaiti,1.0
+338,Igembe South,Akachiu,1.0
+339,Igembe South,Kanuni,1.0
+340,Igembe Central,Akirang'Ondu,1.0
+341,Igembe Central,Athiru Ruujine,1.0
+342,Igembe Central,Igembe East,1.0
+343,Igembe Central,Njia,1.0
+344,Igembe Central,Kangeta,1.0
+345,Igembe North,Antuambui,1.0
+346,Igembe North,Ntunene,1.0
+347,Igembe North,Antubetwe Kiongo,1.0
+348,Igembe North,Naathu,1.0
+349,Igembe North,Amwathi,1.0
+350,Tigania West,Athwana,1.0
+351,Tigania West,Akithii,1.0
+352,Tigania West,Kianjai,1.0
+353,Tigania West,Nkomo,1.0
+354,Tigania West,Mbeu,1.0
+355,Tigania East,Thangatha,1.0
+356,Tigania East,Mikinduri,1.0
+357,Tigania East,Kiguchwa,1.0
+358,Tigania East,Muthara,1.0
+359,Tigania East,Karama,1.0
+360,North Imenti,Municipality,1.0
+361,North Imenti,Ntima East,1.0
+362,North Imenti,Ntima West,1.0
+363,North Imenti,Nyaki West,1.0
+364,North Imenti,Nyaki East,1.0
+365,Buuri,Timau,1.0
+366,Buuri,Kisima,1.0
+367,Buuri,Kiirua/Naari,1.0
+368,Buuri,Ruiri/Rwarera,1.0
+369,Buuri,Kibirichia,1.0
+370,Central Imenti,Mwanganthia,1.0
+371,Central Imenti,Abothuguchi Central,1.0
+372,Central Imenti,Abothuguchi  West,1.0
+373,Central Imenti,Kiagu,1.0
+374,South Imenti,Mitunguu,1.0
+375,South Imenti,Igoji East,1.0
+376,South Imenti,Igoji West,1.0
+377,South Imenti,Abogeta East,1.0
+378,South Imenti,Abogeta West,1.0
+379,South Imenti,Nkuene,1.0
+380,Maara,Mitheru,1.0
+381,Maara,Muthambi,1.0
+382,Maara,Mwimbi,1.0
+383,Maara,Ganga,1.0
+384,Maara,Chogoria,1.0
+385,Chuka/Igambang'Ombe,Mariani,1.0
+386,Chuka/Igambang'Ombe,Karingani,1.0
+387,Chuka/Igambang'Ombe,Magumoni,1.0
+388,Chuka/Igambang'Ombe,Mugwe,1.0
+389,Chuka/Igambang'Ombe,Igambang'Ombe,1.0
+390,Tharaka,Gatunga,1.0
+391,Tharaka,Mukothima,1.0
+392,Tharaka,Nkondi,1.0
+393,Tharaka,Chiakariga,1.0
+394,Tharaka,Marimanti,1.0
+395,Manyatta,Ruguru/Ngandori,1.0
+396,Manyatta,Kithimu,1.0
+397,Manyatta,Nginda,1.0
+398,Manyatta,Mbeti North,1.0
+399,Manyatta,Kirimari,1.0
+400,Manyatta,Gaturi South,1.0
+401,Manyatta,Gaturi North,1.0
+402,Runyenjes,Kagaari South,1.0
+403,Runyenjes,Central  Ward,1.0
+404,Runyenjes,Kagaari North,1.0
+405,Runyenjes,Kyeni North,1.0
+406,Runyenjes,Kyeni South,1.0
+407,Mbeere South,Mwea,1.0
+408,Mbeere South,Makima,1.0
+409,Mbeere South,Mbeti South,1.0
+410,Mbeere South,Mavuria,1.0
+411,Mbeere South,Kiambere,1.0
+412,Mbeere North,Nthawa,1.0
+413,Mbeere North,Muminji,1.0
+414,Mbeere North,Evurore,1.0
+415,Mwingi North,Ngomeni,1.0
+416,Mwingi North,Kyuso,1.0
+417,Mwingi North,Mumoni,1.0
+418,Mwingi North,Tseikuru,1.0
+419,Mwingi North,Tharaka,1.0
+420,Mwingi West,Kyome/Thaana,1.0
+421,Mwingi West,Nguutani,1.0
+422,Mwingi West,Migwani,1.0
+423,Mwingi Central,Kiomo/Kyethani,1.0
+424,Mwingi Central,Central,1.0
+425,Mwingi Central,Kivou,1.0
+426,Mwingi Central,Nguni,1.0
+427,Mwingi Central,Nuu,1.0
+428,Mwingi Central,Mui,1.0
+429,Mwingi Central,Waita,1.0
+430,Kitui West,Mutonguni,1.0
+431,Kitui West,Kauwi,1.0
+432,Kitui West,Matinyani,1.0
+433,Kitui West,Kwa Mutonga/Kithumula,1.0
+434,Kitui Rural,Kisasi,1.0
+435,Kitui Rural,Mbitini,1.0
+436,Kitui Rural,Kwavonza/Yatta,1.0
+437,Kitui Rural,Kanyangi,1.0
+438,Kitui Rural,Mulango,1.0
+439,Kitui Central,Miambani,1.0
+440,Kitui Central,Township,1.0
+441,Kitui Central,Kyangwithya West,1.0
+442,Kitui Central,Kyangwithya East,1.0
+443,Kitui East,Zombe/Mwitika,1.0
+444,Kitui East,Nzambani,1.0
+445,Kitui East,Chuluni,1.0
+446,Kitui East,Voo/Kyamatu,1.0
+447,Kitui East,Endau/Malalani,1.0
+448,Kitui East,Mutito/Kaliku,1.0
+449,Kitui South,Ikanga/Kyatune,1.0
+450,Kitui South,Mutomo,1.0
+451,Kitui South,Mutha,1.0
+452,Kitui South,Ikutha,1.0
+453,Kitui South,Kanziko,1.0
+454,Kitui South,Athi,1.0
+455,Masinga,Kivaa,1.0
+456,Masinga,Masinga Central,1.0
+457,Masinga,Ekalakala,1.0
+458,Masinga,Muthesya,1.0
+459,Masinga,Ndithini,1.0
+460,Yatta,Ndalani,1.0
+461,Yatta,Matuu,1.0
+462,Yatta,Kithimani,1.0
+463,Yatta,Ikombe,1.0
+464,Yatta,Katangi,1.0
+465,Kangundo,Kangundo North,1.0
+466,Kangundo,Kangundo Central,1.0
+467,Kangundo,Kangundo East,1.0
+468,Kangundo,Kangundo West,1.0
+469,Matungulu,Tala,1.0
+470,Matungulu,Matungulu North,1.0
+471,Matungulu,Matungulu East,1.0
+472,Matungulu,Matungulu West,1.0
+473,Matungulu,Kyeleni,1.0
+474,Kathiani,Mitaboni,1.0
+475,Kathiani,Kathiani Central,1.0
+476,Kathiani,Upper Kaewa/Iveti,1.0
+477,Kathiani,Lower Kaewa/Kaani,1.0
+478,Mavoko,Athi River,1.0
+479,Mavoko,Kinanie,1.0
+480,Mavoko,Muthwani,1.0
+481,Mavoko,Syokimau/Mulolongo,1.0
+482,Machakos Town,Kalama,1.0
+483,Machakos Town,Mua,1.0
+484,Machakos Town,Mutituni,1.0
+485,Machakos Town,Machakos Central,1.0
+486,Machakos Town,Mumbuni North,1.0
+487,Machakos Town,Muvuti/Kiima-Kimwe,1.0
+488,Machakos Town,Kola,1.0
+489,Mwala,Mbiuni,1.0
+490,Mwala,Makutano/Mwala,1.0
+491,Mwala,Masii,1.0
+492,Mwala,Muthetheni,1.0
+493,Mwala,Wamunyu,1.0
+494,Mwala,Kibauni,1.0
+495,Mbooni,Tulimani,1.0
+496,Mbooni,Mbooni,1.0
+497,Mbooni,Kithungo/Kitundu,1.0
+498,Mbooni,Kisau-Kiteta,1.0
+499,Mbooni,Waia/Kako,1.0
+500,Mbooni,Kalawa,1.0
+501,Kilome,Kasikeu,1.0
+502,Kilome,Mukaa,1.0
+503,Kilome,Kiima Kiu/Kalanzoni,1.0
+504,Kaiti,Ukia,1.0
+505,Kaiti,Kee,1.0
+506,Kaiti,Kilungu,1.0
+507,Kaiti,Ilima,1.0
+508,Makueni,Wote,1.0
+509,Makueni,Muvau/Kikuumini,1.0
+510,Makueni,Mavindini,1.0
+511,Makueni,Kitise/Kithuki,1.0
+512,Makueni,Kathonzweni,1.0
+513,Makueni,Nzaui/Kilili/Kalamba,1.0
+514,Makueni,Mbitini,1.0
+515,Kibwezi West,Makindu,1.0
+516,Kibwezi West,Nguumo,1.0
+517,Kibwezi West,Kikumbulyu North,1.0
+518,Kibwezi West,Kikumbulyu South,1.0
+519,Kibwezi West,Nguu/Masumba,1.0
+520,Kibwezi West,Emali/Mulala,1.0
+521,Kibwezi East,Masongaleni,1.0
+522,Kibwezi East,Mtito Andei,1.0
+523,Kibwezi East,Thange,1.0
+524,Kibwezi East,Ivingoni/Nzambani,1.0
+525,Kinangop,Engineer,1.0
+526,Kinangop,Gathara,1.0
+527,Kinangop,North Kinangop,1.0
+528,Kinangop,Murungaru,1.0
+529,Kinangop,Njabini\Kiburu,1.0
+530,Kinangop,Nyakio,1.0
+531,Kinangop,Githabai,1.0
+532,Kinangop,Magumu,1.0
+533,Kipipiri,Wanjohi,1.0
+534,Kipipiri,Kipipiri,1.0
+535,Kipipiri,Geta,1.0
+536,Kipipiri,Githioro,1.0
+537,Ol Kalou,Karau,1.0
+538,Ol Kalou,Kanjuiri Range,1.0
+539,Ol Kalou,Mirangine,1.0
+540,Ol Kalou,Kaimbaga,1.0
+541,Ol Kalou,Rurii,1.0
+542,Ol Jorok,Gathanji,1.0
+543,Ol Jorok,Gatimu,1.0
+544,Ol Jorok,Weru,1.0
+545,Ol Jorok,Charagita,1.0
+546,Ndaragwa,Leshau Pondo,1.0
+547,Ndaragwa,Kiriita,1.0
+548,Ndaragwa,Central,1.0
+549,Ndaragwa,Shamata,1.0
+550,Tetu,Dedan Kimanthi,1.0
+551,Tetu,Wamagana,1.0
+552,Tetu,Aguthi-Gaaki,1.0
+553,Kieni,Mweiga,1.0
+554,Kieni,Naromoru Kiamathaga,1.0
+555,Kieni,Mwiyogo/Endarasha,1.0
+556,Kieni,Mugunda,1.0
+557,Kieni,Gatarakwa,1.0
+558,Kieni,Thegu River,1.0
+559,Kieni,Kabaru,1.0
+560,Kieni,Gakawa,1.0
+561,Mathira,Ruguru,1.0
+562,Mathira,Magutu,1.0
+563,Mathira,Iriaini,1.0
+564,Mathira,Konyu,1.0
+565,Mathira,Kirimukuyu,1.0
+566,Mathira,Karatina Town,1.0
+567,Othaya,Mahiga,1.0
+568,Othaya,Iria-Ini,1.0
+569,Othaya,Chinga,1.0
+570,Othaya,Karima,1.0
+571,Mukurweini,Gikondi,1.0
+572,Mukurweini,Rugi,1.0
+573,Mukurweini,Mukurwe-Ini West,1.0
+574,Mukurweini,Mukurwe-Ini Central,1.0
+575,Nyeri Town,Kiganjo/Mathari,1.0
+576,Nyeri Town,Rware,1.0
+577,Nyeri Town,Gatitu/Muruguru,1.0
+578,Nyeri Town,Ruring'U,1.0
+579,Nyeri Town,Kamakwa/Mukaro,1.0
+580,Mwea,Mutithi,1.0
+581,Mwea,Kangai,1.0
+582,Mwea,Thiba,1.0
+583,Mwea,Wamumu,1.0
+584,Mwea,Nyangati,1.0
+585,Mwea,Murinduko,1.0
+586,Mwea,Gathigiriri,1.0
+587,Mwea,Tebere,1.0
+588,Gichugu,Kabare,1.0
+589,Gichugu,Baragwi,1.0
+590,Gichugu,Njukiini,1.0
+591,Gichugu,Ngariama,1.0
+592,Gichugu,Karumandi,1.0
+593,Ndia,Mukure,1.0
+594,Ndia,Kiine,1.0
+595,Ndia,Kariti,1.0
+596,Kirinyaga Central,Mutira,1.0
+597,Kirinyaga Central,Kanyekini,1.0
+598,Kirinyaga Central,Kerugoya,1.0
+599,Kirinyaga Central,Inoi,1.0
+600,Kangema,Kanyenya-Ini,1.0
+601,Kangema,Muguru,1.0
+602,Kangema,Rwathia,1.0
+603,Mathioya,Gitugi,1.0
+604,Mathioya,Kiru,1.0
+605,Mathioya,Kamacharia,1.0
+606,Kiharu,Wangu,1.0
+607,Kiharu,Mugoiri,1.0
+608,Kiharu,Mbiri,1.0
+609,Kiharu,Township,1.0
+610,Kiharu,Murarandia,1.0
+611,Kiharu,Gaturi,1.0
+612,Kigumo,Kahumbu,1.0
+613,Kigumo,Muthithi,1.0
+614,Kigumo,Kigumo,1.0
+615,Kigumo,Kangari,1.0
+616,Kigumo,Kinyona,1.0
+617,Maragwa,Kimorori/Wempa,1.0
+618,Maragwa,Makuyu,1.0
+619,Maragwa,Kambiti,1.0
+620,Maragwa,Kamahuha,1.0
+621,Maragwa,Ichagaki,1.0
+622,Maragwa,Nginda,1.0
+623,Kandara,Ng'Araria,1.0
+624,Kandara,Muruka,1.0
+625,Kandara,Kagundu-Ini,1.0
+626,Kandara,Gaichanjiru,1.0
+627,Kandara,Ithiru,1.0
+628,Kandara,Ruchu,1.0
+629,Gatanga,Ithanga,1.0
+630,Gatanga,Kakuzi/Mitubiri,1.0
+631,Gatanga,Mugumo-Ini,1.0
+632,Gatanga,Kihumbu-Ini,1.0
+633,Gatanga,Gatanga,1.0
+634,Gatanga,Kariara,1.0
+635,Gatundu South,Kiamwangi,1.0
+636,Gatundu South,Kiganjo,1.0
+637,Gatundu South,Ndarugu,1.0
+638,Gatundu South,Ngenda,1.0
+639,Gatundu North,Gituamba,1.0
+640,Gatundu North,Githobokoni,1.0
+641,Gatundu North,Chania,1.0
+642,Gatundu North,Mang'U,1.0
+643,Juja,Murera,1.0
+644,Juja,Theta,1.0
+645,Juja,Juja,1.0
+646,Juja,Witeithie,1.0
+647,Juja,Kalimoni,1.0
+648,Thika Town,Township,1.0
+649,Thika Town,Kamenu,1.0
+650,Thika Town,Hospital,1.0
+651,Thika Town,Gatuanyaga,1.0
+652,Thika Town,Ngoliba,1.0
+653,Ruiru,Gitothua,1.0
+654,Ruiru,Biashara,1.0
+655,Ruiru,Kiuu,1.0
+656,Githunguri,Githunguri,1.0
+657,Githunguri,Githiga,1.0
+658,Githunguri,Ikinu,1.0
+659,Githunguri,Ngewa,1.0
+660,Githunguri,Komothai,1.0
+661,Kiambu,Ting'Ang'A,1.0
+662,Kiambu,Ndumberi,1.0
+663,Kiambu,Riabai,1.0
+664,Kiambu,Township,1.0
+665,Kiambaa,Cianda,1.0
+666,Kiambaa,Karuri,1.0
+667,Kiambaa,Ndenderu,1.0
+668,Kiambaa,Muchatha,1.0
+669,Kiambaa,Kihara,1.0
+670,Kabete,Gitaru,1.0
+671,Kabete,Muguga,1.0
+672,Kabete,Nyadhuna,1.0
+673,Kabete,Kabete,1.0
+674,Kabete,Uthiru,1.0
+675,Kikuyu,Karai,1.0
+676,Kikuyu,Nachu,1.0
+677,Kikuyu,Sigona,1.0
+678,Kikuyu,Kikuyu,1.0
+679,Kikuyu,Kinoo,1.0
+680,Limuru,Bibirioni,1.0
+681,Limuru,Limuru Central,1.0
+682,Limuru,Ndeiya,1.0
+683,Limuru,Limuru East,1.0
+684,Limuru,Ngecha Tigoni,1.0
+685,Lari,Kinale,1.0
+686,Lari,Kijabe,1.0
+687,Lari,Nyanduma,1.0
+688,Lari,Kamburu,1.0
+689,Lari,Lari/Kirenga,1.0
+690,Turkana North,Kaeris,1.0
+691,Turkana North,Lake Zone,1.0
+692,Turkana North,Lapur,1.0
+693,Turkana North,Kaikor/Kaaleng,1.0
+694,Turkana North,Kibish,1.0
+695,Turkana North,Nakalale,1.0
+696,Turkana West,Kakuma,1.0
+697,Turkana West,Lopur,1.0
+698,Turkana West,Letea,1.0
+699,Turkana West,Songot,1.0
+700,Turkana West,Kalobeyei,1.0
+701,Turkana West,Lokichoggio,1.0
+702,Turkana West,Nanaam,1.0
+703,Turkana Central,Kerio Delta,1.0
+704,Turkana Central,Kangatotha,1.0
+705,Turkana Central,Kalokol,1.0
+706,Turkana Central,Lodwar Township,1.0
+707,Turkana Central,Kanamkemer,1.0
+708,Loima,Kotaruk/Lobei,1.0
+709,Loima,Turkwel,1.0
+710,Loima,Loima,1.0
+711,Loima,Lokiriama/Lorengippi,1.0
+712,Turkana South,Kaputir,1.0
+713,Turkana South,Katilu,1.0
+714,Turkana South,Lobokat,1.0
+715,Turkana South,Kalapata,1.0
+716,Turkana South,Lokichar,1.0
+717,Turkana East,Kapedo/Napeitom,1.0
+718,Turkana East,Katilia,1.0
+719,Kapenguria,Riwo,1.0
+720,Kapenguria,Kapenguria,1.0
+721,Kapenguria,Mnagei,1.0
+722,Kapenguria,Siyoi,1.0
+723,Kapenguria,Endugh,1.0
+724,Kapenguria,Sook,1.0
+725,Sigor,Sekerr,1.0
+726,Sigor,Masool,1.0
+727,Sigor,Lomut,1.0
+728,Sigor,Weiwei,1.0
+729,Kacheliba,Suam,1.0
+730,Kacheliba,Kodich,1.0
+731,Kacheliba,Kasei,1.0
+732,Kacheliba,Kapchok,1.0
+733,Kacheliba,Kiwawa,1.0
+734,Kacheliba,Alale,1.0
+735,Pokot South,Chepareria,1.0
+736,Pokot South,Batei,1.0
+737,Pokot South,Lelan,1.0
+738,Pokot South,Tapach,1.0
+739,Samburu West,Lodokejek,1.0
+740,Samburu West,Suguta Marmar,1.0
+741,Samburu West,Maralal,1.0
+742,Samburu West,Loosuk,1.0
+743,Samburu West,Porro,1.0
+744,Samburu North,El-Barta,1.0
+745,Samburu North,Nachola,1.0
+746,Samburu North,Ndoto,1.0
+747,Samburu North,Nyiro,1.0
+748,Samburu North,Angata Nanyokie,1.0
+749,Samburu North,Baawa,1.0
+750,Samburu East,Waso,1.0
+751,Samburu East,Wamba West,1.0
+752,Samburu East,Wamba East,1.0
+753,Samburu East,Wamba North,1.0
+754,Kwanza,Kwanza,1.0
+755,Kwanza,Keiyo,1.0
+756,Kwanza,Bidii,1.0
+757,Endebess,Chepchoina,1.0
+758,Endebess,Endebess,1.0
+759,Endebess,Matumbei,1.0
+760,Saboti,Kinyoro,1.0
+761,Saboti,Matisi,1.0
+762,Saboti,Tuwani,1.0
+763,Saboti,Saboti,1.0
+764,Saboti,Machewa,1.0
+765,Kiminini,Kiminini,1.0
+766,Kiminini,Waitaluk,1.0
+767,Kiminini,Sirende,1.0
+768,Kiminini,Hospital,1.0
+769,Kiminini,Sikhendu,1.0
+770,Kiminini,Nabiswa,1.0
+771,Cherangany,Sinyerere,1.0
+772,Cherangany,Makutano,1.0
+773,Cherangany,Kaplamai,1.0
+774,Cherangany,Motosiet,1.0
+775,Cherangany,Cherangany/Suwerwa,1.0
+776,Cherangany,Chepsiro/Kiptoror,1.0
+777,Cherangany,Sitatunga,1.0
+778,Soy,Moi'S Bridge,1.0
+779,Soy,Kapkures,1.0
+780,Soy,Ziwa,1.0
+781,Soy,Segero/Barsombe,1.0
+782,Soy,Kipsomba,1.0
+783,Soy,Soy,1.0
+784,Soy,Kuinet/Kapsuswa,1.0
+785,Turbo,Ngenyilel,1.0
+786,Turbo,Tapsagoi,1.0
+787,Turbo,Kamagut,1.0
+788,Turbo,Kiplombe,1.0
+789,Turbo,Kapsaos,1.0
+790,Turbo,Huruma,1.0
+791,Moiben,Tembelio,1.0
+792,Moiben,Sergoit,1.0
+793,Moiben,Karuna/Meibeki,1.0
+794,Moiben,Moiben,1.0
+795,Moiben,Kimumu,1.0
+796,Ainabkoi,Kapsoya,1.0
+797,Ainabkoi,Kaptagat,1.0
+798,Ainabkoi,Ainabkoi/Olare,1.0
+799,Kapseret,Simat/Kapseret,1.0
+800,Kapseret,Kipkenyo,1.0
+801,Kapseret,Ngeria,1.0
+802,Kapseret,Megun,1.0
+803,Kapseret,Langas,1.0
+804,Kesses,Racecourse,1.0
+805,Kesses,Cheptiret/Kipchamo,1.0
+806,Kesses,Tulwet/Chuiyat,1.0
+807,Kesses,Tarakwa,1.0
+808,Marakwet East,Kapyego,1.0
+809,Marakwet East,Sambirir,1.0
+810,Marakwet East,Endo,1.0
+811,Marakwet West,Sengwer,1.0
+812,Marakwet West,Cherang'Any/Chebororwa,1.0
+813,Marakwet West,Moiben/Kuserwo,1.0
+814,Marakwet West,Kapsowar,1.0
+815,Marakwet West,Arror,1.0
+816,Keiyo North,Emsoo,1.0
+817,Keiyo North,Kamariny,1.0
+818,Keiyo North,Kapchemutwa,1.0
+819,Keiyo North,Tambach,1.0
+820,Keiyo South,Kaptarakwa,1.0
+821,Keiyo South,Chepkorio,1.0
+822,Keiyo South,Soy North,1.0
+823,Keiyo South,Soy South,1.0
+824,Keiyo South,Kabiemit,1.0
+825,Keiyo South,Metkei,1.0
+826,Tinderet,Songhor/Soba,1.0
+827,Tinderet,Tindiret,1.0
+828,Tinderet,Chemelil/Chemase,1.0
+829,Tinderet,Kapsimotwo,1.0
+830,Aldai,Kabwareng,1.0
+831,Aldai,Terik,1.0
+832,Aldai,Kemeloi-Maraba,1.0
+833,Aldai,Kobujoi,1.0
+834,Aldai,Kaptumo-Kaboi,1.0
+835,Aldai,Koyo-Ndurio,1.0
+836,Nandi Hills,Nandi Hills,1.0
+837,Nandi Hills,Chepkunyuk,1.0
+838,Nandi Hills,Ol'Lessos,1.0
+839,Nandi Hills,Kapchorua,1.0
+840,Chesumei,Chemundu/Kapng'Etuny,1.0
+841,Chesumei,Kosirai,1.0
+842,Chesumei,Lelmokwo/Ngechek,1.0
+843,Chesumei,Kaptel/Kamoiywo,1.0
+844,Chesumei,Kiptuya,1.0
+845,Emgwen,Chepkumia,1.0
+846,Emgwen,Kapkangani,1.0
+847,Emgwen,Kapsabet,1.0
+848,Emgwen,Kilibwoni,1.0
+849,Mosop,Chepterwai,1.0
+850,Mosop,Kipkaren,1.0
+851,Mosop,Kurgung/Surungai,1.0
+852,Mosop,Kabiyet,1.0
+853,Mosop,Ndalat,1.0
+854,Mosop,Kabisaga,1.0
+855,Mosop,Sangalo/Kebulonik,1.0
+856,Tiaty,Tirioko,1.0
+857,Tiaty,Kolowa,1.0
+858,Tiaty,Ribkwo,1.0
+859,Tiaty,Silale,1.0
+860,Tiaty,Loiyamorock,1.0
+861,Tiaty,Tangulbei/Korossi,1.0
+862,Tiaty,Churo/Amaya,1.0
+863,Baringo North,Barwessa,1.0
+864,Baringo North,Kabartonjo,1.0
+865,Baringo North,Saimo/Kipsaraman,1.0
+866,Baringo North,Saimo/Soi,1.0
+867,Baringo North,Bartabwa,1.0
+868,Baringo Central,Kabarnet,1.0
+869,Baringo Central,Sacho,1.0
+870,Baringo Central,Tenges,1.0
+871,Baringo Central,Ewalel Chapchap,1.0
+872,Baringo Central,Kapropita,1.0
+873,Baringo South,Marigat,1.0
+874,Baringo South,Ilchamus,1.0
+875,Baringo South,Mochongoi,1.0
+876,Baringo South,Mukutani,1.0
+877,Mogotio,Mogotio,1.0
+878,Mogotio,Emining,1.0
+879,Mogotio,Kisanana,1.0
+880,Eldama Ravine,Lembus,1.0
+881,Eldama Ravine,Lembus Kwen,1.0
+882,Eldama Ravine,Ravine,1.0
+883,Eldama Ravine,Mumberes/Maji Mazuri,1.0
+884,Eldama Ravine,Lembus/Perkerra,1.0
+885,Eldama Ravine,Koibatek,1.0
+886,Laikipia West,Ol-Moran,1.0
+887,Laikipia West,Rumuruti Township,1.0
+888,Laikipia West,Githiga,1.0
+889,Laikipia West,Marmanet,1.0
+890,Laikipia West,Igwamiti,1.0
+891,Laikipia West,Salama,1.0
+892,Laikipia East,Ngobit,1.0
+893,Laikipia East,Tigithi,1.0
+894,Laikipia East,Thingithu,1.0
+895,Laikipia East,Nanyuki,1.0
+896,Laikipia North,Umande,1.0
+897,Laikipia North,Sosian,1.0
+898,Laikipia North,Segera,1.0
+899,Laikipia North,Mukogondo West,1.0
+900,Laikipia North,Mukogondo East,1.0
+901,Molo,Mariashoni,1.0
+902,Molo,Elburgon,1.0
+903,Molo,Turi,1.0
+904,Molo,Molo,1.0
+905,Njoro,Mau Narok,1.0
+906,Njoro,Mauche,1.0
+907,Njoro,Kihingo,1.0
+908,Njoro,Nessuit,1.0
+909,Njoro,Lare,1.0
+910,Njoro,Njoro,1.0
+911,Naivasha,Biashara,1.0
+912,Naivasha,Hells Gate,1.0
+913,Naivasha,Lake View,1.0
+914,Naivasha,Mai Mahiu,1.0
+915,Naivasha,Maiella,1.0
+916,Naivasha,Olkaria,1.0
+917,Naivasha,Naivasha East,1.0
+918,Naivasha,Viwandani,1.0
+919,Gilgil,Gilgil,1.0
+920,Gilgil,Elementaita,1.0
+921,Gilgil,Mbaruk/Eburu,1.0
+922,Gilgil,Malewa West,1.0
+923,Gilgil,Murindati,1.0
+924,Kuresoi South,Amalo,1.0
+925,Kuresoi South,Keringet,1.0
+926,Kuresoi South,Kiptagich,1.0
+927,Kuresoi South,Tinet,1.0
+928,Kuresoi North,Kiptororo,1.0
+929,Kuresoi North,Nyota,1.0
+930,Kuresoi North,Sirikwa,1.0
+931,Kuresoi North,Kamara,1.0
+932,Subukia,Subukia,1.0
+933,Subukia,Waseges,1.0
+934,Subukia,Kabazi,1.0
+935,Rongai,Menengai West,1.0
+936,Rongai,Soin,1.0
+937,Rongai,Visoi,1.0
+938,Rongai,Mosop,1.0
+939,Rongai,Solai,1.0
+940,Bahati,Dundori,1.0
+941,Bahati,Kabatini,1.0
+942,Bahati,Kiamaina,1.0
+943,Bahati,Lanet/Umoja,1.0
+944,Bahati,Bahati,1.0
+945,Nakuru Town West,Barut,1.0
+946,Nakuru Town West,Kaptembwo,1.0
+947,Nakuru Town West,Kapkures,1.0
+948,Nakuru Town West,Rhoda,1.0
+949,Nakuru Town West,Shaabab,1.0
+950,Nakuru Town East,London,1.0
+951,Nakuru Town East,Biashara,1.0
+952,Nakuru Town East,Kivumbini,1.0
+953,Nakuru Town East,Flamingo,1.0
+954,Nakuru Town East,Menengai,1.0
+955,Nakuru Town East,Nakuru East,1.0
+956,Kilgoris,Kilgoris Central,1.0
+957,Kilgoris,Keyian,1.0
+958,Kilgoris,Angata Barikoi,1.0
+959,Kilgoris,Shankoe,1.0
+960,Kilgoris,Kimintet,1.0
+961,Kilgoris,Lolgorian,1.0
+962,Emurua Dikirr,Ilkerin,1.0
+963,Emurua Dikirr,Ololmasani,1.0
+964,Emurua Dikirr,Mogondo,1.0
+965,Emurua Dikirr,Kapsasian,1.0
+966,Narok North,Olpusimoru,1.0
+967,Narok North,Olokurto,1.0
+968,Narok North,Narok Town,1.0
+969,Narok North,Nkareta,1.0
+970,Narok North,Olorropil,1.0
+971,Narok North,Melili,1.0
+972,Narok East,Mosiro,1.0
+973,Narok East,Keekonyokie,1.0
+974,Narok East,Suswa,1.0
+975,Narok South,Ildamat,1.0
+976,Narok South,Majimoto/Naroosura,1.0
+977,Narok South,Ololulung'A,1.0
+978,Narok South,Melelo,1.0
+979,Narok South,Loita,1.0
+980,Narok South,Sogoo,1.0
+981,Narok South,Sagamian,1.0
+982,Narok West,Ilmotiok,1.0
+983,Narok West,Mara,1.0
+984,Narok West,Siana,1.0
+985,Narok West,Naikarra,1.0
+986,Kajiado North,Olkeri,1.0
+987,Kajiado North,Ongata Rongai,1.0
+988,Kajiado North,Nkaimurunya,1.0
+989,Kajiado North,Oloolua,1.0
+990,Kajiado North,Ngong,1.0
+991,Kajiado Central,Purko,1.0
+992,Kajiado Central,Ildamat,1.0
+993,Kajiado Central,Dalalekutuk,1.0
+994,Kajiado Central,Matapato North,1.0
+995,Kajiado Central,Matapato South,1.0
+996,Kajiado East,Kaputiei North,1.0
+997,Kajiado East,Kitengela,1.0
+998,Kajiado East,Oloosirkon/Sholinke,1.0
+999,Kajiado East,Kenyawa-Poka,1.0
+1000,Kajiado East,Imaroro,1.0
+1001,Kajiado West,Keekonyokie,1.0
+1002,Kajiado West,Iloodokilani,1.0
+1003,Kajiado West,Magadi,1.0
+1004,Kajiado West,Ewuaso Oonkidong'I,1.0
+1005,Kajiado West,Mosiro,1.0
+1006,Kajiado South,Entonet/Lenkisim,1.0
+1007,Kajiado South,Mbirikani/Eselenkei,1.0
+1008,Kajiado South,Kuku,1.0
+1009,Kajiado South,Rombo,1.0
+1010,Kajiado South,Kimana,1.0
+1011,Kipkelion East,Londiani,1.0
+1012,Kipkelion East,Kedowa/Kimugul,1.0
+1013,Kipkelion East,Chepseon,1.0
+1014,Kipkelion East,Tendeno/Sorget,1.0
+1015,Kipkelion West,Kunyak,1.0
+1016,Kipkelion West,Kamasian,1.0
+1017,Kipkelion West,Kipkelion,1.0
+1018,Kipkelion West,Chilchila,1.0
+1019,Ainamoi,Kapsoit,1.0
+1020,Ainamoi,Ainamoi,1.0
+1021,Ainamoi,Kapkugerwet,1.0
+1022,Ainamoi,Kipchebor,1.0
+1023,Ainamoi,Kipchimchim,1.0
+1024,Ainamoi,Kapsaos,1.0
+1025,Bureti,Kisiara,1.0
+1026,Bureti,Tebesonik,1.0
+1027,Bureti,Cheboin,1.0
+1028,Bureti,Chemosot,1.0
+1029,Bureti,Litein,1.0
+1030,Bureti,Cheplanget,1.0
+1031,Bureti,Kapkatet,1.0
+1032,Belgut,Waldai,1.0
+1033,Belgut,Kabianga,1.0
+1034,Belgut,Cheptororiet/Seretut,1.0
+1035,Belgut,Chaik,1.0
+1036,Belgut,Kapsuser,1.0
+1037,Sigowet/Soin,Sigowet,1.0
+1038,Sigowet/Soin,Kaplelartet,1.0
+1039,Sigowet/Soin,Soliat,1.0
+1040,Sigowet/Soin,Soin,1.0
+1041,Sotik,Ndanai/Abosi,1.0
+1042,Sotik,Chemagel,1.0
+1043,Sotik,Kipsonoi,1.0
+1044,Sotik,Kapletundo,1.0
+1045,Sotik,Rongena/Manaret,1.0
+1046,Chepalungu,Kong'Asis,1.0
+1047,Chepalungu,Nyangores,1.0
+1048,Chepalungu,Sigor,1.0
+1049,Chepalungu,Chebunyo,1.0
+1050,Chepalungu,Siongiroi,1.0
+1051,Bomet East,Merigi,1.0
+1052,Bomet East,Kembu,1.0
+1053,Bomet East,Longisa,1.0
+1054,Bomet East,Kipreres,1.0
+1055,Bomet East,Chemaner,1.0
+1056,Bomet Central,Silibwet Township,1.0
+1057,Bomet Central,Ndaraweta,1.0
+1058,Bomet Central,Singorwet,1.0
+1059,Bomet Central,Chesoen,1.0
+1060,Bomet Central,Mutarakwa,1.0
+1061,Konoin,Chepchabas,1.0
+1062,Konoin,Kimulot,1.0
+1063,Konoin,Mogogosiek,1.0
+1064,Konoin,Boito,1.0
+1065,Konoin,Embomos,1.0
+1066,Lugari,Mautuma,1.0
+1067,Lugari,Lugari,1.0
+1068,Lugari,Lumakanda,1.0
+1069,Lugari,Chekalini,1.0
+1070,Lugari,Chevaywa,1.0
+1071,Lugari,Lwandeti,1.0
+1072,Likuyani,Likuyani,1.0
+1073,Likuyani,Sango,1.0
+1074,Likuyani,Kongoni,1.0
+1075,Likuyani,Nzoia,1.0
+1076,Likuyani,Sinoko,1.0
+1077,Malava,West Kabras,1.0
+1078,Malava,Chemuche,1.0
+1079,Malava,East Kabras,1.0
+1080,Malava,Butali/Chegulo,1.0
+1081,Malava,Manda-Shivanga,1.0
+1082,Malava,Shirugu-Mugai,1.0
+1083,Malava,South Kabras,1.0
+1084,Lurambi,Butsotso East,1.0
+1085,Lurambi,Butsotso South,1.0
+1086,Lurambi,Butsotso Central,1.0
+1087,Lurambi,Sheywe,1.0
+1088,Lurambi,Mahiakalo,1.0
+1089,Lurambi,Shirere,1.0
+1090,Navakholo,Ingostse-Mathia,1.0
+1091,Navakholo,Shinoyi-Shikomari-Esumeyia,1.0
+1092,Navakholo,Bunyala West,1.0
+1093,Navakholo,Bunyala East,1.0
+1094,Navakholo,Bunyala Central,1.0
+1095,Mumias West,Mumias Central,1.0
+1096,Mumias West,Mumias North,1.0
+1097,Mumias West,Etenje,1.0
+1098,Mumias West,Musanda,1.0
+1099,Mumias East,Lusheya/Lubinu,1.0
+1100,Mumias East,Malaha/Isongo/Makunga,1.0
+1101,Mumias East,East Wanga,1.0
+1102,Matungu,Koyonzo,1.0
+1103,Matungu,Kholera,1.0
+1104,Matungu,Khalaba,1.0
+1105,Matungu,Mayoni,1.0
+1106,Matungu,Namamali,1.0
+1107,Butere,Marama West,1.0
+1108,Butere,Marama Central,1.0
+1109,Butere,Marenyo - Shianda,1.0
+1110,Butere,Marama North,1.0
+1111,Butere,Marama South,1.0
+1112,Khwisero,Kisa North,1.0
+1113,Khwisero,Kisa East,1.0
+1114,Khwisero,Kisa West,1.0
+1115,Khwisero,Kisa Central,1.0
+1116,Shinyalu,Isukha North,1.0
+1117,Shinyalu,Murhanda,1.0
+1118,Shinyalu,Isukha Central,1.0
+1119,Shinyalu,Isukha South,1.0
+1120,Shinyalu,Isukha East,1.0
+1121,Shinyalu,Isukha West,1.0
+1122,Ikolomani,Idakho South,1.0
+1123,Ikolomani,Idakho East,1.0
+1124,Ikolomani,Idakho North,1.0
+1125,Ikolomani,Idakho Central,1.0
+1126,Vihiga,Lugaga-Wamuluma,1.0
+1127,Vihiga,South Maragoli,1.0
+1128,Vihiga,Central Maragoli,1.0
+1129,Vihiga,Mungoma,1.0
+1130,Sabatia,Lyaduywa/Izava,1.0
+1131,Sabatia,West Sabatia,1.0
+1132,Sabatia,Chavakali,1.0
+1133,Sabatia,North Maragoli,1.0
+1134,Sabatia,Wodanga,1.0
+1135,Sabatia,Busali,1.0
+1136,Hamisi,Shiru,1.0
+1137,Hamisi,Gisambai,1.0
+1138,Hamisi,Shamakhokho,1.0
+1139,Hamisi,Banja,1.0
+1140,Hamisi,Muhudu,1.0
+1141,Hamisi,Tambua,1.0
+1142,Hamisi,Jepkoyai,1.0
+1143,Luanda,Luanda Township,1.0
+1144,Luanda,Wemilabi,1.0
+1145,Luanda,Mwibona,1.0
+1146,Luanda,Luanda South,1.0
+1147,Luanda,Emabungo,1.0
+1148,Emuhaya,North East Bunyore,1.0
+1149,Emuhaya,Central Bunyore,1.0
+1150,Emuhaya,West Bunyore,1.0
+1151,Mt. Elgon,Cheptais,1.0
+1152,Mt. Elgon,Chesikaki,1.0
+1153,Mt. Elgon,Chepyuk,1.0
+1154,Mt. Elgon,Kapkateny,1.0
+1155,Mt. Elgon,Kaptama,1.0
+1156,Mt. Elgon,Elgon,1.0
+1157,Sirisia,Namwela,1.0
+1158,Sirisia,Malakisi/South Kulisiru,1.0
+1159,Sirisia,`,1.0
+1160,Kabuchai,Kabuchai/Chwele,1.0
+1161,Kabuchai,West Nalondo,1.0
+1162,Kabuchai,Bwake/Luuya,1.0
+1163,Kabuchai,Mukuyuni,1.0
+1164,Bumula,South Bukusu,1.0
+1165,Bumula,Bumula,1.0
+1166,Bumula,Khasoko,1.0
+1167,Bumula,Kabula,1.0
+1168,Bumula,Kimaeti,1.0
+1169,Bumula,West Bukusu,1.0
+1170,Bumula,Siboti,1.0
+1171,Kanduyi,Bukembe West,1.0
+1172,Kanduyi,Bukembe East,1.0
+1173,Kanduyi,Township,1.0
+1174,Kanduyi,Khalaba,1.0
+1175,Kanduyi,Musikoma,1.0
+1176,Kanduyi,East Sang'Alo,1.0
+1177,Kanduyi,Marakaru/Tuuti,1.0
+1178,Kanduyi,West Sang'Alo,1.0
+1179,Webuye East,Mihuu,1.0
+1180,Webuye East,Ndivisi,1.0
+1181,Webuye East,Maraka,1.0
+1182,Webute West,Misikhu,1.0
+1183,Webute West,Sitikho,1.0
+1184,Webute West,Matulo,1.0
+1185,Webute West,Bokoli,1.0
+1186,Kimilili,Kibingei,1.0
+1187,Kimilili,Kimilili,1.0
+1188,Kimilili,Maeni,1.0
+1189,Kimilili,Kamukuywa,1.0
+1190,Tongaren,Mbakalo,1.0
+1191,Tongaren,Naitiri/Kabuyefwe,1.0
+1192,Tongaren,Milima,1.0
+1193,Tongaren,Ndalu/ Tabani,1.0
+1194,Tongaren,Tongaren,1.0
+1195,Tongaren,Soysambu/ Mitua,1.0
+1196,Teso North,Malaba Central,1.0
+1197,Teso North,Malaba North,1.0
+1198,Teso North,Ang'Urai South,1.0
+1199,Teso North,Ang'Urai North,1.0
+1200,Teso North,Ang'Urai East,1.0
+1201,Teso North,Malaba South,1.0
+1202,Teso South,Ang'Orom,1.0
+1203,Teso South,Chakol South,1.0
+1204,Teso South,Chakol North,1.0
+1205,Teso South,Amukura West,1.0
+1206,Teso South,Amukura East,1.0
+1207,Teso South,Amukura Central,1.0
+1208,Nambale,Nambale Township,1.0
+1209,Nambale,Bukhayo North/Walatsi,1.0
+1210,Nambale,Bukhayo East,1.0
+1211,Nambale,Bukhayo Central,1.0
+1212,Matayos,Bukhayo West,1.0
+1213,Matayos,Mayenje,1.0
+1214,Matayos,Matayos South,1.0
+1215,Matayos,Busibwabo,1.0
+1216,Matayos,Burumba,1.0
+1217,Butula,Marachi West,1.0
+1218,Butula,Kingandole,1.0
+1219,Butula,Marachi Central,1.0
+1220,Butula,Marachi East,1.0
+1221,Butula,Marachi North,1.0
+1222,Butula,Elugulu,1.0
+1223,Funyula,Namboboto Nambuku,1.0
+1224,Funyula,Nangina,1.0
+1225,Funyula,Ageng'A Nanguba,1.0
+1226,Funyula,Bwiri,1.0
+1227,Budalangi,Bunyala Central,1.0
+1228,Budalangi,Bunyala North,1.0
+1229,Budalangi,Bunyala West,1.0
+1230,Budalangi,Bunyala South,1.0
+1231,Ugenya,West Ugenya,1.0
+1232,Ugenya,Ukwala,1.0
+1233,Ugenya,North Ugenya,1.0
+1234,Ugenya,East Ugenya,1.0
+1235,Ugunja,Sidindi,1.0
+1236,Ugunja,Sigomere,1.0
+1237,Ugunja,Ugunja,1.0
+1238,Alego Usonga,Usonga,1.0
+1239,Alego Usonga,West Alego,1.0
+1240,Alego Usonga,Central Alego,1.0
+1241,Alego Usonga,Siaya Township,1.0
+1242,Alego Usonga,North Alego,1.0
+1243,Alego Usonga,South East Alego,1.0
+1244,Gem,North Gem,1.0
+1245,Gem,West Gem,1.0
+1246,Gem,Central Gem,1.0
+1247,Gem,Yala Township,1.0
+1248,Gem,East Gem,1.0
+1249,Gem,South Gem,1.0
+1250,Bondo,Yimbo West,1.0
+1251,Bondo,Central Sakwa,1.0
+1252,Bondo,South Sakwa,1.0
+1253,Bondo,Yimbo East,1.0
+1254,Bondo,West Sakwa,1.0
+1255,Bondo,North Sakwa,1.0
+1256,Rarieda,East Asembo,1.0
+1257,Rarieda,West Asembo,1.0
+1258,Rarieda,North Uyoma,1.0
+1259,Rarieda,South Uyoma,1.0
+1260,Rarieda,West Uyoma,1.0
+1261,Kisumu East,Kajulu,1.0
+1262,Kisumu East,Kolwa East,1.0
+1263,Kisumu East,Manyatta 'B',1.0
+1264,Kisumu East,Kolwa Central,1.0
+1265,Kisumu West,South West Kisumu,1.0
+1266,Kisumu West,Central Kisumu,1.0
+1267,Kisumu West,Kisumu North,1.0
+1268,Kisumu West,West Kisumu,1.0
+1269,Kisumu West,North West Kisumu,1.0
+1270,Kisumu Central,Nyalenda 'A',1.0
+1271,Kisumu Central,Railways,1.0
+1272,Kisumu Central,Migosi,1.0
+1273,Kisumu Central,Shaurimoyo Kaloleni,1.0
+1274,Kisumu Central,Market Milimani,1.0
+1275,Kisumu Central,Kondele,1.0
+1276,Kisumu Central,Nyalenda B,1.0
+1277,Seme,West Seme,1.0
+1278,Seme,Central Seme,1.0
+1279,Seme,East Seme,1.0
+1280,Seme,North Seme,1.0
+1281,Nyando,East Kano/Wawidhi,1.0
+1282,Nyando,Awasi/Onjiko,1.0
+1283,Nyando,Ahero,1.0
+1284,Nyando,Kabonyo/Kanyagwal,1.0
+1285,Nyando,Kobura,1.0
+1286,Muhoroni,Miwani,1.0
+1287,Muhoroni,Ombeyi,1.0
+1288,Muhoroni,Masogo/Nyang'Oma,1.0
+1289,Muhoroni,Chemelil,1.0
+1290,Muhoroni,Muhoroni/Koru,1.0
+1291,Nyakach,South West Nyakach,1.0
+1292,Nyakach,North Nyakach,1.0
+1293,Nyakach,Central Nyakach,1.0
+1294,Nyakach,West Nyakach,1.0
+1295,Nyakach,South East Nyakach,1.0
+1296,Kasipul,West Kasipul,1.0
+1297,Kasipul,South Kasipul,1.0
+1298,Kasipul,Central Kasipul,1.0
+1299,Kasipul,East Kamagak,1.0
+1300,Kasipul,West Kamagak,1.0
+1301,Kabondo Kasipul,Kabondo East,1.0
+1302,Kabondo Kasipul,Kabondo West,1.0
+1303,Kabondo Kasipul,Kokwanyo/Kakelo,1.0
+1304,Kabondo Kasipul,Kojwach,1.0
+1305,Karachuonyo,West Karachuonyo,1.0
+1306,Karachuonyo,North Karachuonyo,1.0
+1307,Karachuonyo,Central,1.0
+1308,Karachuonyo,Kanyaluo,1.0
+1309,Karachuonyo,Kibiri,1.0
+1310,Karachuonyo,Wangchieng,1.0
+1311,Karachuonyo,Kendu Bay Town,1.0
+1312,Rangwe,West Gem,1.0
+1313,Rangwe,East Gem,1.0
+1314,Rangwe,Kagan,1.0
+1315,Rangwe,Kochia,1.0
+1316,Homa Bay Town,Homa Bay Central,1.0
+1317,Homa Bay Town,Homa Bay Arujo,1.0
+1318,Homa Bay Town,Homa Bay West,1.0
+1319,Homa Bay Town,Homa Bay East,1.0
+1320,Ndhiwa,Kwabwai,1.0
+1321,Ndhiwa,Kanyadoto,1.0
+1322,Ndhiwa,Kanyikela,1.0
+1323,Ndhiwa,Kabuoch North,1.0
+1324,Ndhiwa,Kabuoch South/Pala,1.0
+1325,Ndhiwa,Kanyamwa Kologi,1.0
+1326,Ndhiwa,Kanyamwa Kosewe,1.0
+1327,Mbita,Mfangano Island,1.0
+1328,Mbita,Rusinga Island,1.0
+1329,Mbita,Kasgunga,1.0
+1330,Mbita,Gembe,1.0
+1331,Mbita,Lambwe,1.0
+1332,Suba,Gwassi South,1.0
+1333,Suba,Gwassi North,1.0
+1334,Suba,Kaksingri West,1.0
+1335,Suba,Ruma-Kaksingiri East,1.0
+1336,Rongo,North Kamagambo,1.0
+1337,Rongo,Central Kamagambo,1.0
+1338,Rongo,East Kamagambo,1.0
+1339,Rongo,South Kamagambo,1.0
+1340,Awendo,North Sakwa,1.0
+1341,Awendo,South Sakwa,1.0
+1342,Awendo,West Sakwa,1.0
+1343,Awendo,Central Sakwa,1.0
+1344,Suna East,God Jope,1.0
+1345,Suna East,Suna Central,1.0
+1346,Suna East,Kakrao,1.0
+1347,Suna East,Kwa,1.0
+1348,Suna West,Wiga,1.0
+1349,Suna West,Wasweta Ii,1.0
+1350,Suna West,Ragana-Oruba,1.0
+1351,Suna West,Wasimbete,1.0
+1352,Uriri,West Kanyamkago,1.0
+1353,Uriri,North Kanyamkago,1.0
+1354,Uriri,Central Kanyamkago,1.0
+1355,Uriri,South Kanyamkago,1.0
+1356,Uriri,East Kanyamkago,1.0
+1357,Nyatike,Kachien'G,1.0
+1358,Nyatike,Kachien'G,1.0
+1359,Nyatike,North Kadem,1.0
+1360,Nyatike,Macalder/Kanyarwanda,1.0
+1361,Nyatike,Kaler,1.0
+1362,Nyatike,Got Kachola,1.0
+1363,Nyatike,Muhuru,1.0
+1364,Kuria West,Bukira East,1.0
+1365,Kuria West,Bukira Centrl/Ikerege,1.0
+1366,Kuria West,Isibania,1.0
+1367,Kuria West,Makerero,1.0
+1368,Kuria West,Masaba,1.0
+1369,Kuria West,Tagare,1.0
+1370,Kuria West,Nyamosense/Komosoko,1.0
+1371,Kuria East,Gokeharaka/Getambwega,1.0
+1372,Kuria East,Ntimaru West,1.0
+1373,Kuria East,Ntimaru East,1.0
+1374,Kuria East,Nyabasi East,1.0
+1375,Kuria East,Nyabasi West,1.0
+1376,Bonchari,Bomariba,1.0
+1377,Bonchari,Bogiakumu,1.0
+1378,Bonchari,Bomorenda,1.0
+1379,Bonchari,Riana,1.0
+1380,South Mugirango,Tabaka,1.0
+1381,South Mugirango,Boikang'A,1.0
+1382,South Mugirango,Bogetenga,1.0
+1383,South Mugirango,Borabu / Chitago,1.0
+1384,South Mugirango,Moticho,1.0
+1385,South Mugirango,Getenga,1.0
+1386,Bomachoge Borabu,Bombaba Borabu,1.0
+1387,Bomachoge Borabu,Boochi Borabu,1.0
+1388,Bomachoge Borabu,Bokimonge,1.0
+1389,Bomachoge Borabu,Magenche,1.0
+1390,Bobasi,Masige West,1.0
+1391,Bobasi,Masige East,1.0
+1392,Bobasi,Basi Central,1.0
+1393,Bobasi,Nyacheki,1.0
+1394,Bobasi,Basi Bogetaorio,1.0
+1395,Bobasi,Bobasi Chache,1.0
+1396,Bobasi,Sameta/Mokwerero,1.0
+1397,Bobasi,Bobasi Boitangare,1.0
+1398,Bomachoge Chache,Majoge Basi,1.0
+1399,Bomachoge Chache,Boochi/Tendere,1.0
+1400,Bomachoge Chache,Bosoti/Sengera,1.0
+1401,Nyaribari Masaba,Ichuni,1.0
+1402,Nyaribari Masaba,Nyamasibi,1.0
+1403,Nyaribari Masaba,Masimba,1.0
+1404,Nyaribari Masaba,Gesusu,1.0
+1405,Nyaribari Masaba,Kiamokama,1.0
+1406,Nyaribari Chache,Bobaracho,1.0
+1407,Nyaribari Chache,Kisii Central,1.0
+1408,Nyaribari Chache,Keumbu,1.0
+1409,Nyaribari Chache,Kiogoro,1.0
+1410,Nyaribari Chache,Birongo,1.0
+1411,Nyaribari Chache,Ibeno,1.0
+1412,Kitutu Chache North,Monyerero,1.0
+1413,Kitutu Chache North,Sensi,1.0
+1414,Kitutu Chache North,Marani,1.0
+1415,Kitutu Chache North,Kegogi,1.0
+1416,Kitutu Chache South,Bogusero,1.0
+1417,Kitutu Chache South,Bogeka,1.0
+1418,Kitutu Chache South,Nyakoe,1.0
+1419,Kitutu Chache South,Kitutu   Central,1.0
+1420,Kitutu Chache South,Nyatieko,1.0
+1421,Kitutu Masaba,Rigoma,1.0
+1422,Kitutu Masaba,Gachuba,1.0
+1423,Kitutu Masaba,Kemera,1.0
+1424,Kitutu Masaba,Magombo,1.0
+1425,Kitutu Masaba,Manga,1.0
+1426,Kitutu Masaba,Gesima,1.0
+1427,West Mugirango,Nyamaiya,1.0
+1428,West Mugirango,Bogichora,1.0
+1429,West Mugirango,Bosamaro,1.0
+1430,West Mugirango,Bonyamatuta,1.0
+1431,West Mugirango,Township,1.0
+1432,North Mugirango,Itibo,1.0
+1433,North Mugirango,Bomwagamo,1.0
+1434,North Mugirango,Bokeira,1.0
+1435,North Mugirango,Magwagwa,1.0
+1436,North Mugirango,Ekerenyo,1.0
+1437,Borabu,Mekenene,1.0
+1438,Borabu,Kiabonyoru,1.0
+1439,Borabu,Nyansiongo,1.0
+1440,Borabu,Esise,1.0

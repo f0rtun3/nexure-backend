@@ -106,5 +106,5 @@ class CompanyDetails(Resource):
 
         # return results
         response_msg = helper.make_rest_success_response(
-            "Success", {"data": company_data})
+            "Success", company_data)
         return make_response(response_msg, 200)

@@ -118,7 +118,7 @@ class MPIUnderwriting(Resource):
                     policy_details['subclass_id'])
                 # generate child policy
                 # TODO: Generate acronym for child policies for this instance we use PCI for test purposes
-                new_child_policy.set_pci('PCI')
+                new_child_policy.set_pci(subclass_details.acronym)
                 ch_policy_number = new_child_policy.generate_policy_no()
                 # Finally create the child policy
                 child_policy = ChildPolicy(
@@ -141,9 +141,11 @@ class MPIUnderwriting(Resource):
                 """
                 if policy_details['benefits']:
                     for i in policy_details['benefits']:
-                        benefit = Benefit.get_benefit_by_name("Windscreen and Staff")
+                        benefit = Benefit.get_benefit_by_name(
+                            "Windscreen and Staff")
                         ic_benefit = ICBenefits.get_ic_benefit(benefit.id)
-                        policy_benefit = PolicyBenefits(child_policy.id, ic_benefit.id, i["value"])
+                        policy_benefit = PolicyBenefits(
+                            child_policy.id, ic_benefit.id, i["value"])
                         policy_benefit.save()
 
                 """
@@ -151,9 +153,12 @@ class MPIUnderwriting(Resource):
                 """
                 if policy_details['extensions']:
                     for i in policy_details['extensions']:
-                        extension = Extension.get_extension_id_by_name(i["name"])
-                        ic_extension = ICExtensions.get_ic_extension(extension.id)
-                        policy_extension = PolicyExtensions(child_policy.id, ic_extension, i["value"])
+                        extension = Extension.get_extension_id_by_name(
+                            i["name"])
+                        ic_extension = ICExtensions.get_ic_extension(
+                            extension.id)
+                        policy_extension = PolicyExtensions(
+                            child_policy.id, ic_extension, i["value"])
                         policy_extension.save()
                 """
                 Add loadings from the list of loadings sent in the post request
@@ -162,7 +167,7 @@ class MPIUnderwriting(Resource):
                     for i in policy_details['loadings']:
                         child_policy.add_loading(i.loading_id, i.amount)
                         child_policy.save()
-                
+
                 """
                 Send response if successfully onboarded with the onboarded data
                 """
@@ -278,3 +283,7 @@ class MPIUnderwriting(Resource):
 
         # return all data
         return cover_data
+
+    def get_company_details(self, company_id):
+        "Gets the company name from the company details model"
+        pass
