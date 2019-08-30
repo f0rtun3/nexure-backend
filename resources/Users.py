@@ -1,7 +1,7 @@
 from app import app
 from flask import make_response
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims, jwt_refresh_token_required
 from models.User import User
 from models.UserProfile import UserProfile
 from models.IndependentAgent import IndependentAgent
@@ -392,3 +392,22 @@ class UserLogin(Resource):
         role = UserRolePlacement.fetch_role_by_user_id(user_id)
         role_name = Role.fetch_role_by_id(role)
         return role_name
+
+
+class TokenRefresh(Resource):
+    """
+    A token refresh resource
+    method['POST']
+    obtain a fresh token after previous one has expired
+    """
+    @jwt_refresh_token_required
+    def get(self):
+        """generate a fresh token"""
+        curr_user_id = get_jwt_identity()  # Fetch supervisor_id
+        claims = get_jwt_claims()
+        role = claims['role']
+        new_token = token_handler.create_refresh_token(curr_user_id, role)
+        response = {
+            'access_token': new_token
+        }
+        return make_response(helper.make_rest_success_response("Success", response))
