@@ -112,6 +112,7 @@ class UserRegister(Resource):
                     "kra_pin": user_details['kra_pin'],
                     "birth_date": birth_date,
                     "physical_address": user_details['physical_address'],
+                    "postal_address": user_details['postal_address'],
                     "postal_code": user_details['postal_code'],
                     "postal_town": user_details['postal_town'],
                     "county": user_details['county'],

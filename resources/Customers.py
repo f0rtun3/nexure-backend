@@ -213,8 +213,7 @@ class CustomerOnBoarding(Resource):
 
     def get_role_name(self, uid):
         u_role = UserRolePlacement.fetch_role_by_user_id(uid)
-        u_role_id = u_role.role_id
-        return Role.fetch_role_by_id(u_role_id)
+        return Role.fetch_role_by_id(u_role)
 
     def get_broker_agent_id(self, contact_id, atype):
         agent_broker_id = None
