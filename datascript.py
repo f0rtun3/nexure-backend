@@ -172,9 +172,11 @@ def sum_insured_data():
 
 
 if __name__ == '__main__':
+    """
     car_makes()
     car_models()
     insurance_classes()
+    """
     insurance_subclass()
     counties()
     constituencies()
