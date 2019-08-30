@@ -97,7 +97,7 @@ def insurance_subclass():
         parent_class = InsuranceClass.get_class_by_name(
             row.Class_Insurance)
         new_sub_class = InsuranceSubclass(
-            row.Class_Code, row.Subclasses, parent_class, "ABC")
+            row.Class_Code, row.Subclasses, parent_class, row.acronym)
 
         new_sub_class.save()
 
@@ -172,11 +172,9 @@ def sum_insured_data():
 
 
 if __name__ == '__main__':
-    """
     car_makes()
     car_models()
     insurance_classes()
-    """
     insurance_subclass()
     counties()
     constituencies()
