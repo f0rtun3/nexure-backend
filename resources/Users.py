@@ -272,6 +272,7 @@ class AccountConfirmation(Resource):
         response = helper.make_rest_fail_response("User does not exist")
         return make_response(response, 404)
 
+class AccountConfirmationResource(Resource):
     def get(self, user_id):
         """
         If the jwt token has expired
