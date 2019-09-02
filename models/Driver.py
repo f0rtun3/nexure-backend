@@ -36,3 +36,8 @@ class Driver(db.Model):
     def delete(self):
         db.session.remove(self)
         db.session.commit()
+    
+    @classmethod
+    def get_driver_by_id(cls, id):
+        driver = cls.query.filter_by(id=id).first()
+        return driver

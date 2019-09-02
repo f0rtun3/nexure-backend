@@ -46,4 +46,10 @@ class MasterPolicy(db.Model):
         db.session.remove(self)
         db.session.commit()
 
+    @classmethod
+    def get_policy_by_customer_no(cls, number):
+        policy = cls.query.filter_by(customer=number).all()
+        return policy
+
+
 

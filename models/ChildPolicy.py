@@ -11,6 +11,7 @@ class ChildPolicy(db.Model):
     # links to the association table for benefits
     benefits = db.relationship("PolicyBenefits", backref="benefits")
     # links to the association table for extensions
+    extensions = db.relationship("PolicyExtensions", backref="extensions")
     cp_number = db.Column(db.String(22), nullable=False, unique=True)
     # links to the association table for loadings
     customer_number = db.Column(db.String(50))

@@ -49,3 +49,8 @@ class VehicleDetails(db.Model):
     def delete(self):
         db.session.remove(self)
         db.session.commit()
+
+    @classmethod
+    def get_details(cls, id):
+        vehicle = cls.query.filter_by(id=id).first()
+        return vehicle

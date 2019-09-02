@@ -166,8 +166,8 @@ class UserRegister(Resource):
             # for independent agents
             elif role == 'IA':
                 """
-                    One contact person only represents one entity. So, we fetch the agency using the contact person's id 
-                    """
+                One contact person only represents one entity. So, we fetch the agency using the contact person's id 
+                """
                 agency = IndependentAgent.get_agency_by_contact_person(user_id)
                 data = {
                     "agency_name": user_details['org_name'],
