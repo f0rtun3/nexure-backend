@@ -156,11 +156,13 @@ def locations_data():
         new_data = LocationData(constituency, ward, row.Relativity)
         new_data.save()
 
+
 def make_origin():
     df = pd.read_csv("data/make_origin.csv")
     for row in df.itertuples():
         new_data = MakeOrigin(row.Make_Origin, row.Relativity)
         new_data.save()
+
 
 def sum_insured_data():
     df = pd.read_csv("data/sum_insured_rates.csv")
