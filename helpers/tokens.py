@@ -40,7 +40,7 @@ def create_user_token(identity, role):
     expires = datetime.timedelta(minutes=40)
     user_access_token = create_access_token(identity=identity, user_claims={"role": role},
                                             fresh=True, expires_delta=expires)
-    user_refresh_token = create_refresh_token(identity=identity)
+    user_refresh_token = create_refresh_token(identity=identity, user_claims={"role": role})
     auth_tokens = tokens(user_access_token, user_refresh_token)
     return auth_tokens
 

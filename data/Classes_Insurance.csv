@@ -1,77 +1,77 @@
-Serial_Number,Sector,Class_Insurance,Subclasses,Class_Code
-1,General_Insurance,Aviation,Aviation,10
-2,General_Insurance,Engineering,Contractors All Risk,20
-3,General_Insurance,Engineering,Machinery Breakdown,21
-4,General_Insurance,Engineering,Erection All Risk,22
-5,General_Insurance,Engineering,Consequential Loss From Breakdown,23
-6,General_Insurance,Engineering,Engineering,24
+Serial_Number,Sector,Class_Insurance,Subclasses,Class_Code, acronym
+1,General_Insurance,Aviation,Aviation,10,null
+2,General_Insurance,Engineering,Contractors All Risk,20,null
+3,General_Insurance,Engineering,Machinery Breakdown,21,null
+4,General_Insurance,Engineering,Erection All Risk,22,null
+5,General_Insurance,Engineering,Consequential Loss From Breakdown,23,null
+6,General_Insurance,Engineering,Engineering,24,null
 7,General_Insurance,Engineering,"Boiler And Pressure Vessels
-",25
-8,General_Insurance,Engineering,Deterioration Of Stock,26
-9,General_Insurance,Engineering,Electronic Equipment,27
-10,General_Insurance,Engineering,Plant All Risks,28
-11,General_Insurance,Fire Domestic,Contents,30
-12,General_Insurance,Fire Domestic,Buildings and Contents,31
-13,General_Insurance,Fire Domestic,Contents and All Risks,32
-14,General_Insurance,Fire Industrial,Fire Industrial,40
-15,General_Insurance,Fire Industrial,Political Violence,41
-16,General_Insurance,Fire Industrial,Stock Floater,42
-17,General_Insurance,Fire Industrial,Terrorism And Sabotage,43
-18,General_Insurance,Fire Industrial,Industrial All Risks,44
-19,General_Insurance,Fire Industrial,Fire Consequential Loss,45
-20,General_Insurance,Liability,Products Liability,50
-21,General_Insurance,Liability,Professional Indemnity,51
-22,General_Insurance,Liability,Other Liability,52
-23,General_Insurance,Liability,Clinical Trials,53
-24,General_Insurance,Liability,Directors And Officers Liability,54
-25,General_Insurance,Liability,Events Cancellation,55
-26,General_Insurance,Marine,Marine Hull,60
-27,General_Insurance,Marine,Marine Cargo,61
-28,General_Insurance,Marine,Marine GIT,62
-29,General_Insurance,Marine,Marine Open Cover,63
-30,General_Insurance,Motor Private,Comprehensive,70
-31,General_Insurance,Motor Private,Third Party,71
-32,General_Insurance,Motor Private,Third Party Fire and Theft,72
-33,General_Insurance,Motor Private,Motor Cycle,73
-34,General_Insurance,Motor Private,Motor P.T.A. Cover,74
-35,General_Insurance,Motor Commercial,Comprehensive,80
-36,General_Insurance,Motor Commercial,Third Party,81
-37,General_Insurance,Motor Commercial,General Cartage,82
-38,General_Insurance,Motor Commercial,PSV,83
-39,General_Insurance,Motor Commercial,Motor Tractors,84
-40,General_Insurance,Motor Commercial,Motor Trade,85
-41,General_Insurance,Personal Accident,Personal Accident,90
-42,General_Insurance,Personal Accident,Travel Annual,91
-43,General_Insurance,Personal Accident,Travel Term,92
-44,General_Insurance,Personal Accident,Group Personal Accident,93
-45,General_Insurance,Personal Accident,Watchkeeper Policy,94
-46,General_Insurance,Theft,Cash in Transit,100
-47,General_Insurance,Theft,Fidelity Guarantee,101
-48,General_Insurance,Theft,Burglary,102
-49,General_Insurance,Theft,Business Man'S Combined,103
-50,General_Insurance,Theft,Bankers Blanket Bond,104
-51,General_Insurance,Theft,Schools Combined,105
-52,General_Insurance,Theft,Office Compact,106
-53,General_Insurance,Workmen Compensation,WIBA,110
-54,General_Insurance,Workmen Compensation,Gpa & Wiba Combined,111
-55,General_Insurance,Workmen Compensation,Work Injury Benefits Act (Wiba),112
-56,General_Insurance,Workmen Compensation,Workmen'S Comp (Common Law) Cover,113
-57,General_Insurance,Workmen Compensation,Workmen'S Compensation (Act) Cover,114
-58,General_Insurance,Medical,Inpatient,120
-59,General_Insurance,Medical,Outpatient,121
-60,General_Insurance,Medical,Dental,122
-61,General_Insurance,Medical,Optical,123
-62,General_Insurance,Medical,Maternity,124
-63,General_Insurance,Miscellaneous,Bond Insurance,130
-64,General_Insurance,Miscellaneous,Livestock Insurance,131
-65,General_Insurance,Miscellaneous,Crop Insurance,132
-66,General_Insurance,Miscellaneous,Golfers Starter Pack,133
-67,General_Insurance,Miscellaneous,Golfers and Sportsman Insurance,134
-68,General_Insurance,Miscellaneous,Crop Index,135
-69,General_Insurance,Miscellaneous,Livestock Index,136
-70,General_Insurance,Miscellaneous,Other Miscellaneous Accident,137
-71,General_Insurance,Miscellaneous,Pedal Cycle,138
-72,General_Insurance,Miscellaneous,Performance Bonds,139
-73,General_Insurance,Miscellaneous,Plate Glass,140
-74,General_Insurance,Miscellaneous,Prize Indemnity,141
-75,General_Insurance,Miscellaneous,Security Bonds,142
+",25,null
+8,General_Insurance,Engineering,Deterioration Of Stock,26,null
+9,General_Insurance,Engineering,Electronic Equipment,27,null
+10,General_Insurance,Engineering,Plant All Risks,28,null
+11,General_Insurance,Fire Domestic,Contents,30,null
+12,General_Insurance,Fire Domestic,Buildings and Contents,31,null
+13,General_Insurance,Fire Domestic,Contents and All Risks,32,null
+14,General_Insurance,Fire Industrial,Fire Industrial,40,null
+15,General_Insurance,Fire Industrial,Political Violence,41,null
+16,General_Insurance,Fire Industrial,Stock Floater,42,null
+17,General_Insurance,Fire Industrial,Terrorism And Sabotage,43,null
+18,General_Insurance,Fire Industrial,Industrial All Risks,44,null
+19,General_Insurance,Fire Industrial,Fire Consequential Loss,45,null
+20,General_Insurance,Liability,Products Liability,50,null
+21,General_Insurance,Liability,Professional Indemnity,51,null
+22,General_Insurance,Liability,Other Liability,52,null
+23,General_Insurance,Liability,Clinical Trials,53,null
+24,General_Insurance,Liability,Directors And Officers Liability,54,null
+25,General_Insurance,Liability,Events Cancellation,55,null
+26,General_Insurance,Marine,Marine Hull,60,null
+27,General_Insurance,Marine,Marine Cargo,61,null
+28,General_Insurance,Marine,Marine GIT,62,null
+29,General_Insurance,Marine,Marine Open Cover,63,null
+30,General_Insurance,Motor Private,Comprehensive,70,COM
+31,General_Insurance,Motor Private,Third Party,71,TPO
+32,General_Insurance,Motor Private,Third Party Fire and Theft,72,TPF
+33,General_Insurance,Motor Private,Motor Cycle,73,MCY
+34,General_Insurance,Motor Private,Motor P.T.A. Cover,74,MPC
+35,General_Insurance,Motor Commercial,Comprehensive,80,null
+36,General_Insurance,Motor Commercial,Third Party,81,null
+37,General_Insurance,Motor Commercial,General Cartage,82,null
+38,General_Insurance,Motor Commercial,PSV,83,null
+39,General_Insurance,Motor Commercial,Motor Tractors,84,null
+40,General_Insurance,Motor Commercial,Motor Trade,85,null
+41,General_Insurance,Personal Accident,Personal Accident,90,null
+42,General_Insurance,Personal Accident,Travel Annual,91,null
+43,General_Insurance,Personal Accident,Travel Term,92,null
+44,General_Insurance,Personal Accident,Group Personal Accident,93,null
+45,General_Insurance,Personal Accident,Watchkeeper Policy,94,null
+46,General_Insurance,Theft,Cash in Transit,100,null
+47,General_Insurance,Theft,Fidelity Guarantee,101,null
+48,General_Insurance,Theft,Burglary,102,null
+49,General_Insurance,Theft,Business Man'S Combined,103,null
+50,General_Insurance,Theft,Bankers Blanket Bond,104,null
+51,General_Insurance,Theft,Schools Combined,105,null
+52,General_Insurance,Theft,Office Compact,106,null
+53,General_Insurance,Workmen Compensation,WIBA,110,nul
+54,General_Insurance,Workmen Compensation,Gpa & Wiba Combined,111,null
+55,General_Insurance,Workmen Compensation,Work Injury Benefits Act (Wiba),112,null
+56,General_Insurance,Workmen Compensation,Workmen'S Comp (Common Law) Cover,113,null
+57,General_Insurance,Workmen Compensation,Workmen'S Compensation (Act) Cover,114,null
+58,General_Insurance,Medical,Inpatient,120,null
+59,General_Insurance,Medical,Outpatient,121,null
+60,General_Insurance,Medical,Dental,122,null
+61,General_Insurance,Medical,Optical,123,null
+62,General_Insurance,Medical,Maternity,124,null
+63,General_Insurance,Miscellaneous,Bond Insurance,130,null
+64,General_Insurance,Miscellaneous,Livestock Insurance,131,null
+65,General_Insurance,Miscellaneous,Crop Insurance,132,null
+66,General_Insurance,Miscellaneous,Golfers Starter Pack,133,null
+67,General_Insurance,Miscellaneous,Golfers and Sportsman Insurance,134,null
+68,General_Insurance,Miscellaneous,Crop Index,135,null
+69,General_Insurance,Miscellaneous,Livestock Index,136,null
+70,General_Insurance,Miscellaneous,Other Miscellaneous Accident,137,null
+71,General_Insurance,Miscellaneous,Pedal Cycle,138,null
+72,General_Insurance,Miscellaneous,Performance Bonds,139,null
+73,General_Insurance,Miscellaneous,Plate Glass,140,null
+74,General_Insurance,Miscellaneous,Prize Indemnity,141,null
+75,General_Insurance,Miscellaneous,Security Bonds,142,null

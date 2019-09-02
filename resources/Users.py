@@ -1,7 +1,7 @@
 from app import app
 from flask import make_response
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims, jwt_refresh_token_required
 from models.User import User
 from models.UserProfile import UserProfile
 from models.IndependentAgent import IndependentAgent
@@ -68,7 +68,7 @@ class UserRegister(Resource):
         email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                      f" to confirm your account"
         helper.send_email(user_details['email'], subject, email_template, email_text)
-        
+
         response_msg = helper.make_rest_success_response("Registration successful, kindly"
                                                          " check your email for confirmation link")
         return make_response(response_msg, 200)
@@ -87,6 +87,10 @@ class UserRegister(Resource):
 
     @jwt_required
     def put(self):
+        """
+        registration completion of a user
+        :return:
+        """
         # get user id
         user_id = get_jwt_identity()
         # get the user details from the request sent by the client
@@ -96,108 +100,158 @@ class UserRegister(Resource):
         # if user exists, then update their details
         if user:
             # get their role
-            role = UserRolePlacement.fetch_role_by_user_id(user_id)
             claims = get_jwt_claims()
             role = claims['role']
-            # update their profile
-            format_date_str = '%d/%m/%Y'
-            birth_date = datetime.strptime(user_details['birth_date'], format_date_str)
-            birth_date = birth_date.date()
-            self.update_profile(
-                user_id,
-                data={
-                    "gender": user_details['gender'],
-                    "occupation": user_details['occupation'],
-                    "id_passport": user_details['id_passport'],
-                    "kra_pin": user_details['kra_pin'],
-                    "birth_date": birth_date,
-                    "physical_address": user_details['physical_address'],
-                    "postal_code": user_details['postal_code'],
-                    "postal_town": user_details['postal_town'],
-                    "county": user_details['county'],
-                    "constituency": user_details['constituency'],
-                    "ward": user_details['ward']
-                    # "facebook": user_details['facebook'],
-                    # "twitter": user_details['twitter'],
-                    # "instagram": user_details['instagram']
-                }
-            )
+            birth_date = self.format_birth_date(user_details['birth_date'])
+
+            profile_data = self.set_profile_data(user_details['gender'], user_details['occupation'],
+                                                 user_details['id_passport'], user_details['kra_pin'],
+                                                 birth_date, user_details['physical_address'],
+                                                 user_details['postal_address'], user_details['postal_code'],
+                                                 user_details['postal_town'], user_details['county'],
+                                                 user_details['constituency'], user_details['ward']
+                                                 )
+            self.update_profile(user_id, profile_data)
             """
             update the client account depending on their role: 
             Note: that for tied agents, we only update their profiles
             """
-            # for brokers
+            data = None
+            client_row = self.get_client_row(role, user_id)
             if role == 'BR':
-                # get broker by id
-                broker = Broker.get_broker_by_contact_id(user_id)
-                # update their account
-                data = {
-                    "broker_name": user_details['org_name'],
-                    "broker_phone_number": user_details['org_phone_number'],
-                    "broker_email": user_details['org_email'],
-                    "ira_registration_number": user_details['ira_reg_no'],
-                    "ira_license_number": user_details['ira_license_no'],
-                    "kra_pin": user_details['org_kra_pin'],
-                    "website": user_details['website'],
-                    "facebook": user_details['facebook'],
-                    "instagram": user_details['twitter'],
-                    "twitter": user_details['instagram']
-                }
-                broker.update(data)
-            # for insurance companies
+                phone = self.check_organization_phone_number(client_row.broker_phone_number,
+                                                             user_details['org_phone'])
+                data = self.set_broker_data(user_details['org_name'], phone,
+                                            user_details['org_email'], user_details['ira_reg_no'],
+                                            user_details['ira_license_no'], user_details['org_kra_pin'],
+                                            user_details['website'], user_details['facebook'], user_details['twitter'],
+                                            user_details['instagram']
+                                            )
             elif role == 'IC':
-                #  get insurance company
-                company = InsuranceCompany.get_company_by_contact_person(
-                    user_id)
-                # update their account
-                data = {
-                    "bank_account": user_details['bank_account_number'],
-                    "mpesa_paybill": user_details['mpesa_paybill'],
-                    "ira_registration_number": user_details['ira_reg_no'],
-                    "ira_license_number": user_details['ira_license_no'],
-                    "kra_pin": user_details['org_kra_pin'],
-                    "website": user_details['website'],
-                    "facebook": user_details['facebook'],
-                    "instagram": user_details['instagram'],
-                    "twitter": user_details['twitter']
-                }
-                company.update(data)
-                
-            # for independent agents
+                data = self.set_ic_data(user_details['bank_account_number'], user_details['mpesa_paybill'],
+                                        user_details['ira_reg_no'], user_details['ira_license_no'],
+                                        user_details['org_kra_pin'], user_details['website'],
+                                        user_details['facebook'], user_details['instagram'],
+                                        user_details['twitter']
+                                        )
             elif role == 'IA':
-                """
-                    One contact person only represents one entity. So, we fetch the agency using the contact person's id 
-                    """
-                agency = IndependentAgent.get_agency_by_contact_person(user_id)
-                data = {
-                    "agency_name": user_details['org_name'],
-                    "agency_phone": user_details['org_phone_number'],
-                    "agency_email": user_details['org_email'],
-                    "ira_registration_number": user_details['ira_reg_no'],
-                    "ira_license_number": user_details['ira_license_no'],
-                    "kra_pin": user_details['org_kra_pin'],
-                    "website": user_details['website'],
-                    "facebook": user_details['facebook'],
-                    "instagram": user_details['instagram'],
-                    "twitter": user_details['twitter']
-                }
-                agency.update(data)
+                phone = self.check_organization_phone_number(client_row.agency_phone,
+                                                             user_details['org_phone'])
+                data = self.set_ia_data(user_details['org_name'], phone,
+                                        user_details['org_email'], user_details['ira_reg_no'],
+                                        user_details['ira_license_no'], user_details['org_kra_pin'],
+                                        user_details['website'], user_details['facebook'], user_details['instagram'],
+                                        user_details['twitter']
+                                        )
+
+            client_row.update(data)
+
+            if user_details['new_password']:
+                # update the user password if it was set
+                user = User.get_user_by_id(get_jwt_identity())
+                password = user.generate_password_hash(user_details['new_password'])
+                user.update_password(password)
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
                 "User does not exist")
             return make_response(response_msg, 404)
 
-        # change password
-        if user_details['new_password']:
-            user = User.get_user_by_id(get_jwt_identity())
-            password = user.generate_password_hash(user_details['new_password'])
-            user.update_password(password)
-
-        # if update is successful
+        # update was successful
         response_msg = helper.make_rest_success_response(
             f"Update successful.")
         return make_response(response_msg, 200)
+
+    @staticmethod
+    def check_organization_phone_number(phone, updated_phone_no=None):
+        if updated_phone_no is None:
+            return phone
+
+        return updated_phone_no
+
+    @staticmethod
+    def get_client_row(role, user_id):
+        if role == 'BR':
+            client_row = Broker.get_broker_by_contact_id(user_id)
+        elif role == 'IA':
+            client_row = IndependentAgent.get_agency_by_contact_person(user_id)
+        elif role == 'IC':
+            client_row = InsuranceCompany.get_company_by_contact_person(user_id)
+        else:
+            return False
+
+        return client_row
+
+    @staticmethod
+    def set_profile_data(gender, occupation, id_passport, kra_pin, birth_date, physical_address,
+                         postal_address, postal_code, postal_town, county, constituency, ward):
+        return {
+            "gender": gender,
+            "occupation": occupation,
+            "id_passport": id_passport,
+            "kra_pin": kra_pin,
+            "birth_date": birth_date,
+            "physical_address": physical_address,
+            "postal_address": postal_address,
+            "postal_code": postal_code,
+            "postal_town": postal_town,
+            "county": county,
+            "constituency": constituency,
+            "ward": ward
+        }
+
+    @staticmethod
+    def set_broker_data(org_name, org_phone_number, org_email, ira_reg_no, ira_license_no, org_kra_pin, website,
+                        facebook, twitter, instagram):
+        return {
+            "broker_name": org_name,
+            "broker_phone_number": org_phone_number,
+            "broker_email": org_email,
+            "ira_registration_number": ira_reg_no,
+            "ira_license_number": ira_license_no,
+            "kra_pin": org_kra_pin,
+            "website": website,
+            "facebook": facebook,
+            "instagram": twitter,
+            "twitter": instagram
+        }
+
+    @staticmethod
+    def set_ia_data(org_name, org_phone_number, org_email, ira_reg_no, ira_license_no, org_kra_pin, website,
+                    facebook, twitter, instagram):
+        return {
+            "agency_name": org_name,
+            "agency_phone": org_phone_number,
+            "agency_email": org_email,
+            "ira_registration_number": ira_reg_no,
+            "ira_licence_number": ira_license_no,
+            "kra_pin": org_kra_pin,
+            "website": website,
+            "facebook": facebook,
+            "instagram": instagram,
+            "twitter": twitter
+        }
+
+    @staticmethod
+    def set_ic_data(bank_account_number, mpesa_paybill, ira_reg_no, ira_license_no, org_kra_pin, website,
+                    facebook, twitter, instagram):
+        return {
+            "bank_account": bank_account_number,
+            "mpesa_paybill": mpesa_paybill,
+            "ira_registration_number": ira_reg_no,
+            "ira_license_number": ira_license_no,
+            "kra_pin": org_kra_pin,
+            "website": website,
+            "facebook": facebook,
+            "instagram": instagram,
+            "twitter": twitter,
+        }
+
+    @staticmethod
+    def format_birth_date(birth_date):
+        date_format = "%d/%m/%Y"
+        b_day = datetime.strptime(birth_date, date_format)
+        return b_day.date()
 
     @staticmethod
     def update_profile(uid, data):
@@ -248,6 +302,7 @@ class AccountConfirmation(Resource):
     Handle user account activation
     if the sent token is expured, a request handler will send a fresh token
     """
+
     @jwt_required
     def put(self):
         """
@@ -317,7 +372,7 @@ class UserLogin(Resource):
                     "authentication": auth_tokens,
                     "role": role
                 }
-                if role in("BRSTF", "TASTF", "IASTF"):
+                if role in ("BRSTF", "TASTF", "IASTF"):
                     # if the authenticated user is a staff member,
                     # get the corresponding permissions
                     response_dict['permission'] = UserPermissions.get_permission_by_user_id(user_db_row.id)
@@ -338,3 +393,22 @@ class UserLogin(Resource):
         role = UserRolePlacement.fetch_role_by_user_id(user_id)
         role_name = Role.fetch_role_by_id(role)
         return role_name
+
+
+class TokenRefresh(Resource):
+    """
+    A token refresh resource
+    method['POST']
+    obtain a fresh token after previous one has expired
+    """
+    @jwt_refresh_token_required
+    def get(self):
+        """generate a fresh token"""
+        curr_user_id = get_jwt_identity()  # Fetch supervisor_id
+        claims = get_jwt_claims()
+        role = claims['role']
+        new_token = token_handler.create_refresh_token(curr_user_id, role)
+        response = {
+            'access_token': new_token
+        }
+        return make_response(helper.make_rest_success_response("Success", response))
