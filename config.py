@@ -21,6 +21,7 @@ class Config(object):
     S3_LOCATION=f"https://{os.environ['S3_BUCKET']}.s3.amazonaws.com/"
     CONFIRMATION_ENDPOINT = 'https://nexure.co.ke/confirm'
     LOGIN_ENDPOINT = 'https://nexure.co.ke/login'
+    ACCOUNT_RESET_ENDPOINT = 'https://nexure.co.ke/reset'
 
 
 class Production(Config):

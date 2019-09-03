@@ -96,4 +96,4 @@ class IndependentAgent(db.Model):
 
     @classmethod
     def get_agency_by_contact_person(cls, user_id):
-        return cls.filter_by(contact_person=user_id).first()
+        return cls.query.filter_by(contact_person=user_id).first()
