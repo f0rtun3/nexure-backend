@@ -270,17 +270,6 @@ class MPIUnderwriting(Resource):
                 benefits.append(data)
             cover_data.update({"benefits": benefits})
 
-        # get_loadings
-        loadings = []
-        if child_policy.loadings:
-            for i in child_policy.loadings:
-                data = {
-                    "id": i.ic_loadings_id,
-                    "amount": i.amount
-                }
-                loadings.append(data)
-            cover_data.update({"loadings": loadings})
-
         # get_extensions
         extensions = []
         if child_policy.extensions:
@@ -290,8 +279,7 @@ class MPIUnderwriting(Resource):
                     "amount": i.amount
                 }
                 extensions.append(data)
-            cover_data.update({"loadings": extensions})
-
+            cover_data.update({"extensions": extensions})
         # return all data
         return cover_data
 

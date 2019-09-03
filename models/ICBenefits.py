@@ -12,7 +12,7 @@ class ICBenefits(db.Model):
         'benefit.id', onupdate='CASCADE', ondelete='CASCADE'))
     # links to the association table for benefits
     policy_benefit = db.relationship('ChildPolicy', secondary='policy_benefits',
-                               lazy='dynamic', backref=db.backref('allbenefits', lazy='dynamic'))
+                                     lazy='dynamic', backref=db.backref('allbenefits', lazy='dynamic'))
     free_limit = db.Column(db.Float, nullable=False)
     max_limit = db.Column(db.Float, nullable=False)
     rate = db.Column(db.Float, nullable=False)
@@ -45,8 +45,16 @@ class ICBenefits(db.Model):
         """
         benefit_rows = cls.query.filter_by(insurance_company=company_id).all()
         return benefit_rows
-    
+
     @classmethod
     def get_ic_benefit(cls, benefit_id):
         benefit = cls.query.filter_by(benefit=benefit_id).first()
         return benefit
+
+    @classmethod
+    def get_benefit_id(cls, id):
+        """
+        Gets the IC benefit given the object id
+        """
+        ic_benefit = cls.query.filter_by(id=id).first()
+        return ic_benefit

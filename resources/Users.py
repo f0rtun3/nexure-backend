@@ -135,6 +135,7 @@ class UserRegister(Resource):
                                         user_details['twitter']
                                         )
             elif role == 'IA':
+<<<<<<< HEAD
                 phone = self.check_organization_phone_number(client_row.agency_phone,
                                                              user_details['org_phone'])
                 data = self.set_ia_data(user_details['org_name'], phone,
@@ -151,6 +152,25 @@ class UserRegister(Resource):
                 user = User.get_user_by_id(get_jwt_identity())
                 password = user.generate_password_hash(user_details['new_password'])
                 user.update_password(password)
+=======
+                """
+                One contact person only represents one entity. So, we fetch the agency using the contact person's id 
+                """
+                agency = IndependentAgent.get_agency_by_contact_person(user_id)
+                data = {
+                    "agency_name": user_details['org_name'],
+                    "agency_phone": user_details['org_phone_number'],
+                    "agency_email": user_details['org_email'],
+                    "ira_registration_number": user_details['ira_reg_no'],
+                    "ira_license_number": user_details['ira_license_no'],
+                    "kra_pin": user_details['org_kra_pin'],
+                    "website": user_details['website'],
+                    "facebook": user_details['facebook'],
+                    "instagram": user_details['instagram'],
+                    "twitter": user_details['twitter']
+                }
+                agency.update(data)
+>>>>>>> 57e68fe46d36b5f02825aa634ccede7a581854a2
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(

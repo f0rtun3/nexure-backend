@@ -27,3 +27,8 @@ class CarModel(db.Model):
     def get_models_by_make_id(cls, make_id):
         car_models = cls.query.filter_by(make=make_id)
         return car_models
+    
+    @classmethod
+    def get_model_name_by_id(cls, model_id):
+        model = cls.query.filter_by(model_id=model_id).first()
+        return model.model_name

@@ -42,11 +42,19 @@ class ICExtensions(db.Model):
         Returns id, extension_id, free_limit, max_limit and rate for
         every list of extensions under a particular company 
         """
-        extension_rows = cls.query.filter_by(insurance_company=company_id).all()
+        extension_rows = cls.query.filter_by(
+            insurance_company=company_id).all()
         return extension_rows
-    
+
     @classmethod
     def get_ic_extension(cls, extension_id):
         extension = cls.query.filter_by(extension=extension_id).first()
         return extension
 
+    @classmethod
+    def get_extension_id(cls, id):
+        """
+        Gets the IC Extension given the object id
+        """
+        ic_extension = cls.query.filter_by(id=id).first()
+        return ic_extension
