@@ -11,6 +11,7 @@ from models.AgeData import AgeData
 from models.LocationData import LocationData
 from models.MakeOrigin import MakeOrigin
 from models.SumInsuredRates import SumInsuredRates
+from models.LicencedClasses import LicencedClasses
 
 # Import the CSV files into python using read_csv
 # fetch car makes data and send it to its models
@@ -22,9 +23,6 @@ def car_makes():
         new_car_make = CarMake(row.Make_ID, row.Make_Name)
         new_car_make.save()
 
-# fetch car models data
-
-
 def car_models():
     df = pd.read_csv("data/clean_car_models.csv")
     for row in df.itertuples():
@@ -32,9 +30,6 @@ def car_models():
         car_make = CarMake.get_car_make_by_name(row.Make_Name)
         new_car_model = CarModel(row.Model_Name, row.Series, car_make)
         new_car_model.save()
-
-# Insurance classes and subclasses
-
 
 def insurance_classes():
     df = pd.read_csv("data/cleaned_classes.csv")
@@ -87,7 +82,10 @@ def insurance_classes():
         new_insurance_class = InsuranceClass(
             class_id, row.Class_Insurance, acronym, row.Sector)
         new_insurance_class.save()
-
+        # add micro insurance to the list of insurance_clasess available
+        insurance_class = InsuranceClass(
+            13, "Micro Insurance", "MIC", "General Insurance")
+        insurance_class.save()
 
 def insurance_subclass():
     # read file
@@ -101,25 +99,19 @@ def insurance_subclass():
 
         new_sub_class.save()
 
-# Counties
-
-
 def counties():
     df = pd.read_csv("data/County_Insurance.csv")
     for row in df.itertuples():
         new_county = County(row.County_Name)
         new_county.save()
 
-
 def constituencies():
     df = pd.read_csv("data/Constituency_Insurance.csv")
-
     for row in df.itertuples():
         # TODO: Create get county by name
         county = County.get_county_by_name(row.County_Name)
         new_constituency = Constituency(row.Constituency_Name, county)
         new_constituency.save()
-
 
 def ward():
     df = pd.read_csv("data/Ward_Insurance.csv")
@@ -130,14 +122,12 @@ def ward():
         new_ward = Ward(row.Ward_Name, constituency, county_id)
         new_ward.save()
 
-
 def insurance_details():
     df = pd.read_csv("data/insurance-companies.csv")
     for row in df.itertuples():
         new_company = CompanyDetails(
             row.org_name, row.email, row.physical_address, row.website, row.avatar)
         new_company.save()
-
 
 def age_data():
     df = pd.read_csv("data/age_data.csv")
@@ -146,16 +136,13 @@ def age_data():
                            row.UpperLimit, row.Relativity)
         new_data.save()
 
-
 def locations_data():
     df = pd.read_csv("data/locations.csv")
-
     for row in df.itertuples():
         constituency = Constituency.get_constituency_by_name(row.Constituency)
         ward = Ward.get_ward_id_by_name(row.Ward)
         new_data = LocationData(constituency, ward, row.Relativity)
         new_data.save()
-
 
 def make_origin():
     df = pd.read_csv("data/make_origin.csv")
@@ -163,13 +150,25 @@ def make_origin():
         new_data = MakeOrigin(row.Make_Origin, row.Relativity)
         new_data.save()
 
-
 def sum_insured_data():
     df = pd.read_csv("data/sum_insured_rates.csv")
     for row in df.itertuples():
-        new_data = SumInsuredRates(row.LowerLimit, row.UpperLimit, row.Relativity, row.Rate)
+        new_data = SumInsuredRates(
+            row.LowerLimit, row.UpperLimit, row.Relativity, row.Rate)
         new_data.save()
 
+def licenced_classes():
+    df = pd.read_csv("data/cleaned_licence_data.csv")
+    for row in df.itertuples():
+        if type(row.Classes) == str and type(row.Classes) is not None:
+            # sort list of classes
+            class_list = list(map(int, row.Classes.split(",")))
+            company = CompanyDetails.get_company_by_name(row.Company)
+            # add to licenced class model
+            if company:
+                for i in class_list:
+                    new_data = LicencedClasses(company.id, i)
+                    new_data.save()
 
 if __name__ == '__main__':
     car_makes()
@@ -184,3 +183,4 @@ if __name__ == '__main__':
     locations_data()
     make_origin()
     sum_insured_data()
+    licenced_classes()

@@ -1,7 +1,7 @@
 from app import db
 
 
-class LicenceClasses(db.Model):
+class LicencedClasses(db.Model):
     id = db.Column(db.Integer, autoincrement=True,
                    primary_key=True, nullable=False)
     company = db.Column(db.Integer, db.ForeignKey(

@@ -43,3 +43,8 @@ class CompanyDetails(db.Model):
     def get_company_by_id(cls, id):
         company = cls.query.filter_by(id=id).first()
         return company
+    
+    @classmethod
+    def get_company_by_name(cls, name):
+        company = cls.query.filter_by(company_name=name).first()
+        return company
