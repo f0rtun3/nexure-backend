@@ -6,6 +6,7 @@ from resources.Users import UserRegister
 from resources.Users import UserLogin
 from resources.Users import TokenRefresh
 from resources.Users import AccountConfirmation
+from resources.Users import AccountRecovery
 from resources.Users import AccountConfirmationResource
 from resources.Customers import CustomerOnBoarding
 from resources.StaffRegistration import StaffRegistration
@@ -31,6 +32,7 @@ api.add_resource(TokenRefresh, '/api/auth/refresh')
 api.add_resource(CustomerOnBoarding, '/api/customer')
 api.add_resource(AccountConfirmation, '/api/confirm')
 api.add_resource(AccountConfirmationResource, '/api/confirm/<int:user_id>')
+api.add_resource(AccountRecovery, '/api/auth/reset')
 api.add_resource(StaffRegistration, '/api/staff')
 api.add_resource(CarHandler, '/api/vehicles')
 api.add_resource(OrganizationHandler, '/api/organizations/all')

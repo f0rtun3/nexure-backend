@@ -30,6 +30,13 @@ def generate_temporary_password_template(url_endpoint, code):
                            temp_password=code)
     return html
 
+def generate_account_recovery_template(url_endpoint, code, salutation=""):
+    html = render_template('account_reset.html',
+                           url_endpoint=url_endpoint,
+                           confirm_token=code,
+                           salutation=salutation)
+    return html
+
 
 def send_email(recipient, subject, template, email_text):
     sender=app.config['MAIL_DEFAULT_USER']
@@ -58,13 +65,6 @@ def send_email(recipient, subject, template, email_text):
         return f"{e.response['Error']['Message']}"
     else:
         return "success"
-    """
-    if not from_addr:
-        from_addr = app.config['MAIL_DEFAULT_USER']
-    email = Mailer.Email(recipient, subject)
-    email.html(template)
-    email.send(from_addr)
-    """
 
 
 def create_user_password():

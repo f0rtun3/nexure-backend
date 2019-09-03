@@ -327,6 +327,7 @@ class AccountConfirmation(Resource):
         response = helper.make_rest_fail_response("User does not exist")
         return make_response(response, 404)
 
+
 class AccountConfirmationResource(Resource):
     def get(self, user_id):
         """
@@ -335,6 +336,7 @@ class AccountConfirmationResource(Resource):
         """
         user_row = User.get_user_by_id(user_id)
         if user_row:
+            # awesome, user account exists, let's go ahead and resend the activation email to the user
             confirmation_code = token_handler.user_account_confirmation_token(user_id)
             email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
                                                                    confirmation_code)
@@ -350,7 +352,12 @@ class AccountConfirmationResource(Resource):
 
 
 class UserLogin(Resource):
+    """
+    let's authenticate the user to the system upon sign in here
+    """
     def post(self):
+        # this is the POST request resource to handle user signin
+
         user_details = user_parser.parse_args()
         # check whether the user exists before confirming
         user_db_row = User.get_user_by_email(user_details['email'])
@@ -360,12 +367,14 @@ class UserLogin(Resource):
                 "User email does not exist")
             return make_response(response_msg, 404)
 
-        # user exists, let's go ahead and authenticate the user
+        # good, let's go ahead and authenticate the user now
         # we also need to check whether the user account is verified or not
+        # we don't want inactive accounts accessing our system
         if user_db_row.check_password_hash(user_details['password']):
             if user_db_row.is_active:
-                # generate an access and refresh token for the user, and also return the user role
-                # to redirect them to the correct page after logging in
+                # generate an access and refresh tokens for the user, for obvious reasons
+                # also return the user role as a token claim, we'll need that for subsequent
+                # requests from the client
                 role = self.get_user_role(user_db_row.id)
                 auth_tokens = token_handler.create_user_token(user_db_row.id, role)
                 response_dict = {
@@ -384,12 +393,16 @@ class UserLogin(Resource):
                 response_msg = helper.make_rest_fail_response("Please confirm your account before signing in.")
                 return make_response(response_msg, 401)
         else:
+            # wrong credentials passed, return the appropriate message
             response_msg = helper.make_rest_fail_response(
                 "Wrong credentials passed, please try again")
             return make_response(response_msg, 401)
 
     @staticmethod
     def get_user_role(user_id):
+        """
+        get the user role by id, this is needed to throttle permissions on modules to access
+        """
         role = UserRolePlacement.fetch_role_by_user_id(user_id)
         role_name = Role.fetch_role_by_id(role)
         return role_name
@@ -403,7 +416,10 @@ class TokenRefresh(Resource):
     """
     @jwt_refresh_token_required
     def get(self):
-        """generate a fresh token"""
+        """
+        generate an  unfresh token
+        unfortunately this token is limited to certain CRUD operations
+        """
         curr_user_id = get_jwt_identity()  # Fetch supervisor_id
         claims = get_jwt_claims()
         role = claims['role']
@@ -412,3 +428,50 @@ class TokenRefresh(Resource):
             'access_token': new_token
         }
         return make_response(helper.make_rest_success_response("Success", response))
+
+
+class AccountRecovery(Resource):
+    """
+    When the users forget their password, we need to take appropriate steps to recover their account
+    """
+    def post(self):
+        """
+        send the user an email containing a link to set a new password
+        :arg email {string} user email whose account we intend to recover
+        :return:
+        """
+        user_details = user_parser.parse_args()
+        user_row = User.get_user_by_email(user_details['email'])
+        if user_row:
+            account_token = token_handler.user_account_confirmation_token(user_row.id)
+            email_text = f"To Please follow this link to reset your password " \
+                         f"{app.config['ACCOUNT_RESET_ENDPOINT']}/{account_token}"
+            email_template = helper.generate_account_recovery_template(app.config['ACCOUNT_RESET_ENDPOINT'],
+                                                                       account_token)
+            subject = "Account Password Recovery"
+            helper.send_email(user_details['email'], subject, email_template, email_text)
+            response_msg = helper.make_rest_success_response("Successfully sent account recovery steps, check your"
+                                                             " email")
+            return make_response(response_msg, 200)
+
+        response_msg = helper.make_rest_fail_response("There is not account associated with this email")
+        return make_response(response_msg, 404)
+
+    @jwt_required
+    def put(self):
+        """
+        when the user resets the password, 
+        we will update the same here
+        :return:
+        """
+        user_id = get_jwt_identity()
+        user_details = user_parser.parse_args()
+        user = User.get_user_by_id(user_id)
+        if user:
+            password = user.generate_password_hash(user_details['new_password'])
+            user.update_password(password)
+            response_msg = helper.make_rest_success_response("Successfully recovered user account")
+            return make_response(response_msg, 200)
+
+        response_msg = helper.make_rest_fail_response("Sorry, user does not exist in this database")
+        return make_response(response_msg, 404)
