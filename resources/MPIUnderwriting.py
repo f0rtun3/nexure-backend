@@ -137,6 +137,7 @@ class MPIUnderwriting(Resource):
                     policy_details['insurance_company'],
                     policy_details['pricing_module'],
                     master_policy.id,
+                    subclass_details.name
                 )
                 child_policy.save()
 
@@ -241,7 +242,7 @@ class MPIUnderwriting(Resource):
 
         cover_data.update({'transaction_type': child_policy.transaction_type})
         cover_data.update({'child_policy_no': child_policy.cp_number})
-        cover_data.update({'customer_number': child_policy.customer_number})        
+        cover_data.update({'customer_number': child_policy.customer_number})
         cover_data.update({'rate': child_policy.rate})
         cover_data.update({'premium_amount': child_policy.premium_amount})
         cover_data.update({'date_registered': child_policy.date_registered})
@@ -282,6 +283,3 @@ class MPIUnderwriting(Resource):
             cover_data.update({"extensions": extensions})
         # return all data
         return cover_data
-
-        
-        

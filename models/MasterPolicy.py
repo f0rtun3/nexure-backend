@@ -9,7 +9,8 @@ class MasterPolicy(db.Model):
     """
     __tablename__ = 'master_policy'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True,
+                   autoincrement=True, nullable=False)
     # the master policy number which is created upon registration
     mp_number = db.Column(db.String(22), nullable=False, unique=True)
     # the customer number of the policy holder
@@ -51,5 +52,12 @@ class MasterPolicy(db.Model):
         policy = cls.query.filter_by(customer=number).all()
         return policy
 
+    @classmethod
+    def get_policy_by_mp_number(cls, mp_number):
+        policy = cls.query.filter_by(mp_number=mp_number).first()
+        return policy
 
-
+    @classmethod
+    def get_policy_by_id(cls, id):
+        policy = cls.query.filter_by(id=id).first()
+        return policy

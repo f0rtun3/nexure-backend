@@ -21,12 +21,16 @@ from resources.MPIUnderwriting import MPIUnderwriting
 from resources.Location import Location
 from resources.InsuranceProducts import InsuranceProducts
 from resources.CustomerDetails import CustomerDetails
+from resources.MasterDetails import MasterDetails
+from resources.ChildDetails import ChildDetails
 
 
 api.add_resource(Companies, '/api/companies/all')
 api.add_resource(CustomerDetails, '/api/customer_details/<email>')
 api.add_resource(CompanyDetails, '/api/company_details/<company_id>')
 api.add_resource(UserRegister, '/api/user')
+api.add_resource(MasterDetails, '/api/master_details/<master_id>')
+api.add_resource(ChildDetails, '/api/child_details/<child_id>')
 api.add_resource(UserLogin, '/api/login')
 api.add_resource(TokenRefresh, '/api/auth/refresh')
 api.add_resource(CustomerOnBoarding, '/api/customer')

@@ -4,6 +4,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
 from models.Role import Role
 from models.CompanyDetails import CompanyDetails
+from models.LicencedClasses import LicencedClasses
 from models.UserRolePlacement import UserRolePlacement
 import helpers.helpers as helper
 from helpers.parsers import customer_parser
@@ -26,9 +27,11 @@ class Companies(Resource):
             # get company details
             list_of_companies = []
             for company in companies_list:
+                policies = LicencedClasses.get_company_classes(company.id)
                 data = {
                     "id": company.id,
                     "name": company.company_name,
+                    "products": policies
                 }
                 list_of_companies.append(data)
 

@@ -88,23 +88,6 @@ class CompanyDetails(Resource):
 
             company_data.update({"products": products_list})
 
-        # get the levies
-        levies = Levies.get_all_levies()
-
-        levies_list = []
-        if levies:
-            for i in levies:
-                data = {
-                    "id": i.id,
-                    "name": i.name,
-                    "rate": i.rate
-                }
-                levies_list.append(data)
-
-            company_data.update({"levies": levies_list})
-        company_data.update({"company_id": company_id})
-
-        # return results
         response_msg = helper.make_rest_success_response(
             "Success", company_data)
         return make_response(response_msg, 200)

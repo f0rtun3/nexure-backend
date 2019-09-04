@@ -25,3 +25,9 @@ class LicencedClasses(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+    
+    @classmethod
+    def get_company_classes(cls, company_id):
+        classes = cls.query.filter_by(company=company_id).all()
+        class_list = [i.insurance_class for i in classes]
+        return class_list
