@@ -133,7 +133,7 @@ class MPIUnderwriting(Resource):
                     policy_details['date_expiry'],
                     policy_details['premium_amount'],
                     policy_details['transaction_type'],
-                    4,
+                    company_id,
                     policy_details['insurance_company'],
                     policy_details['pricing_module'],
                     master_policy.id,

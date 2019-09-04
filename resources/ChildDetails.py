@@ -35,7 +35,7 @@ class ChildDetails(Resource):
     """
     Contains get request for fetching child details using child id
     """
-    # @jwt_required
+    @jwt_required
     def get(self, child_id):
         """
         Get all child data

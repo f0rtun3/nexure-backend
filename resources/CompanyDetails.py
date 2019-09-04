@@ -21,6 +21,7 @@ import uuid
 
 
 class CompanyDetails(Resource):
+    @jwt_required
     def get(self, company_id):
         company_data = {}
         # get the company benefits
