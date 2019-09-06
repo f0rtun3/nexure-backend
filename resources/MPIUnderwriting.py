@@ -33,6 +33,7 @@ from models.InsuranceCompany import InsuranceCompany
 from models.OrganizationCustomer import OrganizationCustomer
 from models.VehicleModifications import VehicleModifications
 from models.Driver import Driver
+from Controllers.MPIChildPolicy import ChildController
 import helpers.helpers as helper
 from helpers.parsers import underwriting_parser
 from helpers.CustomerNumber import CustomerNumber
@@ -123,8 +124,9 @@ class MPIUnderwriting(Resource):
                 # TODO: Generate acronym for child policies for this instance we use PCI for test purposes
                 new_child_policy.set_pci(subclass_details.acronym)
                 ch_policy_number = new_child_policy.generate_policy_no()
-                # Finally create the child policy
-                child_policy = ChildPolicy(
+
+                # Finally create the child policy through the child policy controller
+                data = (
                     ch_policy_number,
                     new_vehicle.id,
                     policy_details["customer_number"],
@@ -139,8 +141,8 @@ class MPIUnderwriting(Resource):
                     master_policy.id,
                     subclass_details.name
                 )
-                child_policy.save()
-
+                child_policy = ChildController.add_new_policy(data)
+                
                 """
                 Add benefits from the list of benefits sent in the post request
                 """
@@ -150,7 +152,7 @@ class MPIUnderwriting(Resource):
                             "Windscreen and Staff")
                         ic_benefit = ICBenefits.get_ic_benefit(benefit.id)
                         policy_benefit = PolicyBenefits(
-                            child_policy.id, ic_benefit.id, i["value"])
+                            child_policy, ic_benefit.id, i["value"])
                         policy_benefit.save()
 
                 """
@@ -163,22 +165,15 @@ class MPIUnderwriting(Resource):
                         ic_extension = ICExtensions.get_ic_extension(
                             extension.id)
                         policy_extension = PolicyExtensions(
-                            child_policy.id, ic_extension, i["value"])
+                            child_policy, ic_extension, i["value"])
                         policy_extension.save()
-                """
-                Add loadings from the list of loadings sent in the post request
-                """
-                if policy_details['loadings']:
-                    for i in policy_details['loadings']:
-                        child_policy.add_loading(i.loading_id, i.amount)
-                        child_policy.save()
 
-                """
+                """        
                 Send response if successfully onboarded with the onboarded data
                 """
-                # data = self.get_cover_data(child_policy.id)
+                # data = self.get_cover_data(child_policy)
                 response = helper.make_rest_success_response(
-                    "Congratulations! The customer was enrolled successfully. Cover will be activated after payment is made.", child_policy.id)
+                    "Congratulations! The customer was enrolled successfully. Cover will be activated after payment is made.", child_policy)
                 return make_response(response, 200)
 
             # if it's an endorsement i.e the customer wants to add an item under the master policy
@@ -232,54 +227,54 @@ class MPIUnderwriting(Resource):
             insurance = InsuranceCompany.get_company_by_contact_person(uid)
             return insurance.id
 
-    @staticmethod
-    def get_cover_data(self, child_id):
-        """
-        Get all cover data
-        """
-        cover_data = {}
-        child_policy = ChildPolicy.get_child_by_id(child_id)
+    # @staticmethod
+    # def get_cover_data(self, child_id):
+    #     """
+    #     Get all cover data
+    #     """
+    #     cover_data = {}
+    #     child_policy = ChildPolicy.get_child_by_id(child_id)
 
-        cover_data.update({'transaction_type': child_policy.transaction_type})
-        cover_data.update({'child_policy_no': child_policy.cp_number})
-        cover_data.update({'customer_number': child_policy.customer_number})
-        cover_data.update({'rate': child_policy.rate})
-        cover_data.update({'premium_amount': child_policy.premium_amount})
-        cover_data.update({'date_registered': child_policy.date_registered})
-        cover_data.update({'status': child_policy.status})
+    #     cover_data.update({'transaction_type': child_policy.transaction_type})
+    #     cover_data.update({'child_policy_no': child_policy.cp_number})
+    #     cover_data.update({'customer_number': child_policy.customer_number})
+    #     cover_data.update({'rate': child_policy.rate})
+    #     cover_data.update({'premium_amount': child_policy.premium_amount})
+    #     cover_data.update({'date_registered': child_policy.date_registered})
+    #     cover_data.update({'status': child_policy.status})
 
-        # get company id
-        comp = CompanyDetails.get_company_by_id(child_policy.company)
-        cover_data.update({'company': comp.company_name})
+    #     # get company id
+    #     comp = CompanyDetails.get_company_by_id(child_policy.company)
+    #     cover_data.update({'company': comp.company_name})
 
-        # get master policy id
-        master = child_policy.master_policy
-        master_details = {
-            "mp_number": master.mp_number,
-            "company": master.company,
-            "date_created": master.date_created
-        }
-        cover_data.update({"master_policy": master_details})
-        # get_benefits
-        benefits = []
-        if child_policy.benefits:
-            for i in child_policy.benefits:
-                data = {
-                    "id": i.ic_benefit_id,
-                    "amount": i.amount
-                }
-                benefits.append(data)
-            cover_data.update({"benefits": benefits})
+    #     # get master policy id
+    #     master = child_policy.master_policy
+    #     master_details = {
+    #         "mp_number": master.mp_number,
+    #         "company": master.company,
+    #         "date_created": master.date_created
+    #     }
+    #     cover_data.update({"master_policy": master_details})
+    #     # get_benefits
+    #     benefits = []
+    #     if child_policy.benefits:
+    #         for i in child_policy.benefits:
+    #             data = {
+    #                 "id": i.ic_benefit_id,
+    #                 "amount": i.amount
+    #             }
+    #             benefits.append(data)
+    #         cover_data.update({"benefits": benefits})
 
-        # get_extensions
-        extensions = []
-        if child_policy.extensions:
-            for i in child_policy.extensions:
-                data = {
-                    "id": i.ic_loadings_id,
-                    "amount": i.amount
-                }
-                extensions.append(data)
-            cover_data.update({"extensions": extensions})
-        # return all data
-        return cover_data
+    #     # get_extensions
+    #     extensions = []
+    #     if child_policy.extensions:
+    #         for i in child_policy.extensions:
+    #             data = {
+    #                 "id": i.ic_loadings_id,
+    #                 "amount": i.amount
+    #             }
+    #             extensions.append(data)
+    #         cover_data.update({"extensions": extensions})
+    #     # return all data
+    #     return cover_data
