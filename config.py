@@ -18,7 +18,7 @@ class Config(object):
     AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
     S3_BUCKET = os.environ['S3_BUCKET']
-    S3_LOCATION=f"https://{os.environ['S3_BUCKET']}.s3.amazonaws.com/"
+    S3_LOCATION = f"https://{os.environ['S3_BUCKET']}.s3.amazonaws.com/"
     CONFIRMATION_ENDPOINT = 'https://nexure.co.ke/confirm'
     LOGIN_ENDPOINT = 'https://nexure.co.ke/login'
     ACCOUNT_RESET_ENDPOINT = 'https://nexure.co.ke/reset'
@@ -46,3 +46,7 @@ class Development(Config):
 
 class Testing(Config):
     TESTING = True
+    HOST="127.0.0.1"
+    PORT=5000
+    ALLOWED_HOSTS="127.0.0.1"
+    SQLALCHEMY_DATABASE_URI = "postgresql://paulodera:Jsv0#XY^ri@localhost/nexure_test"

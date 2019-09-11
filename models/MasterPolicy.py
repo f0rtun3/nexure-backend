@@ -34,6 +34,18 @@ class MasterPolicy(db.Model):
         self.date_expiry = date_expiry
         self.company = company
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "mp_number": self.mp_number,
+            "customer": self.customer,
+            "date_created": self.date_created.strftime('%Y-%m-%d'),
+            "date_expiry": self.date_expiry.strftime('%Y-%m-%d'),
+            "status": self.status,
+            "company": self.company_details.company_name,
+            "child_policies": [child.serialize() for child in self.child_policy]
+        }
+
     def save(self):
         db.session.add(self)
         db.session.commit()

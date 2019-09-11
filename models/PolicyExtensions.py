@@ -30,3 +30,15 @@ class PolicyExtensions(db.Model):
     def delete(self):
         db.session.remove(self)
         db.session.commit()
+
+    @classmethod
+    def get_policy_ext_by_policy(cls, child_policy_id):
+        extension_set = set()
+        extensions = cls.query.filter_by(policy_id=child_policy_id)
+        if extensions is None:
+            return None
+
+        for ext in extensions:
+            extensions.add(ext.ic_extension)
+
+        return extension_set

@@ -30,3 +30,12 @@ class PolicyBenefits(db.Model):
     def delete(self):
         db.session.remove(self)
         db.session.commit()
+
+    @classmethod
+    def get_policy_benefit_by_policy(cls, child_policy_id):
+        benefit_set = set()
+        benefits = cls.query.filter_by(policy_id=child_policy_id)
+        for benefit in benefits:
+            benefit_set.add(benefit.ic_benefit)
+
+        return benefit_set
