@@ -12,7 +12,7 @@ class ICBenefits(db.Model):
         'benefit.id', onupdate='CASCADE', ondelete='CASCADE'))
     # links to the association table for benefits
     policy_benefit = db.relationship('ChildPolicy', secondary='policy_benefits',
-                                     lazy='dynamic', backref=db.backref('allbenefits', lazy='dynamic'))
+                                     backref=db.backref('allbenefits', lazy='dynamic'))
     free_limit = db.Column(db.Float, nullable=False)
     max_limit = db.Column(db.Float, nullable=False)
     rate = db.Column(db.Float, nullable=False)

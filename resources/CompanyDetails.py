@@ -75,20 +75,6 @@ class CompanyDetails(Resource):
                 extensions_list.append(data)
 
             company_data.update({"extensions": extensions_list})
-
-        # get products the company sells
-        products = ICProducts.get_products_by_company(company_id)
-        products_list = []
-        if products:
-            for product in products:
-                data = {
-                    "class": product.insurance_class,
-                    "subclass": product.sub_class
-                }
-                products_list.append(data)
-
-            company_data.update({"products": products_list})
-
         response_msg = helper.make_rest_success_response(
             "Success", company_data)
         return make_response(response_msg, 200)

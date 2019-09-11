@@ -25,8 +25,8 @@ class MasterPolicy(db.Model):
     status = db.Column(db.Boolean, nullable=False, default=True)
     # insurance company that covers this master policy
     company = db.Column(db.Integer, db.ForeignKey(
-        'company_details.id', onupdate='CASCADE', ondelete='CASCADE'))
-    child_policy = db.relationship("ChildPolicy", backref="child_policy")
+        'insurance_company.id', onupdate='CASCADE', ondelete='CASCADE'))
+    child = db.relationship("ChildPolicy", backref="master")
 
     def __init__(self, mp_number, customer, date_expiry, company):
         self.mp_number = mp_number
