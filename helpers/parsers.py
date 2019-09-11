@@ -336,9 +336,8 @@ underwriting_parser.add_argument(
     action='append'
 )
 underwriting_parser.add_argument(
-    "loadings",
-    type=dict,
-    action='append'
+    "master_policy",
+    type=str
 )
 underwriting_parser.add_argument(
     "date_expiry",

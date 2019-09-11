@@ -25,7 +25,7 @@ class ChildPolicy(db.Model):
     master_policy = db.Column(db.Integer, db.ForeignKey(
         'master_policy.id', onupdate='CASCADE', ondelete='CASCADE'))
     company = db.Column(db.Integer, db.ForeignKey(
-        'company_details.id', onupdate='CASCADE', ondelete='CASCADE'))
+        'insurance_company.id', onupdate='CASCADE', ondelete='CASCADE'))
     pricing_model = db.Column(db.String(50), nullable=False)
     date_activated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
     is_active = db.Column(db.Boolean, default=False)

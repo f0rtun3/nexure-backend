@@ -18,7 +18,8 @@ class InsuranceCompany(db.Model):
         'company_details.id', ondelete='CASCADE', onupdate='CASCADE'))
     rate = db.Column(db.Float, nullable=True)
     year = db.Column(db.Float, nullable=True)
-
+    child_policy = db.relationship("ChildPolicy", backref="child_policy")
+    master_policy = db.relationship("MasterPolicy", backref="master_policy")
     # social media handles
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
@@ -42,7 +43,7 @@ class InsuranceCompany(db.Model):
         self.rate = rate
 
     def __repr__(self):
-        return f"{self.company_details}"
+        return f"{self.ira_registration_number}"
 
     def serialize(self):
         return{
@@ -96,5 +97,10 @@ class InsuranceCompany(db.Model):
             "twitter": company.twitter,
             "rate": company.rate
         } for company in company_rows]
-                        
+
         return companies
+
+    @classmethod
+    def get_by_associated_company(cls, assoc_id):
+        company = cls.query.filter_by(associated_company=assoc_id).first()
+        return company
