@@ -71,7 +71,7 @@ class MPIUnderwriting(Resource):
                 # Send response if successfully onboarded with the onboarded data
                 # data = self.get_cover_data(child_policy_id)
                 response = helper.make_rest_success_response(
-                    "Congratulations! The customer was enrolled successfully. Cover will be activated after payment is made", child_policy_id)
+                    "Congratulations! The customer was enrolled successfully. Cover will be activated after payment is made.", child_policy_id)
                 return make_response(response, 200)
 
             # if it's an endorsement i.e the customer wants to add an item under the master policy
