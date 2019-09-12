@@ -1,6 +1,7 @@
-from app import app
+"""
+api endpoint definition
+"""
 from flask_restful import Api
-api = Api(app)
 
 from resources.Users import UserRegister
 from resources.Users import UserLogin
@@ -24,25 +25,28 @@ from resources.CustomerDetails import CustomerDetails
 from resources.MasterDetails import MasterDetails
 from resources.ChildDetails import ChildDetails
 
+from app import app
 
-api.add_resource(Companies, '/api/companies/all')
-api.add_resource(CustomerDetails, '/api/customer_details/<email>')
-api.add_resource(CompanyDetails, '/api/company_details/<company_id>')
-api.add_resource(UserRegister, '/api/user')
-api.add_resource(MasterDetails, '/api/master_details/<master_id>')
-api.add_resource(ChildDetails, '/api/child_details/<child_id>')
-api.add_resource(UserLogin, '/api/login')
-api.add_resource(TokenRefresh, '/api/auth/refresh')
-api.add_resource(CustomerOnBoarding, '/api/customer')
-api.add_resource(AccountConfirmation, '/api/confirm')
-api.add_resource(AccountConfirmationResource, '/api/confirm/<int:user_id>')
-api.add_resource(AccountRecovery, '/api/auth/reset')
-api.add_resource(StaffRegistration, '/api/staff')
-api.add_resource(CarHandler, '/api/vehicles')
-api.add_resource(OrganizationHandler, '/api/organizations/all')
-api.add_resource(MPIUnderwriting, '/api/transactions')
-api.add_resource(BenefitHandler, '/api/benefits')
-api.add_resource(LoadingsHandler, '/api/loadings')
-api.add_resource(ExtensionHandler, '/api/extensions')
-api.add_resource(Location, '/api/locations')
-api.add_resource(InsuranceProducts, '/api/products')
+API = Api(app)
+
+API.add_resource(Companies, '/api/companies/all')
+API.add_resource(CustomerDetails, '/api/customer_details/<string:email>')
+API.add_resource(CompanyDetails, '/api/company_details/<int:company_id>')
+API.add_resource(UserRegister, '/api/user')
+API.add_resource(MasterDetails, '/api/master_details/<int:master_id>')
+API.add_resource(ChildDetails, '/api/child_details/<int:child_id>')
+API.add_resource(UserLogin, '/api/login')
+API.add_resource(TokenRefresh, '/api/auth/refresh')
+API.add_resource(CustomerOnBoarding, '/api/customer')
+API.add_resource(AccountConfirmation, '/api/confirm')
+API.add_resource(AccountConfirmationResource, '/api/confirm/<int:user_id>')
+API.add_resource(AccountRecovery, '/api/auth/reset')
+API.add_resource(StaffRegistration, '/api/staff')
+API.add_resource(CarHandler, '/api/vehicles')
+API.add_resource(OrganizationHandler, '/api/organizations/all')
+API.add_resource(MPIUnderwriting, '/api/transactions')
+API.add_resource(BenefitHandler, '/api/benefits')
+API.add_resource(LoadingsHandler, '/api/loadings')
+API.add_resource(ExtensionHandler, '/api/extensions')
+API.add_resource(Location, '/api/locations')
+API.add_resource(InsuranceProducts, '/api/products')

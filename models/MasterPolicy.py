@@ -1,4 +1,5 @@
 from app import db
+from sqlalchemy import desc
 
 
 class MasterPolicy(db.Model):
@@ -34,6 +35,18 @@ class MasterPolicy(db.Model):
         self.date_expiry = date_expiry
         self.company = company
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "mp_number": self.mp_number,
+            "customer_number": self.customer,
+            "date_created": self.date_created.strftime('%m/%d/%Y'),
+            "date_expiry": self.date_expiry.strftime('%m/%d/%Y'),
+            "status": self.status,
+            "company": self.insurance_company.company_details.company_name,
+            "child_policies": [child_policy.serialize() for child_policy in self.child]
+        }
+
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -61,3 +74,11 @@ class MasterPolicy(db.Model):
     def get_policy_by_id(cls, id):
         policy = cls.query.filter_by(id=id).first()
         return policy
+
+    @classmethod
+    def get_latest_policy_details(cls, mp_number):
+        policy_details = cls.query.order_by(cls.id.desc()).filter_by(mp_number=mp_number).first()
+        if policy_details:
+            return policy_details.serialize()
+
+        return None

@@ -18,12 +18,15 @@ class InsuranceCompany(db.Model):
         'company_details.id', ondelete='CASCADE', onupdate='CASCADE'))
     rate = db.Column(db.Float, nullable=True)
     year = db.Column(db.Float, nullable=True)
-    child_policy = db.relationship("ChildPolicy", backref="child_policy")
-    master_policy = db.relationship("MasterPolicy", backref="master_policy")
     # social media handles
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
+    master_policy = db.relationship("MasterPolicy", backref="insurance_company", lazy='dynamic')
+    ic_benefit = db.relationship('ICBenefits', backref="insurance_company", lazy='dynamic')
+    ic_extension = db.relationship('ICExtensions', backref="insurance_company", lazy='dynamic')
+    child_policy = db.relationship('ChildPolicy', backref="insurance_company", lazy='dynamic')
+    ic_rate_discount = db.relationship('ICRateDiscount', backref='insurance_company', lazy='dynamic')
 
     def __init__(self, contact_person, associated_company, ira_registration_number=None,
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,

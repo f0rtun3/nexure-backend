@@ -53,7 +53,7 @@ class ExtensionHandler(Resource):
         return make_response(response_msg, 200)
 
     def put(self):
-        """Update benefit, change the free limit, or max limit, change rate etc."""
+        #ToDo:Update benefit, change the free limit, or max limit, change rate etc.
         pass
 
     def get(self):

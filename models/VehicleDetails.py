@@ -15,14 +15,14 @@ class VehicleDetails(db.Model):
     body_type = db.Column(db.String(20))
     origin = db.Column(db.String(20), nullable=True)
     sum_insured = db.Column(db.Integer, nullable=False)
-    driver = db.Column(db.Integer, db.ForeignKey(
+    driver_id = db.Column(db.Integer, db.ForeignKey(
         'driver.id', ondelete='CASCADE', onupdate='CASCADE'))
     no_of_seats = db.Column(db.Integer, nullable=False)
     manufacture_year = db.Column(db.Integer, nullable=False)
     engine_capacity = db.Column(db.Integer, nullable=False)
-
     # link to vehicle modifications
-    modifications = db.relationship("VehicleModifications", backref="user")
+    modifications = db.relationship("VehicleModifications", backref="vehicle_details")
+    vehicle_details = db.relationship("ChildPolicy", backref="vehicle_details")
 
     def __init__(self, reg_number, model, color, body_type, origin, sum_insured, driver,
                  no_of_seats, manufacture_year, engine_capacity):
@@ -36,6 +36,22 @@ class VehicleDetails(db.Model):
         self.no_of_seats = no_of_seats
         self.manufacture_year = manufacture_year
         self.engine_capacity = engine_capacity
+
+    def serialize(self):
+        return {
+            "reg_number": self.reg_number,
+            "model": self.car_model.model_name,
+            "color": self.color,
+            "body_type": self.body_type,
+            "origin": self.origin,
+            "sum_insured": self.sum_insured,
+            "driver": self.driver.serialize(),
+            "no_of_seats": self.no_of_seats,
+            "manufacture_year": self.manufacture_year,
+            "engine_capacity": self.engine_capacity,
+            "vehicle_modifications": [modification.serialize() for modification in
+                                      self.modifications]
+        }
 
     def save(self):
         db.session.add(self)

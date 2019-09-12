@@ -2,16 +2,15 @@ from app import db
 
 
 class ChildPolicy(db.Model):
-    """Stores all information regarding a particular child policy to which a customer is enrolled, linking all their details as well"""
+    """
+        Stores all information regarding a particular child policy to which a customer is enrolled,
+        linking all their details as well
+    """
 
     __tablename__ = 'child_policy'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     vehicle = db.Column(db.Integer, db.ForeignKey('vehicle_details.id', ondelete='CASCADE', onupdate='CASCADE'))
-    # links to the association table for benefits
-    benefits = db.relationship("PolicyBenefits", backref="benefits")
-    # links to the association table for extensions
-    extensions = db.relationship("PolicyExtensions", backref="extensions")
     cp_number = db.Column(db.String(22), nullable=False, unique=True)
     # links to the association table for loadings
     customer_number = db.Column(db.String(50))
@@ -30,6 +29,10 @@ class ChildPolicy(db.Model):
     date_activated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
     is_active = db.Column(db.Boolean, default=False)
     subclass = db.Column(db.String(22), nullable=True)
+    # links to the association table for benefits
+    benefits = db.relationship("PolicyBenefits", backref="child_policy")
+    # links to the association table for extensions
+    extensions = db.relationship("PolicyExtensions", backref="child_policy")
 
     def __init__(self, cp_number, vehicle, customer_number, rate, date_expiry, premium_amount, transaction_type,
                  agency_id, company, pricing_model, master_policy, subclass):
@@ -45,6 +48,23 @@ class ChildPolicy(db.Model):
         self.company = company
         self.pricing_model = pricing_model
         self.subclass = subclass
+
+    def serialize(self):
+        return {
+            "vehicle": self.vehicle_details.serialize(),
+            "cp_number": self.cp_number,
+            "rate": self.rate,
+            "date_expiry": self.date_expiry.strftime('%m/%d/%Y'),
+            "premium_amount": self.premium_amount,
+            "transaction_type": self.transaction_type,
+            "agency_id": self.agency_id,
+            "master_policy": self.master_policy,
+            "pricing_model": self.pricing_model,
+            "date_activated": self.date_activated.strftime('%m/%d/%Y'),
+            "subclass": self.subclass,
+            "benefits": [benefit.serialize() for benefit in self.benefits],
+            "extensions": [extension.serialize() for extension in self.extensions]
+        }
 
     def save(self):
         db.session.add(self)
@@ -75,3 +95,7 @@ class ChildPolicy(db.Model):
     def get_child_by_id(cls, id):
         child = cls.query.filter_by(id=id).first()
         return child
+
+    @classmethod
+    def get_child_by_master_policy(cls, id):
+        return [policy.serialize() for policy in cls.query.filter_by(master_policy=id).all()]

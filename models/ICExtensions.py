@@ -2,26 +2,37 @@ from app import db
 
 
 class ICExtensions(db.Model):
-    """Stores the extensions that offered by a company, for a particular policy, together with the rate and limits for them"""
+    """Stores the extensions
+    that offered by a company, for a particular policy, together with the rate and limits for them"""
 
     __tablename__ = 'ic_extension'
 
     id = db.Column(db.Integer, autoincrement=True,
                    primary_key=True, nullable=False)
-    insurance_company = db.Column(db.Integer, db.ForeignKey(
+    insurance_company_id = db.Column(db.Integer, db.ForeignKey(
         'insurance_company.id', onupdate='CASCADE', ondelete='CASCADE'))
-    extension = db.Column(db.Integer, db.ForeignKey(
+    extension_id = db.Column(db.Integer, db.ForeignKey(
         'extension.id', onupdate='CASCADE', ondelete='CASCADE'))
     free_limit = db.Column(db.Float, nullable=False)
     max_limit = db.Column(db.Float, nullable=False)
     rate = db.Column(db.Float, nullable=False)
+    policy_extension = db.relationship('PolicyExtensions', backref="ic_extension")
 
-    def __init__(self, insurance_company, extension, free_limit, max_limit, rate):
+    def __init__(self, insurance_company, extension_id, free_limit, max_limit, rate):
         self.insurance_company = insurance_company
-        self.extension = extension
+        self.extension = extension_id
         self.free_limit = free_limit
         self.max_limit = max_limit
         self.rate = rate
+
+    def serialize(self):
+        return {
+            "insurance_company": self.insurance_company.company_details.company_name,
+            "name": self.extension.name,
+            "free_limit": self.free_limit,
+            "max_limit": self.max_limit,
+            "rate": self.rate
+        }
 
     def save(self):
         db.session.add(self)
@@ -58,3 +69,8 @@ class ICExtensions(db.Model):
         """
         ic_extension = cls.query.filter_by(id=id).first()
         return ic_extension
+
+    @classmethod
+    def get_unselected_extensions(cls, excluded_extensions):
+        extensions = cls.query.filter(cls.id.notin_(excluded_extensions))
+        return [extension.serialize() for extension in extensions]

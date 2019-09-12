@@ -71,7 +71,8 @@ class MPIUnderwriting(Resource):
                 # Send response if successfully onboarded with the onboarded data
                 # data = self.get_cover_data(child_policy_id)
                 response = helper.make_rest_success_response(
-                    "Congratulations! The customer was enrolled successfully. Cover will be activated after payment is made", child_policy_id)
+                    "Congratulations! The customer was enrolled successfully. Cover will be"
+                    " activated after payment is made", child_policy_id)
                 return make_response(response, 200)
 
             # if it's an endorsement i.e the customer wants to add an item under the master policy
@@ -96,12 +97,20 @@ class MPIUnderwriting(Resource):
                         "Failed! Master policy expired. Kindly wait for renew it the endorse.")
                     return make_response(response, 500)
 
-            elif transaction_type == 'RENEWAL':
-                pass
+            elif transaction_type == 'RET':
+                #   renew the transaction
+                if MasterController.renew_transaction(policy_details['master_policy_id'],
+                                                      policy_details['expiry_date'],
+                                                      transaction_type):
+                    return make_response(helper.make_rest_success_response("Policy renewed successfully"),
+                                         200)
+                else:
+                    return make_response(helper.make_rest_success_response("Failed to renew Policy"))
                 # if the customer want's to extend the cover to cater for extra losses
             elif transaction_type == 'EXTENSION':
                 pass
-                # if the customer decided to cancel the entire or part of his cover, before it expires, then they are entitled for a refund
+                # if the customer decided to cancel the entire or part
+                # of his cover, before it expires, then they are entitled for a refund
             elif transaction_type == 'REFUND':
                 pass
                 # If the customer decides to cancel their cover midway

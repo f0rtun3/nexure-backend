@@ -376,3 +376,15 @@ policy_parser.add_argument(
     "sub_class",
     type=int
 )
+policy_parser.add_argument(
+    "expiry_date",
+    type=str
+)
+policy_parser.add_argument(
+    "master_policy_id",
+    type=int
+)
+policy_parser.add_argument(
+    "transaction_type",
+    type=str
+)

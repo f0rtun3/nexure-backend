@@ -11,7 +11,8 @@ class CompanyDetails(db.Model):
     physical_address = db.Column(db.String(300))
     website = db.Column(db.String(150))
     avatar = db.Column(db.String(50), nullable=True)
-    linked_company = db.relationship("InsuranceCompany", backref="linked_company")
+    insurance_company = db.relationship('InsuranceCompany', backref="company_details",
+                                        cascade="all, delete, delete-orphan")
  
     def __init__(self, company_name, company_email, physical_address, website, avatar=None):
         self.company_name = company_name
