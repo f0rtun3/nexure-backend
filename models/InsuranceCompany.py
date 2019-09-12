@@ -77,7 +77,8 @@ class InsuranceCompany(db.Model):
 
     @classmethod
     def get_company_by_id(cls, insurance_company_id):
-        return cls.query.filter_by(id=insurance_company_id).first()
+        company = cls.query.filter_by(id=insurance_company_id).first()
+        return company
 
     @classmethod
     def get_company_by_contact_person(cls, user_id):

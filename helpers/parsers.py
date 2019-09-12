@@ -374,7 +374,8 @@ policy_parser.add_argument(
 )
 policy_parser.add_argument(
     "sub_class",
-    type=int
+    type=list,
+    action='append'
 )
 policy_parser.add_argument(
     "expiry_date",

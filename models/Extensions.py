@@ -8,8 +8,6 @@ class Extension(db.Model):
     name = db.Column(db.String(100))
     insurance_company = db.relationship('ICExtensions', backref="extension",
                                         cascade="all, delete, delete-orphan")
-    # class_code = db.Column(db.Integer, db.ForeignKey('insurance_class.class_id',
-    # onupdate='CASCADE', ondelete='CASCADE'))
 
     def __init__(self, name):
         self.name = name

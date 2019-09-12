@@ -17,10 +17,9 @@ from resources.Extensions import ExtensionHandler
 from resources.Loadings import LoadingsHandler
 from resources.Benefits import BenefitHandler
 from resources.InsuranceCompany import Companies
-from resources.CompanyDetails import CompanyDetails
+from resources.CompanyDetails import CompanyDetails, CompanyDetailsHandler
 from resources.MPIUnderwriting import MPIUnderwriting
 from resources.Location import Location
-from resources.InsuranceProducts import InsuranceProducts
 from resources.CustomerDetails import CustomerDetails
 from resources.MasterDetails import MasterDetails
 from resources.ChildDetails import ChildDetails
@@ -32,6 +31,7 @@ API = Api(app)
 API.add_resource(Companies, '/api/companies/all')
 API.add_resource(CustomerDetails, '/api/customer_details/<string:email>')
 API.add_resource(CompanyDetails, '/api/company_details/<int:company_id>')
+API.add_resource(CompanyDetailsHandler, '/api/company_details')
 API.add_resource(UserRegister, '/api/user')
 API.add_resource(MasterDetails, '/api/master_details/<int:master_id>')
 API.add_resource(ChildDetails, '/api/child_details/<int:child_id>')
@@ -49,4 +49,3 @@ API.add_resource(BenefitHandler, '/api/benefits')
 API.add_resource(LoadingsHandler, '/api/loadings')
 API.add_resource(ExtensionHandler, '/api/extensions')
 API.add_resource(Location, '/api/locations')
-API.add_resource(InsuranceProducts, '/api/products')
