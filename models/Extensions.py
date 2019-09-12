@@ -1,11 +1,13 @@
 from app import db
 
+
 class Extension(db.Model):
     __tablename__ = 'extension'
     """Contains extensions for a particular child polict"""
     id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
     name = db.Column(db.String(100))
-    # class_code = db.Column(db.Integer, db.ForeignKey('insurance_class.class_id', onupdate='CASCADE', ondelete='CASCADE'))
+    insurance_company = db.relationship('ICExtensions', backref="extension",
+                                        cascade="all, delete, delete-orphan")
 
     def __init__(self, name):
         self.name = name

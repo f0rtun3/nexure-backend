@@ -10,14 +10,17 @@ class PolicyExtensions(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     policy_id = db.Column(db.Integer, db.ForeignKey('child_policy.id', ondelete='CASCADE', onupdate='CASCADE'))
-    ic_extension = db.Column(db.Integer, db.ForeignKey('ic_extension.id', ondelete='CASCADE', onupdate='CASCADE'))
+    ic_extension_id = db.Column(db.Integer, db.ForeignKey('ic_extension.id', ondelete='CASCADE', onupdate='CASCADE'))
     amount = db.Column(db.Float, nullable=False)
 
     def __init__(self, policy_id, ic_extension, amount):
         self.policy_id = policy_id
         self.ic_benefit = ic_extension
         self.amount = amount
-    
+
+    def serialize(self):
+        return self.ic_extension.serialize()
+
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -30,3 +33,15 @@ class PolicyExtensions(db.Model):
     def delete(self):
         db.session.remove(self)
         db.session.commit()
+
+    @classmethod
+    def get_policy_ext_by_policy(cls, child_policy_id):
+        extension_set = set()
+        extensions = cls.query.filter_by(policy_id=child_policy_id)
+        if extensions is None:
+            return None
+
+        for ext in extensions:
+            extensions.add(ext.ic_extension)
+
+        return extension_set

@@ -8,6 +8,8 @@ class CarMake(db.Model):
     __tablename__ = 'car_make'
     make_id = db.Column(db.Integer, primary_key=True, nullable=False)
     make_name = db.Column(db.String(50), unique=True, nullable=False)
+    car_model = db.relationship('CarModel', backref='car_make', cascade="all, delete,"
+                                                                        " delete-orphan")
 
     def __init__(self, make_id, make_name):
         self.make_id = make_id

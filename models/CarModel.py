@@ -1,5 +1,6 @@
 from app import db
 
+
 class CarModel(db.Model):
     """
     Stores car model
@@ -10,9 +11,8 @@ class CarModel(db.Model):
     model_name = db.Column(db.String(300), nullable=False)
     series = db.Column(db.String(100), nullable=False)
     make = db.Column(db.Integer, db.ForeignKey('car_make.make_id', ondelete='CASCADE', onupdate='CASCADE'))
-
     # describe the relationship with the vehicle_details of a policy holder
-    # vehicle_details = db.relationship("VehicleDetails", backref="vehicles")
+    vehicle_details = db.relationship("VehicleDetails", backref="car_model", lazy='dynamic')
 
     def __init__(self, model_name, series, make):
         self. model_name = model_name

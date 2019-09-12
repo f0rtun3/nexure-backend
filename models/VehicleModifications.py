@@ -22,6 +22,14 @@ class VehicleModifications(db.Model):
         self.serial_no = serial_no
         self.vehicle = vehicle
 
+    def serialize(self):
+        return {
+            "accessory_name": self.accessory_name,
+            "make": self.make,
+            "estimated_value": self.estimated_value,
+            "serial_no": self.serial_no
+        }
+
     def save(self):
         db.session.add(self)
         db.session.commit(self)

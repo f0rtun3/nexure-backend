@@ -7,7 +7,10 @@ class Benefit(db.Model):
     id = db.Column(db.Integer, autoincrement=True,
                    primary_key=True, nullable=False)
     name = db.Column(db.String(100))
-    # class_code = db.Column(db.Integer, db.ForeignKey('insurance_class.class_id', onupdate='CASCADE', ondelete='CASCADE'))
+    insurance_company = db.relationship('ICBenefits', backref="benefit",
+                                        cascade="all, delete, delete-orphan")
+    #   class_code = db.Column(db.Integer, db.ForeignKey('insurance_class.class_id', onupdate='CASCADE',
+    #   ondelete='CASCADE'))
 
     def __init__(self, name):
         self.name = name

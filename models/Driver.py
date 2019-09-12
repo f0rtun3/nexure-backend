@@ -15,7 +15,7 @@ class Driver(db.Model):
     # for subsequent communication
     phone = db.Column(db.BIGINT, unique=True)
     birth_date = db.Column(db.DateTime)
-    driver = db.relationship("VehicleDetails", backref="user")
+    driver = db.relationship("VehicleDetails", backref="driver")
 
     def __init__(self, first_name, last_name, gender, phone, birth_date):
         self.first_name = first_name
@@ -23,6 +23,14 @@ class Driver(db.Model):
         self.gender = gender
         self.phone = phone
         self.birth_date = birth_date
+
+    def serialize(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "phone": self.phone,
+            "birth_date": self.birth_date.strftime('%m/%d/%Y')
+        }
 
     def save(self):
         db.session.add(self)

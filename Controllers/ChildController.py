@@ -40,11 +40,11 @@ class ChildController:
 
     def add_modifications(self, accessory_name, make, estimated_value, serial_no):
         new_modification = VehicleModifications(
-            accessory_name, make, estimated_value. serial_no, self.vehicle_id)
+            accessory_name, make, estimated_value, serial_no, self.vehicle_id)
         new_modification.save()
 
     def create_child_policy(self, policy_number, customer_number, rate, date_expiry, premium_amount, transaction_type,
-                            agency_id, associated_company, pricing_model, master_id, subclass):
+                            agency_id, associated_company, pricing_model, master_id, subclass, vehicle_id=None):
         # Get insurance company given the company details
         new_company = InsuranceCompany.get_by_associated_company(
             associated_company)
@@ -52,7 +52,7 @@ class ChildController:
         # create child policy
         new_child = ChildPolicy(
             policy_number,
-            self.vehicle_id,
+            vehicle_id if not None else self.vehicle_id,
             customer_number,
             rate,
             date_expiry,
@@ -87,3 +87,40 @@ class ChildController:
             policy_extension = PolicyExtensions(
                 child_id, ic_extension, i["value"])
             policy_extension.save()
+
+    @staticmethod
+    def get_unselected_benefits(child_policy_id):
+        """
+        unselected policy holder benefits from an insurance company
+        :param child_policy_id:
+        :return:
+        """
+        current_benefits = PolicyBenefits.get_policy_benefit_by_policy(child_policy_id)
+        return ICBenefits.get_unselected_benefits(current_benefits)
+
+    @staticmethod
+    def get_unselected_extensions(child_policy_id):
+        """
+        unselected policy holder benefits from an insurance company
+        :param child_policy_id:
+        :return:
+        """
+        current_extensions = PolicyExtensions.get_policy_ext_by_policy(child_policy_id)
+        return ICExtensions.get_unselected_extensions(current_extensions)
+
+    @staticmethod
+    def get_unselected_benefits_extensions(child_policy_id):
+        """
+        We need to exclude the benefits and extensions that the user
+        has not selected from the insurance company
+        :param child_policy_id:
+        :return:
+        """
+        child_policy = ChildPolicy.get_child_by_id(child_policy_id)
+        if not child_policy:
+            return None
+
+        return {
+            'extensions': self.get_unselected_extensions(child_policy_id),
+            'benefits': self.get_unselected_benefits(child_policy_id)
+        }

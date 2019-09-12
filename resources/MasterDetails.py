@@ -30,6 +30,7 @@ from helpers.PolicyNumber import PolicyNoGenerator
 import helpers.tokens as token_handler
 import uuid
 import json
+from Controllers.MasterController import MasterController
 
 
 class MasterDetails(Resource):
@@ -39,25 +40,12 @@ class MasterDetails(Resource):
     @jwt_required
     def get(self, master_id):
         """
-        Uses the master policy number to get the policy details
+        get the master policy and associated child policies
+        :return:
         """
-        master = MasterPolicy.get_policy_by_id(master_id)
-        child_policies = []
-        for i in master.child_policy:
-            # Use child policy id
-            child_id = i.id
-            child_data = ChildPolicy.get_child_by_id(child_id)
-            comp = CompanyDetails.get_company_by_id(child_data.company)
-            data = {
-                "id": child_data.id,
-                "policy_name": child_data.subclass,
-                "child_no": child_data.cp_number,
-                "company": comp.company_name,
-                "date_activated": child_data.date_activated,
-                "premium_paid": child_data.premium_amount
-            }
-            child_policies.append(data)
+        result = MasterController.fetch_master_policy(master_id)
+        if result:
+            return make_response(helper.make_rest_success_response("Successfully fetched",
+                                                                   result), 200)
 
-        response = helper.make_rest_success_response(
-            "Success.", child_policies)
-        return make_response(response, 200)
+        return make_response(helper.make_rest_fail_response("Policy was not found"), 404)
