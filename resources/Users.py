@@ -1,4 +1,4 @@
-from app import app
+from app import application
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims, jwt_refresh_token_required
@@ -62,10 +62,10 @@ class UserRegister(Resource):
         #   Send a confirmation link to the user for account confirmation
         confirmation_code = token_handler.user_account_confirmation_token(
             new_user_authentication.id)
-        email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+        email_template = helper.generate_confirmation_template(application.config['CONFIRMATION_ENDPOINT'],
                                                                confirmation_code)
         subject = "Please confirm your account"
-        email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
+        email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                      f" to confirm your account"
         helper.send_email(user_details['email'], subject, email_template, email_text)
 
@@ -339,10 +339,10 @@ class AccountConfirmationResource(Resource):
         if user_row:
             # awesome, user account exists, let's go ahead and resend the activation email to the user
             confirmation_code = token_handler.user_account_confirmation_token(user_id)
-            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+            email_template = helper.generate_confirmation_template(application.config['CONFIRMATION_ENDPOINT'],
                                                                    confirmation_code)
             subject = "Please confirm your account"
-            email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
+            email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                          f" to confirm your account"
             helper.send_email(user_row.email, subject, email_template, email_text)
             response = helper.make_rest_success_response("Please check your email to confirm your account")
@@ -446,8 +446,8 @@ class AccountRecovery(Resource):
         if user_row:
             account_token = token_handler.user_account_confirmation_token(user_row.id)
             email_text = f"To Please follow this link to reset your password " \
-                         f"{app.config['ACCOUNT_RESET_ENDPOINT']}/{account_token}"
-            email_template = helper.generate_account_recovery_template(app.config['ACCOUNT_RESET_ENDPOINT'],
+                         f"{application.config['ACCOUNT_RESET_ENDPOINT']}/{account_token}"
+            email_template = helper.generate_account_recovery_template(application.config['ACCOUNT_RESET_ENDPOINT'],
                                                                        account_token)
             subject = "Account Password Recovery"
             helper.send_email(user_details['email'], subject, email_template, email_text)

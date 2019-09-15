@@ -1,7 +1,7 @@
 """
 Resource for fetching all company details, including it's benefits, extensions, loadings and levies, given the ID.
 """
-from app import app, db
+from app import application, db
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims

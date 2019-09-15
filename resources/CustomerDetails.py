@@ -2,7 +2,7 @@
 Resource for fetching customer details. This is necessary so that an agent or broker can pull the customer details 
 using one of their attributes such as an email.
 """
-from app import app
+from app import application
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims

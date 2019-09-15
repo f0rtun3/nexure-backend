@@ -1,7 +1,7 @@
 """
 Resource for fetching child details
 """
-from app import app
+from app import application
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims

@@ -14,24 +14,24 @@ import boto3
 load_dotenv()
 
 
-app = Flask(__name__)
-# mail=Mail(app)
-app.config.from_object(os.environ['APP_SETTINGS'])
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-CORS(app, resources={r"/*": {"origins": app.config['ALLOWED_HOSTS']}})
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-jwt = JWTManager(app)
+application = Flask(__name__)
+# mail=Mail(application)
+application.config.from_object(os.environ['APP_SETTINGS'])
+application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+CORS(application, resources={r"/*": {"origins": application.config['ALLOWED_HOSTS']}})
+db = SQLAlchemy(application)
+migrate = Migrate(application, db)
+jwt = JWTManager(application)
 ses = boto3.client(
     "ses",
-    region_name=app.config['AWS_REGION'],
-    aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
-    aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY']
+    region_name=application.config['AWS_REGION'],
+    aws_access_key_id=application.config['AWS_ACCESS_KEY_ID'],
+    aws_secret_access_key=application.config['AWS_SECRET_ACCESS_KEY']
 )
 s3 = boto3.client(
     's3',
-    aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
-    aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY']
+    aws_access_key_id=application.config['AWS_ACCESS_KEY_ID'],
+    aws_secret_access_key=application.config['AWS_SECRET_ACCESS_KEY']
 )
 
 @jwt.expired_token_loader
@@ -76,4 +76,4 @@ def fresh_token_loader_handler():
 import api
 
 if __name__ == '__main__':
-    app.run()
+    application.run()
