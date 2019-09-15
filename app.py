@@ -73,7 +73,6 @@ def fresh_token_loader_handler():
     }
     return make_response(jsonify(response), 401)
 
-from models import *
 import api
 
 if __name__ == '__main__':
