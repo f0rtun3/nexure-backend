@@ -30,8 +30,7 @@ class Production(Config):
 
 class Staging(Config):
     DEVELOPMENT = True
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{os.environ['RDS_USER']}:{os.environ['RDS_PASSWORD']}@" \
-                              f"{os.environ['RDS_HOSTNAME']}/{os.environ['RDS_DB_NAME']}"
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     DEBUG = True
     HOST = "127.0.0.1"
     PORT = 5000
