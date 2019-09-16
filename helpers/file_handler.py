@@ -3,7 +3,7 @@ AWS Pre signed URL class handler
 """
 import logging
 from botocore.exceptions import ClientError
-from app import application
+from application import application
 
 
 class S3FileHandler:

@@ -18,5 +18,5 @@ class Constituency(db.Model):
 
     @classmethod
     def get_constituency_by_name(cls, name):
-        consituency = cls.query.filter_by(name=name).first()
-        return consituency.id
+        constituency = cls.query.filter_by(name=name).first()
+        return constituency.id

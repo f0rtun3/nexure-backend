@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from app import application, db
+from application import application, db
 
 
 class BasicTest(unittest.TestCase):
