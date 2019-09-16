@@ -1,6 +1,6 @@
 """
 api endpoint definition
-"""
+
 from flask_restful import Api
 
 from resources.Users import UserRegister
@@ -49,3 +49,4 @@ API.add_resource(BenefitHandler, '/api/benefits')
 API.add_resource(LoadingsHandler, '/api/loadings')
 API.add_resource(ExtensionHandler, '/api/extensions')
 API.add_resource(Location, '/api/locations')
+"""

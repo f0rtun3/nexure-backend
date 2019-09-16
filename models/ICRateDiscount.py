@@ -1,7 +1,7 @@
 """
 Insurance rate discount model description
 """
-from app import db
+from database.db import db
 
 
 class ICRateDiscount(db.Model):

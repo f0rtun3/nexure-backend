@@ -1,4 +1,4 @@
-from app import db
+from database.db import db
 
 class Constituency(db.Model):
     __tablename__ = 'constituency'

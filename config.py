@@ -9,6 +9,7 @@ class Config(object):
     SECRET_KEY = os.environ['SECRET_KEY']
     JWT_SECRET_KEY = os.environ['JWT_SECRET_KEY']
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAIL_SERVER = 'email-smtp.us-east-1.amazonaws.com'
     MAIL_PORT = 465
     MAIL_DEFAULT_USER = 'no-reply@nexure.co.ke'

@@ -2,24 +2,27 @@ from flask import Flask, make_response, jsonify
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from dotenv import load_dotenv
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_restful import Api
+from database.db import db
 
 import os
 import boto3
 
-# automatically set the application's os environment
-# variables from the .env file
-# to avoid manual and repetitive setting of the same
+from models import *
+"""
+automatically set the application's os environment
+variables from the .env file
+to avoid manual and repetitive setting of the same
+"""
 load_dotenv()
 
 
 application = Flask(__name__)
-# mail=Mail(application)
 application.config.from_object(os.environ['APP_SETTINGS'])
-application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(application)
 CORS(application, resources={r"/*": {"origins": application.config['ALLOWED_HOSTS']}})
-db = SQLAlchemy(application)
+
 migrate = Migrate(application, db)
 jwt = JWTManager(application)
 ses = boto3.client(
@@ -33,6 +36,7 @@ s3 = boto3.client(
     aws_access_key_id=application.config['AWS_ACCESS_KEY_ID'],
     aws_secret_access_key=application.config['AWS_SECRET_ACCESS_KEY']
 )
+
 
 @jwt.expired_token_loader
 def expired_token_handler():
@@ -73,7 +77,52 @@ def fresh_token_loader_handler():
     }
     return make_response(jsonify(response), 401)
 
-import api
+
+from resources.Users import UserRegister
+from resources.Users import UserLogin
+from resources.Users import TokenRefresh
+from resources.Users import AccountConfirmation
+from resources.Users import AccountRecovery
+from resources.Users import AccountConfirmationResource
+from resources.Customers import CustomerOnBoarding
+from resources.StaffRegistration import StaffRegistration
+from resources.Organizations import OrganizationHandler
+from resources.Cars import CarHandler
+from resources.Extensions import ExtensionHandler
+from resources.Loadings import LoadingsHandler
+from resources.Benefits import BenefitHandler
+from resources.InsuranceCompany import Companies
+from resources.CompanyDetails import CompanyDetails
+from resources.CompanyDetails import CompanyDetailsHandler
+from resources.MPIUnderwriting import MPIUnderwriting
+from resources.Location import Location
+from resources.CustomerDetails import CustomerDetails
+from resources.MasterDetails import MasterDetails
+from resources.ChildDetails import ChildDetails
+
+API = Api(application)
+
+API.add_resource(Companies, '/api/companies/all')
+API.add_resource(CustomerDetails, '/api/customer_details/<string:email>')
+API.add_resource(CompanyDetails, '/api/company_details/<int:company_id>')
+API.add_resource(CompanyDetailsHandler, '/api/company_details')
+API.add_resource(UserRegister, '/api/user')
+API.add_resource(MasterDetails, '/api/master_details/<int:master_id>')
+API.add_resource(ChildDetails, '/api/child_details/<int:child_id>')
+API.add_resource(UserLogin, '/api/login')
+API.add_resource(TokenRefresh, '/api/auth/refresh')
+API.add_resource(CustomerOnBoarding, '/api/customer')
+API.add_resource(AccountConfirmation, '/api/confirm')
+API.add_resource(AccountConfirmationResource, '/api/confirm/<int:user_id>')
+API.add_resource(AccountRecovery, '/api/auth/reset')
+API.add_resource(StaffRegistration, '/api/staff')
+API.add_resource(CarHandler, '/api/vehicles')
+API.add_resource(OrganizationHandler, '/api/organizations/all')
+API.add_resource(MPIUnderwriting, '/api/transactions')
+API.add_resource(BenefitHandler, '/api/benefits')
+API.add_resource(LoadingsHandler, '/api/loadings')
+API.add_resource(ExtensionHandler, '/api/extensions')
+API.add_resource(Location, '/api/locations')
 
 if __name__ == '__main__':
     application.run(host=application.config['HOST'], port=application.config['PORT'])

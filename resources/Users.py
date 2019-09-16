@@ -1,4 +1,4 @@
-from app import application
+from flask import current_app as application
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims, jwt_refresh_token_required
@@ -12,7 +12,7 @@ from models.UserRolePlacement import UserRolePlacement
 from models.InsuranceCompany import InsuranceCompany
 from models.UserPermissions import UserPermissions
 #   from models.IndividualCustomer import IndividualCustomer
-import helpers.helpers as helper
+from helpers import helpers as helper
 import helpers.tokens as token_handler
 from helpers.parsers import user_parser
 import uuid

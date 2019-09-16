@@ -1,8 +1,7 @@
 """
 Resource for fetching customer details
 """
-from app import application
-from flask import make_response, jsonify
+from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
 from models.User import User
@@ -23,7 +22,7 @@ from models.InsuranceCompany import InsuranceCompany
 from models.OrganizationCustomer import OrganizationCustomer
 from models.VehicleModifications import VehicleModifications
 from models.Driver import Driver
-import helpers.helpers as helper
+from helpers import helpers as helper
 from helpers.parsers import underwriting_parser
 from helpers.CustomerNumber import CustomerNumber
 from helpers.PolicyNumber import PolicyNoGenerator

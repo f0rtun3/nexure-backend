@@ -2,7 +2,7 @@
 Cusomer resources handler
 new customer onboarding
 """
-from app import application
+from flask import current_app as application
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
@@ -23,7 +23,7 @@ from models.UserRolePlacement import UserRolePlacement
 from models.InsuranceCompany import InsuranceCompany
 from models.OrganizationCustomer import OrganizationCustomer
 from models.OrganizationTypes import OrganizationTypes
-import helpers.helpers as helper
+from helpers import helpers as helper
 from helpers.parsers import customer_parser
 from helpers.CustomerNumber import CustomerNumber
 import helpers.tokens as token_handler

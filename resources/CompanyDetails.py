@@ -1,7 +1,6 @@
 """
 Resource for fetching all company details, including it's benefits, extensions, loadings and levies, given the ID.
 """
-from app import application, db
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
@@ -18,7 +17,7 @@ from models.IndependentAgent import IndependentAgent
 from models.TiedAgent import TiedAgents
 from models.InsuranceCompany import InsuranceCompany
 from models.UserRolePlacement import UserRolePlacement
-import helpers.helpers as helper
+from helpers import helpers as helper
 from helpers.parsers import policy_parser
 from helpers.CustomerNumber import CustomerNumber
 from helpers.PolicyNumber import PolicyNoGenerator

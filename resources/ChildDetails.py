@@ -1,7 +1,6 @@
 """
 Resource for fetching child details
 """
-from app import application
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
@@ -24,7 +23,7 @@ from models.ICBenefits import ICBenefits
 from models.ICExtensions import ICExtensions
 from models.Driver import Driver
 from models.UserProfile import UserProfile
-import helpers.helpers as helper
+from helpers import helpers as helper
 from helpers.parsers import underwriting_parser
 import helpers.tokens as token_handler
 import uuid
