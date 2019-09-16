@@ -10,6 +10,27 @@ import os
 import boto3
 
 from models import *
+from resources.Users import UserRegister
+from resources.Users import UserLogin
+from resources.Users import TokenRefresh
+from resources.Users import AccountConfirmation
+from resources.Users import AccountRecovery
+from resources.Users import AccountConfirmationResource
+from resources.Customers import CustomerOnBoarding
+from resources.StaffRegistration import StaffRegistration
+from resources.Organizations import OrganizationHandler
+from resources.Cars import CarHandler
+from resources.Extensions import ExtensionHandler
+from resources.Loadings import LoadingsHandler
+from resources.Benefits import BenefitHandler
+from resources.InsuranceCompany import Companies
+from resources.CompanyDetails import CompanyDetails
+from resources.CompanyDetails import CompanyDetailsHandler
+from resources.MPIUnderwriting import MPIUnderwriting
+from resources.Location import Location
+from resources.CustomerDetails import CustomerDetails
+from resources.MasterDetails import MasterDetails
+from resources.ChildDetails import ChildDetails
 """
 automatically set the application's os environment
 variables from the .env file
@@ -22,7 +43,6 @@ application = Flask(__name__)
 application.config.from_object(os.environ['APP_SETTINGS'])
 db.init_app(application)
 CORS(application, resources={r"/*": {"origins": application.config['ALLOWED_HOSTS']}})
-
 migrate = Migrate(application, db)
 jwt = JWTManager(application)
 ses = boto3.client(
@@ -77,28 +97,6 @@ def fresh_token_loader_handler():
     }
     return make_response(jsonify(response), 401)
 
-
-from resources.Users import UserRegister
-from resources.Users import UserLogin
-from resources.Users import TokenRefresh
-from resources.Users import AccountConfirmation
-from resources.Users import AccountRecovery
-from resources.Users import AccountConfirmationResource
-from resources.Customers import CustomerOnBoarding
-from resources.StaffRegistration import StaffRegistration
-from resources.Organizations import OrganizationHandler
-from resources.Cars import CarHandler
-from resources.Extensions import ExtensionHandler
-from resources.Loadings import LoadingsHandler
-from resources.Benefits import BenefitHandler
-from resources.InsuranceCompany import Companies
-from resources.CompanyDetails import CompanyDetails
-from resources.CompanyDetails import CompanyDetailsHandler
-from resources.MPIUnderwriting import MPIUnderwriting
-from resources.Location import Location
-from resources.CustomerDetails import CustomerDetails
-from resources.MasterDetails import MasterDetails
-from resources.ChildDetails import ChildDetails
 
 API = Api(application)
 
