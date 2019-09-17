@@ -116,6 +116,7 @@ class UserRegister(Resource):
             update the client account depending on their role: 
             Note: that for tied agents, we only update their profiles
             """
+            agency = None
             data = None
             client_row = self.get_client_row(role, user_id)
             if role == 'BR':

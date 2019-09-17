@@ -1,9 +1,10 @@
 """
 AWS Pre signed URL class handler
 """
+from flask import current_app as application
 import logging
 from botocore.exceptions import ClientError
-from application import application
+import application as app
 
 
 class S3FileHandler:
@@ -54,7 +55,7 @@ class S3FileHandler:
         :return String
         """
         try:
-            response = application.s3.generate_presigned_url(
+            response = app.application.s3.generate_presigned_url(
                 ClientMethod=self.method_name,
                 Params=self.method_parameters,
                 ExpiresIn=self.expiration,
@@ -73,8 +74,8 @@ class S3FileHandler:
         :return object returns url and fields to pass during upload
         """
         try:
-            response = application.s3.generate_presigned_post(
-                Bucket=application.app.config['S3_BUCKET'],
+            response = app.application.s3.generate_presigned_post(
+                Bucket=application.config['S3_BUCKET'],
                 Key=self.key,
                 Fields=self.fields,
                 Conditions=self.conditions,
