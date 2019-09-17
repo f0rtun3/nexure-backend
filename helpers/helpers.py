@@ -1,4 +1,4 @@
-from flask import current_app as application
+import application as app
 from flask import jsonify, render_template
 from botocore.exceptions import ClientError
 import string
@@ -40,10 +40,10 @@ def generate_account_recovery_template(url_endpoint, code, salutation=""):
 
 
 def send_email(recipient, subject, template, email_text):
-    sender=application.config['MAIL_DEFAULT_USER']
+    sender = app.application.config['MAIL_DEFAULT_USER']
     recipient = [recipient]
     try:
-        response = application.ses.send_email(
+        response = app.ses.send_email(
             Source=sender,
             Destination={
                 'ToAddresses': recipient
