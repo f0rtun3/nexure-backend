@@ -35,5 +35,5 @@ class County(db.Model):
     
     @classmethod
     def get_all_counties(cls):
-        counties = cls.query.all()
+        counties = [c.serialize() for c in cls.query.all()]
         return counties
