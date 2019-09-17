@@ -9,6 +9,7 @@ class Config(object):
     SECRET_KEY = os.environ['SECRET_KEY']
     JWT_SECRET_KEY = os.environ['JWT_SECRET_KEY']
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAIL_SERVER = 'email-smtp.us-east-1.amazonaws.com'
     MAIL_PORT = 465
     MAIL_DEFAULT_USER = 'no-reply@nexure.co.ke'
@@ -30,8 +31,9 @@ class Production(Config):
 
 class Staging(Config):
     DEVELOPMENT = True
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     DEBUG = True
-    HOST = "0.0.0.0"
+    HOST = "127.0.0.1"
     PORT = 5000
     ALLOWED_HOSTS = "*"
 
@@ -49,4 +51,4 @@ class Testing(Config):
     HOST="127.0.0.1"
     PORT=5000
     ALLOWED_HOSTS="127.0.0.1"
-    SQLALCHEMY_DATABASE_URI = "postgresql://paulodera:Jsv0#XY^ri@localhost/nexure_test"
+    #   SQLALCHEMY_DATABASE_URI = "postgresql://paulodera:Jsv0#XY^ri@localhost/nexure_test"

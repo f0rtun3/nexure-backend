@@ -1,5 +1,6 @@
-from app import db
-  
+from database.db import db
+
+
 class County(db.Model):
     __tablename__ = 'county'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
@@ -9,6 +10,14 @@ class County(db.Model):
 
     def __init__(self, county_name):
         self.county_name = county_name
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.county_name,
+            "constituencies": [constituency.serialize() for
+                               constituency in self.constituency]
+        }
 
     def save(self):
         db.session.add(self)
@@ -26,5 +35,5 @@ class County(db.Model):
     
     @classmethod
     def get_all_counties(cls):
-        counties = cls.query.all()
+        counties = [c.serialize() for c in cls.query.all()]
         return counties

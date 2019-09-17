@@ -1,4 +1,4 @@
-from app import db
+from database.db import db
 
 class Constituency(db.Model):
     __tablename__ = 'constituency'
@@ -11,12 +11,19 @@ class Constituency(db.Model):
     def __init__(self, name, county):
         self.name = name
         self.county = county
-    
+
+    def serialize(self):
+        return{
+            "id": self.id,
+            "name": self.name,
+            "wards": [ward.serialize() for ward in self.ward]
+        }
+
     def save(self):
         db.session.add(self)
         db.session.commit()
 
     @classmethod
     def get_constituency_by_name(cls, name):
-        consituency = cls.query.filter_by(name=name).first()
-        return consituency.id
+        constituency = cls.query.filter_by(name=name).first()
+        return constituency.id

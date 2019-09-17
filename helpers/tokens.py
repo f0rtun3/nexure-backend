@@ -4,7 +4,6 @@ generates user token for account confirmation and verifies the same
 """
 from flask_jwt_extended import (create_access_token, create_refresh_token)
 import datetime
-from app import jwt
 
 
 def user_account_confirmation_token(identity):

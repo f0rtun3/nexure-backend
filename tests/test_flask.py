@@ -1,19 +1,19 @@
 import os
 import unittest
 
-from app import app, db
+from application import application, db
 
 
 class BasicTest(unittest.TestCase):
     def setUp(self):
-        self.app = app
+        self.app = application
         self.client = self.app.test_client()
         self.policy_id = 53
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql://postgres:Jsv0#XY^ri@localhost/nexure_test'
+        application.config['TESTING'] = True
+        application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Jsv0#XY^ri@localhost/nexure_test'
         db.drop_all()
         db.create_all()
-        self.assertEqual(app.debug, False)
+        self.assertEqual(application.debug, False)
 
     def test_fetch_master_policy(self):
         path = f"/policy_handler/{self.policy_id}"

@@ -1,4 +1,4 @@
-from app import db
+from database.db import db
 
 
 class Ward(db.Model):
@@ -16,6 +16,12 @@ class Ward(db.Model):
         self.name = name
         self.constituency = constituency
         self.county = county
+
+    def serialize(self):
+        return{
+            "id": self.id,
+            "name": self.name
+        }
 
     def save(self):
         db.session.add(self)

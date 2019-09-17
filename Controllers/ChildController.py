@@ -121,6 +121,6 @@ class ChildController:
             return None
 
         return {
-            'extensions': self.get_unselected_extensions(child_policy_id),
-            'benefits': self.get_unselected_benefits(child_policy_id)
+            'extensions': ChildController.get_unselected_extensions(child_policy_id),
+            'benefits': ChildController.get_unselected_benefits(child_policy_id)
         }

@@ -1,7 +1,7 @@
 from flask import make_response
 from flask_restful import Resource
 # from flask_jwt_extended import jwt_required
-import helpers.helpers as helper
+from helpers import helpers as helper
 from models.OrganizationTypes import OrganizationTypes
 
 

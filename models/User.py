@@ -1,4 +1,4 @@
-from app import db
+from database.db import db
 from sqlalchemy.dialects.postgresql import UUID
 from werkzeug.security import generate_password_hash, check_password_hash
 
