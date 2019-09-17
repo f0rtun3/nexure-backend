@@ -119,6 +119,7 @@ class UserRegister(Resource):
             data = None
             client_row = self.get_client_row(role, user_id)
             if role == 'BR':
+                agency = Broker.get_broker_by_contact_id(user_id)
                 phone = self.check_organization_phone_number(client_row.broker_phone_number,
                                                              user_details['org_phone'])
                 data = self.set_broker_data(user_details['org_name'], phone,
@@ -128,6 +129,7 @@ class UserRegister(Resource):
                                             user_details['instagram']
                                             )
             elif role == 'IC':
+                agency = IndependentAgent.get_agency_by_contact_person(user_id)
                 data = self.set_ic_data(user_details['bank_account_number'], user_details['mpesa_paybill'],
                                         user_details['ira_reg_no'], user_details['ira_license_no'],
                                         user_details['org_kra_pin'], user_details['website'],
@@ -151,7 +153,8 @@ class UserRegister(Resource):
                     "instagram": user_details['instagram'],
                     "twitter": user_details['twitter']
                 }
-                agency.update(data)
+
+            agency.update(data)
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(

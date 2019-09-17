@@ -41,14 +41,14 @@ class S3FileHandler:
         """
         self.fields = fields
 
-    def set_uplods_conditions(self, conditions):
+    def set_upload_conditions(self, conditions):
         """
         set the conditions to include in the policy when uploading an object
         :type conditions: object
         """
         self.conditions = conditions
 
-    def create_presigned_url(self):
+    def create_pre_signed_url(self):
         """
         actual method to generate the pre-signed url
         :return String
@@ -67,7 +67,7 @@ class S3FileHandler:
 
         return response
 
-    def create_presigned_post(self):
+    def create_pre_signed_post(self):
         """
         generate a presigned url to upload a file to s3 bucket
         :return object returns url and fields to pass during upload
