@@ -155,6 +155,12 @@ class UserRegister(Resource):
                 }
 
             agency.update(data)
+            # change password
+            if user_details['new_password']:
+                user = User.get_user_by_id(get_jwt_identity())
+                password = user.generate_password_hash(user_details['new_password'])
+                user.update_password(password)
+
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
