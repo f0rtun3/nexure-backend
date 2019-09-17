@@ -1,4 +1,4 @@
-from app import app, db
+from flask import current_app as application
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
@@ -13,7 +13,7 @@ from models.TAStaff import TAStaff
 from models.IAStaff import IAStaff
 from models.Role import Role
 from models.UserRolePlacement import UserRolePlacement
-import helpers.helpers as helper
+from helpers import helpers as helper
 from helpers.parsers import customer_parser
 from helpers.CustomerNumber import CustomerNumber
 from helpers.parsers import user_parser
@@ -74,19 +74,19 @@ class StaffRegistration(Resource):
 
         # send email to with the activation details for the staff
         # Temporary password email
-        email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+        email_template = helper.generate_confirmation_template(application.config['CONFIRMATION_ENDPOINT'],
                                                                temporary_pass)
         subject = "Nexure Temporary Password"
-        email_text=f"Follow {app.config['LOGIN_ENDPOINT']} to login and use {temporary_pass} as your temporary password"
+        email_text=f"Follow {application.config['LOGIN_ENDPOINT']} to login and use {temporary_pass} as your temporary password"
         helper.send_email(user_details['email'], subject, email_template, email_text)
 
         #  Generate a user account activation email
         confirmation_code = token_handler.user_account_confirmation_token(
             new_user.id)
-        email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+        email_template = helper.generate_confirmation_template(application.config['CONFIRMATION_ENDPOINT'],
                                                                confirmation_code)
         subject = "Please confirm your account"
-        email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
+        email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                      f" to confirm your account"
         helper.send_email(
             user_details['email'], subject, email_template, email_text)

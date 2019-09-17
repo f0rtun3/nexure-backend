@@ -1,4 +1,4 @@
-from app import app
+from flask import current_app as application
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims, jwt_refresh_token_required
@@ -12,7 +12,7 @@ from models.UserRolePlacement import UserRolePlacement
 from models.InsuranceCompany import InsuranceCompany
 from models.UserPermissions import UserPermissions
 #   from models.IndividualCustomer import IndividualCustomer
-import helpers.helpers as helper
+from helpers import helpers as helper
 import helpers.tokens as token_handler
 from helpers.parsers import user_parser
 import uuid
@@ -62,10 +62,10 @@ class UserRegister(Resource):
         #   Send a confirmation link to the user for account confirmation
         confirmation_code = token_handler.user_account_confirmation_token(
             new_user_authentication.id)
-        email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+        email_template = helper.generate_confirmation_template(application.config['CONFIRMATION_ENDPOINT'],
                                                                confirmation_code)
         subject = "Please confirm your account"
-        email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
+        email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                      f" to confirm your account"
         helper.send_email(user_details['email'], subject, email_template, email_text)
 
@@ -119,6 +119,7 @@ class UserRegister(Resource):
             data = None
             client_row = self.get_client_row(role, user_id)
             if role == 'BR':
+                agency = Broker.get_broker_by_contact_id(user_id)
                 phone = self.check_organization_phone_number(client_row.broker_phone_number,
                                                              user_details['org_phone'])
                 data = self.set_broker_data(user_details['org_name'], phone,
@@ -128,6 +129,7 @@ class UserRegister(Resource):
                                             user_details['instagram']
                                             )
             elif role == 'IC':
+                agency = IndependentAgent.get_agency_by_contact_person(user_id)
                 data = self.set_ic_data(user_details['bank_account_number'], user_details['mpesa_paybill'],
                                         user_details['ira_reg_no'], user_details['ira_license_no'],
                                         user_details['org_kra_pin'], user_details['website'],
@@ -151,7 +153,14 @@ class UserRegister(Resource):
                     "instagram": user_details['instagram'],
                     "twitter": user_details['twitter']
                 }
-                agency.update(data)
+
+            agency.update(data)
+            # change password
+            if user_details['new_password']:
+                user = User.get_user_by_id(get_jwt_identity())
+                password = user.generate_password_hash(user_details['new_password'])
+                user.update_password(password)
+
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
@@ -339,10 +348,10 @@ class AccountConfirmationResource(Resource):
         if user_row:
             # awesome, user account exists, let's go ahead and resend the activation email to the user
             confirmation_code = token_handler.user_account_confirmation_token(user_id)
-            email_template = helper.generate_confirmation_template(app.config['CONFIRMATION_ENDPOINT'],
+            email_template = helper.generate_confirmation_template(application.config['CONFIRMATION_ENDPOINT'],
                                                                    confirmation_code)
             subject = "Please confirm your account"
-            email_text = f"Use this link {app.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
+            email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                          f" to confirm your account"
             helper.send_email(user_row.email, subject, email_template, email_text)
             response = helper.make_rest_success_response("Please check your email to confirm your account")
@@ -446,8 +455,8 @@ class AccountRecovery(Resource):
         if user_row:
             account_token = token_handler.user_account_confirmation_token(user_row.id)
             email_text = f"To Please follow this link to reset your password " \
-                         f"{app.config['ACCOUNT_RESET_ENDPOINT']}/{account_token}"
-            email_template = helper.generate_account_recovery_template(app.config['ACCOUNT_RESET_ENDPOINT'],
+                         f"{application.config['ACCOUNT_RESET_ENDPOINT']}/{account_token}"
+            email_template = helper.generate_account_recovery_template(application.config['ACCOUNT_RESET_ENDPOINT'],
                                                                        account_token)
             subject = "Account Password Recovery"
             helper.send_email(user_details['email'], subject, email_template, email_text)

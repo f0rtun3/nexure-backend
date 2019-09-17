@@ -1,4 +1,4 @@
-from app import db
+from database.db import db
 
 policy_loadings = db.Table('policy_loadings',
                            db.Column('policy_id', db.Integer,

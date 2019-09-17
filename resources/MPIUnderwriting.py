@@ -1,7 +1,6 @@
 """
 Resource for policy underwriting
 """
-from app import app
 from flask import make_response, jsonify
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
@@ -20,7 +19,7 @@ from models.InsuranceCompany import InsuranceCompany
 from models.OrganizationCustomer import OrganizationCustomer
 from Controllers.ChildController import ChildController
 from Controllers.MasterController import MasterController
-import helpers.helpers as helper
+from helpers import helpers as helper
 from helpers.parsers import underwriting_parser
 from helpers.CustomerNumber import CustomerNumber
 from helpers.PolicyNumber import PolicyNoGenerator

@@ -1,4 +1,4 @@
-from app import db
+from database.db import db
 
 class ICLoadings(db.Model):
     """Stores the loadings offered by a company, for a particular policy, together with the rate"""

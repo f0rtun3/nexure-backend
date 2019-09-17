@@ -3,7 +3,7 @@ from flask_restful import Resource
 from models.Constituency import Constituency
 from models.County import County
 from models.Ward import Ward
-import helpers.helpers as helper
+from helpers import helpers as helper
 
 
 class Location(Resource):

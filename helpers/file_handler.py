@@ -3,7 +3,7 @@ AWS Pre signed URL class handler
 """
 import logging
 from botocore.exceptions import ClientError
-from app import app
+from application import application
 
 
 class S3FileHandler:
@@ -41,20 +41,20 @@ class S3FileHandler:
         """
         self.fields = fields
 
-    def set_uplods_conditions(self, conditions):
+    def set_upload_conditions(self, conditions):
         """
         set the conditions to include in the policy when uploading an object
         :type conditions: object
         """
         self.conditions = conditions
 
-    def create_presigned_url(self):
+    def create_pre_signed_url(self):
         """
         actual method to generate the pre-signed url
         :return String
         """
         try:
-            response = app.s3.generate_presigned_url(
+            response = application.s3.generate_presigned_url(
                 ClientMethod=self.method_name,
                 Params=self.method_parameters,
                 ExpiresIn=self.expiration,
@@ -67,14 +67,14 @@ class S3FileHandler:
 
         return response
 
-    def create_presigned_post(self):
+    def create_pre_signed_post(self):
         """
         generate a presigned url to upload a file to s3 bucket
         :return object returns url and fields to pass during upload
         """
         try:
-            response = app.s3.generate_presigned_post(
-                Bucket=app.app.config['S3_BUCKET'],
+            response = application.s3.generate_presigned_post(
+                Bucket=application.app.config['S3_BUCKET'],
                 Key=self.key,
                 Fields=self.fields,
                 Conditions=self.conditions,
