@@ -28,9 +28,9 @@ class InsuranceCompany(db.Model):
     child_policy = db.relationship('ChildPolicy', backref="insurance_company", lazy='dynamic')
     ic_rate_discount = db.relationship('ICRateDiscount', backref='insurance_company', lazy='dynamic')
 
-    def __init__(self, contact_person, associated_company, ira_registration_number=None,
+    def __init__(self, contact_person, associated_company, company_phone=None, ira_registration_number=None,
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
-                 mpesa_paybill=None, rate=None, company_phone=None):
+                 mpesa_paybill=None, rate=None):
 
         self.company_phone = company_phone
         self.contact_person = contact_person
