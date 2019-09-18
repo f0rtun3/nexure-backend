@@ -42,7 +42,7 @@ class Broker(db.Model):
     def __repr__(self):
         return f"{self.broker_name}"
 
-    def serializers(self):
+    def serialize(self):
         return {
             "broker_name": self.broker_name,
             "contact_person": self.contact_person,
@@ -54,8 +54,9 @@ class Broker(db.Model):
             "website": self.website,
             "facebook": self.facebook,
             "instagram": self.instagram,
-            "twitter": self.twitter
-        }, 200
+            "twitter": self.twitter,
+            "profile_details": self.user.serialize()
+        }
 
     def save(self):
         db.session.add(self)

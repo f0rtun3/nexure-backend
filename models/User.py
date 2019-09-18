@@ -23,7 +23,7 @@ class User(db.Model):
     is_active = db.Column(db.Boolean, default=False)
     # define the relationship to user_profile
     # this allows us access the generated user uuid for exposure
-    user_profile = db.relationship("UserProfile", backref="user")
+    user_profile = db.relationship("UserProfile", backref="user", uselist=False)
     # define the relationship to the individual customer
     individual_customer = db.relationship("IndividualCustomer", backref="user")
     # define the relationship to the organization customer
@@ -49,18 +49,15 @@ class User(db.Model):
     def __repr__(self):
         return f"{self.email}"
 
+    def serialize(self):
+        return self.user_profile.serialize()
+
     @staticmethod
     def generate_password_hash(password):
         return generate_password_hash(password)
 
     def check_password_hash(self, password):
         return check_password_hash(self.password, password)
-
-    def serialize(self):
-        return {
-            "user_id": self.user_id,
-            "email": self.email
-        }, 200
 
     def save(self):
         db.session.add(self)
