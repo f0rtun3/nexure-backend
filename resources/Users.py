@@ -134,7 +134,8 @@ class UserRegister(Resource):
                 agency.update(data)
             elif role == 'IC':
                 agency = InsuranceCompany.get_company_by_contact_person(user_id)
-                data = self.set_ic_data(user_details['bank_account_number'], user_details['mpesa_paybill'],
+                phone = self.check_updated_organization_detail(client_row.company_phone, user_details['org_phone'])
+                data = self.set_ic_data(user_details['bank_account_number'], phone, user_details['mpesa_paybill'],
                                         user_details['ira_reg_no'], user_details['ira_license_no'],
                                         user_details['org_kra_pin'], user_details['website'],
                                         user_details['facebook'], user_details['instagram'],
@@ -250,10 +251,11 @@ class UserRegister(Resource):
         }
 
     @staticmethod
-    def set_ic_data(bank_account_number, mpesa_paybill, ira_reg_no, ira_license_no, org_kra_pin, website,
+    def set_ic_data(bank_account_number, company_phone, mpesa_paybill, ira_reg_no, ira_license_no, org_kra_pin, website,
                     facebook, twitter, instagram):
         return {
             "bank_account": bank_account_number,
+            "company_phone": company_phone,
             "mpesa_paybill": mpesa_paybill,
             "ira_registration_number": ira_reg_no,
             "ira_license_number": ira_license_no,
@@ -291,6 +293,7 @@ class UserRegister(Resource):
             new_insurance_company = InsuranceCompany(
                 user_id,
                 user_details['company_id'],
+                user_details['org_phone']
             )
             new_insurance_company.save()
 
