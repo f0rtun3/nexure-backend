@@ -133,7 +133,7 @@ class UserRegister(Resource):
                                             )
                 agency.update(data)
             elif role == 'IC':
-                agency = IndependentAgent.get_agency_by_contact_person(user_id)
+                agency = InsuranceCompany.get_company_by_contact_person(user_id)
                 data = self.set_ic_data(user_details['bank_account_number'], user_details['mpesa_paybill'],
                                         user_details['ira_reg_no'], user_details['ira_license_no'],
                                         user_details['org_kra_pin'], user_details['website'],

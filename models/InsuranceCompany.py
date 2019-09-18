@@ -50,7 +50,7 @@ class InsuranceCompany(db.Model):
 
     def serialize(self):
         return{
-            "contact_person": self.contact_person,
+            "contact_person": self.contact_person.serialize(),
             "company_number": self.company_phone,
             "bank_account": self.bank_account,
             "mpesa_paybill": self.mpesa_paybill,
