@@ -15,7 +15,7 @@ class Config(object):
     MAIL_DEFAULT_USER = 'no-reply@nexure.co.ke'
     MAIL_USE_TLS = False
     MAIL_USE_SSL = False
-    AWS_REGION='us-east-1'
+    AWS_REGION = 'us-east-1'
     AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
     S3_BUCKET = os.environ['S3_BUCKET']
@@ -48,7 +48,8 @@ class Development(Config):
 
 class Testing(Config):
     TESTING = True
-    HOST="127.0.0.1"
-    PORT=5000
-    ALLOWED_HOSTS="127.0.0.1"
+    HOST = "127.0.0.1"
+    PORT = 5000
+    ALLOWED_HOSTS = "127.0.0.1"
+    #   SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
     #   SQLALCHEMY_DATABASE_URI = "postgresql://paulodera:Jsv0#XY^ri@localhost/nexure_test"

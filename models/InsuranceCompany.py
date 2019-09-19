@@ -3,8 +3,7 @@ from database.db import db
 
 class InsuranceCompany(db.Model):
     __tablename__ = "insurance_company"
-    id = db.Column(
-        db.Integer, autoincrement=True, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     contact_person = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))
     company_phone = db.Column(db.BIGINT, unique=True, nullable=True)
@@ -17,20 +16,24 @@ class InsuranceCompany(db.Model):
     associated_company = db.Column(db.Integer, db.ForeignKey(
         'company_details.id', ondelete='CASCADE', onupdate='CASCADE'))
     rate = db.Column(db.Float, nullable=True)
+    ncd_rate = db.Column(db.Float, nullable=True)
     year = db.Column(db.Float, nullable=True)
     # social media handles
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
-    master_policy = db.relationship("MasterPolicy", backref="insurance_company", lazy='dynamic')
-    ic_benefit = db.relationship('ICBenefits', backref="insurance_company", lazy='dynamic')
-    ic_extension = db.relationship('ICExtensions', backref="insurance_company", lazy='dynamic')
-    child_policy = db.relationship('ChildPolicy', backref="insurance_company", lazy='dynamic')
-    ic_rate_discount = db.relationship('ICRateDiscount', backref='insurance_company', lazy='dynamic')
+    master_policy = db.relationship(
+        "MasterPolicy", backref="insurance_company", lazy='dynamic')
+    ic_benefit = db.relationship(
+        'ICBenefits', backref="insurance_company", lazy='dynamic')
+    ic_extension = db.relationship(
+        'ICExtensions', backref="insurance_company", lazy='dynamic')
+    child_policy = db.relationship(
+        'ChildPolicy', backref="insurance_company", lazy='dynamic')
 
     def __init__(self, contact_person, associated_company, ira_registration_number=None,
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
-                 mpesa_paybill=None, rate=None, company_phone=None):
+                 mpesa_paybill=None, rate=None, company_phone=None, ncd_rate=None):
 
         self.company_phone = company_phone
         self.contact_person = contact_person
@@ -44,12 +47,14 @@ class InsuranceCompany(db.Model):
         self.mpesa_paybill = mpesa_paybill
         self.associated_company = associated_company
         self.rate = rate
+        self.ncd_rate = ncd_rate
 
     def __repr__(self):
         return f"{self.ira_registration_number}"
 
     def serialize(self):
         return{
+            "id": self.id,
             "contact_person": self.contact_person,
             "company_number": self.company_phone,
             "bank_account": self.bank_account,
@@ -59,7 +64,9 @@ class InsuranceCompany(db.Model):
             "kra_pin": self.kra_pin,
             "facebook": self.facebook,
             "instagram": self.instagram,
-            "twitter": self.twitter
+            "twitter": self.twitter,
+            "rate": self.rate,
+            "ncd_rate": self.ncd_rate
         }, 200
 
     def save(self):
@@ -87,21 +94,7 @@ class InsuranceCompany(db.Model):
 
     @classmethod
     def get_all_companies(cls):
-        company_rows = cls.query.all()
-        companies = [{
-            "id": company.id,
-            "contact_person": company.contact_person,
-            "company_number": company.company_phone,
-            "ira_registration_number": company.ira_registration_number,
-            "ira_license_number": company.ira_license_number,
-            "kra_pin": company.kra_pin,
-            "website": company.website,
-            "facebook": company.facebook,
-            "instagram": company.instagram,
-            "twitter": company.twitter,
-            "rate": company.rate
-        } for company in company_rows]
-
+        companies = [company.serialize() for company in cls.query.all()]
         return companies
 
     @classmethod

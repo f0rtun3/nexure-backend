@@ -17,6 +17,12 @@ class Loadings(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
 
     def update(self, data):
         for key, item in data.items():
@@ -39,5 +45,5 @@ class Loadings(db.Model):
 
     @classmethod
     def get_all_loadings(cls):
-        loading_rows = cls.query.all()
-        return loading_rows
+        loadings = [loading.serialize() for loading in cls.query.all()]
+        return loadings

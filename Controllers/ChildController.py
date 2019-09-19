@@ -95,7 +95,8 @@ class ChildController:
         :param child_policy_id:
         :return:
         """
-        current_benefits = PolicyBenefits.get_policy_benefit_by_policy(child_policy_id)
+        current_benefits = PolicyBenefits.get_policy_benefit_by_policy(
+            child_policy_id)
         return ICBenefits.get_unselected_benefits(current_benefits)
 
     @staticmethod
@@ -105,7 +106,8 @@ class ChildController:
         :param child_policy_id:
         :return:
         """
-        current_extensions = PolicyExtensions.get_policy_ext_by_policy(child_policy_id)
+        current_extensions = PolicyExtensions.get_policy_ext_by_policy(
+            child_policy_id)
         return ICExtensions.get_unselected_extensions(current_extensions)
 
     @staticmethod
@@ -124,3 +126,17 @@ class ChildController:
             'extensions': ChildController.get_unselected_extensions(child_policy_id),
             'benefits': ChildController.get_unselected_benefits(child_policy_id)
         }
+
+    @staticmethod
+    def cancel(child_policy_id):
+        """
+        To cancel a child policy, set 'is_active' to false and 'transaction_type' to 'CNC' for cancelled
+        """
+        # get child policy
+        child_policy = ChildPolicy.get_child_by_id(child_policy_id)
+        # deactivate child policy
+        data = {
+            "transaction_type": 'CNC',
+            "is_active": False
+        }
+        child_policy.update(data)

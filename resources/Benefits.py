@@ -58,21 +58,16 @@ class BenefitHandler(Resource):
     def put(self):
         """Update benefit, change the free limit, or max limit, change rate etc."""
         pass
-    
+
     def get(self):
         """
         Get all benefits
         """
-        benefits_list = []
         benefits = Benefit.get_all_benefits()
         if benefits:
-            for i in benefits:
-                data = {
-                    "id": i.id,
-                    "name": i.name
-                }
-                benefits_list.append(data)
+            response_msg = helper.make_rest_success_response(
+                "Benefits", benefits)
+            return make_response(response_msg, 200)
 
-        response_msg = helper.make_rest_success_response(
-            "Benefits", benefits_list)
-        return make_response(response_msg, 200)
+        return make_response(helper.make_rest_fail_response(
+            "No data was found"), 404)

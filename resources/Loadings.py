@@ -53,21 +53,16 @@ class LoadingsHandler(Resource):
     def put(self):
         """Update loading, change rate etc."""
         pass
-        
+
     def get(self):
         """
         Get all loadings
         """
-        loadings_list = []
         loadings = Loadings.get_all_loadings()
         if loadings:
-            for i in loadings:
-                data = {
-                    "id": i.id,
-                    "name": i.name
-                }
-                loadings_list.append(data)
+            response_msg = helper.make_rest_success_response(
+                "Loadings", loadings)
+            return make_response(response_msg, 200)
 
-        response_msg = helper.make_rest_success_response(
-            "Benefits", loadings_list)
-        return make_response(response_msg, 200)
+        return make_response(helper.make_rest_fail_response(
+            "No data was found"), 404)

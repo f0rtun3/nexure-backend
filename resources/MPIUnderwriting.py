@@ -76,10 +76,9 @@ class MPIUnderwriting(Resource):
 
             # if it's an endorsement i.e the customer wants to add an item under the master policy
             elif transaction_type == 'END':
-                # get the master policy by master number
-                master_number = policy_details["master_policy"]
-                endorsed_policy = MasterPolicy.get_policy_by_mp_number(
-                    master_number)
+                # get the master policy by master policy id
+                endorsed_policy = MasterPolicy.get_policy_by_id(
+                    policy_details["master_policy_id"])
                 # check whether the policy has expired.
                 time_difference = endorsed_policy.date_expiry - datetime.now()
                 if time_difference.days > 1:
@@ -107,14 +106,31 @@ class MPIUnderwriting(Resource):
                     return make_response(helper.make_rest_success_response("Failed to renew Policy"))
                 # if the customer want's to extend the cover to cater for extra losses
             elif transaction_type == 'EXTENSION':
-                pass
-                # if the customer decided to cancel the entire or part
-                # of his cover, before it expires, then they are entitled for a refund
+                # get child policy
+                child_policy = ChildPolicy.get_child_by_id(
+                    policy_details['child_policy_id'])
+                # check whether policy is less than one year old (365) days
+                time_difference = datetime.now() - child_policy.date_activated
+                if time_difference.days < 365:
+                    child_controller = ChildController()
+                    # add extensions
+                    child_controller.add_extensions(
+                        policy_details["extensions"], policy_details['child_policy_id'])
+
+                    return make_response(helper.make_rest_success_response("Policy extended successfully"),
+                                         200)
+                else:
+                    return make_response(helper.make_rest_success_response("Failed to extend policy"))
+
             elif transaction_type == 'REFUND':
                 pass
-                # If the customer decides to cancel their cover midway
-            elif transaction_type == 'CANCELLATION':
-                pass
+            elif transaction_type == 'CNC':
+                # To cancel a transaction
+                child_controller = ChildController()
+                child_controller.cancel(policy_details['child_policy_id'])
+                return make_response(helper.make_rest_success_response("Policy cancelled successfully"),
+                                     200)
+
         else:
             response = helper.make_rest_fail_response("Failed")
             return make_response(response, 500)

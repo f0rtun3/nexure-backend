@@ -1,6 +1,5 @@
 from database.db import db
 
-
 class CompanyDetails(db.Model):
     """Store info about the insurance company, to be associated at login"""
     __tablename__ = "company_details"
@@ -13,7 +12,7 @@ class CompanyDetails(db.Model):
     avatar = db.Column(db.String(50), nullable=True)
     insurance_company = db.relationship('InsuranceCompany', backref="company_details",
                                         cascade="all, delete, delete-orphan")
- 
+
     def __init__(self, company_name, company_email, physical_address, website, avatar=None):
         self.company_name = company_name
         self.company_email = company_email
@@ -45,7 +44,7 @@ class CompanyDetails(db.Model):
     def get_company_by_id(cls, id):
         company = cls.query.filter_by(id=id).first()
         return company
-    
+
     @classmethod
     def get_company_by_name(cls, name):
         company = cls.query.filter_by(company_name=name).first()

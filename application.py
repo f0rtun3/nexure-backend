@@ -42,7 +42,8 @@ load_dotenv()
 application = Flask(__name__)
 application.config.from_object(os.environ['APP_SETTINGS'])
 db.init_app(application)
-CORS(application, resources={r"/*": {"origins": application.config['ALLOWED_HOSTS']}})
+CORS(application, resources={
+     r"/*": {"origins": application.config['ALLOWED_HOSTS']}})
 migrate = Migrate(application, db)
 jwt = JWTManager(application)
 ses = boto3.client(
@@ -123,4 +124,5 @@ API.add_resource(ExtensionHandler, '/api/extensions')
 API.add_resource(Location, '/api/locations')
 
 if __name__ == '__main__':
-    application.run(host=application.config['HOST'], port=application.config['PORT'])
+    application.run(
+        host=application.config['HOST'], port=application.config['PORT'])

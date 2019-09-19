@@ -17,7 +17,8 @@ class MasterController:
         :return:
         """
         master_policy = MasterPolicy.get_policy_by_id(master_policy_id)
-        master_policy_details = MasterController.fetch_latest_master_policy_details(master_policy.mp_number)
+        master_policy_details = MasterController.fetch_latest_master_policy_details(
+            master_policy.mp_number)
         if not master_policy_details:
             return None
 
@@ -26,11 +27,13 @@ class MasterController:
                                                                    master_policy_details.customer, expiry_date,
                                                                    master_policy_details.company
                                                                    )
-        child_policies = master_policy_details['child_policies']
+
+        child_policies = [child for child in master_policy_details['child_policies']
+                          if child["transaction_type"] != 'CNC']
         for child_policy in child_policies:
             child_policy['master_policy'] = ren_policy_details
             child_policy['transaction_type'] = transaction_type
-            ChildController.create_child_policy(child_policy.cp_number,child_policy.customer_number,
+            ChildController.create_child_policy(child_policy.cp_number, child_policy.customer_number,
                                                 child_policy.rate, child_policy.date_expiry,
                                                 child_policy.premium_amount, child_policy.transaction_type,
                                                 child_policy.agency_id, child_policy.company,
@@ -41,7 +44,8 @@ class MasterController:
 
     @staticmethod
     def fetch_latest_master_policy_details(master_policy_code):
-        policy_details = MasterPolicy.get_latest_policy_details(master_policy_code)
+        policy_details = MasterPolicy.get_latest_policy_details(
+            master_policy_code)
         return policy_details
 
     @staticmethod
