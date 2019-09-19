@@ -50,7 +50,7 @@ class InsuranceCompany(db.Model):
 
     def serialize(self):
         return{
-            "contact_person": self.contact_person.serialize(),
+            "contact_person": self.user.serialize(),
             "company_number": self.company_phone,
             "bank_account": self.bank_account,
             "mpesa_paybill": self.mpesa_paybill,
@@ -60,7 +60,7 @@ class InsuranceCompany(db.Model):
             "facebook": self.facebook,
             "instagram": self.instagram,
             "twitter": self.twitter
-        }, 200
+        }
 
     def save(self):
         db.session.add(self)

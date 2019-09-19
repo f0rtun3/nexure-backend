@@ -21,10 +21,7 @@ class TiedAgents(db.Model):
         return f"{self.id}"
 
     def serialize(self):
-        return {
-            "id": self.id,
-            "user": self.user_id,
-        }, 200
+        return self.user.serialize()
 
     def save(self):
         db.session.add(self)

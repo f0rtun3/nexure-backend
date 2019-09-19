@@ -19,6 +19,7 @@ class Ward(db.Model):
 
     def serialize(self):
         return{
+            "constituency_id": self.constituency,
             "id": self.id,
             "name": self.name
         }
@@ -31,3 +32,8 @@ class Ward(db.Model):
     def get_ward_id_by_name(cls, name):
         ward = cls.query.filter_by(name=name).first()
         return ward.id
+
+    @classmethod
+    def get_all_wards(cls):
+        return [ward.serialize() for ward in cls.query.all()]
+

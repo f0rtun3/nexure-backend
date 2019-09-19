@@ -15,8 +15,7 @@ class County(db.Model):
         return {
             "id": self.id,
             "name": self.county_name,
-            "constituencies": [constituency.serialize() for
-                               constituency in self.constituency]
+            #   "constituencies": [constituency.serialize() for constituency in self.constituency]
         }
 
     def save(self):

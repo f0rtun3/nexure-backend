@@ -33,7 +33,6 @@ class UserProfile(db.Model):
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
-
     created_on = db.Column(db.DateTime, default=db.func.now())
     updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
@@ -87,9 +86,9 @@ class UserProfile(db.Model):
             "facebook": self.facebook,
             "twitter": self.twitter,
             "instagram": self.instagram,
-            "created_on": self.created_on,
-            "updated_on": self.updated_on
-        }, 200
+            "created_on": self.created_on.strftime('%m/%d/%Y'),
+            "updated_on": self.updated_on.strftime('%m/%d/%Y')
+        }
 
     def save(self):
         db.session.add(self)
