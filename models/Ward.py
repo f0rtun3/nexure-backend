@@ -19,7 +19,7 @@ class Ward(db.Model):
 
     def serialize(self):
         return{
-            "constituency_id": self.constituency,
+            "constituency": self.name,
             "id": self.id,
             "name": self.name
         }
