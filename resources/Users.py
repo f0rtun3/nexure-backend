@@ -82,6 +82,15 @@ class UserRegister(Resource):
         user_id = get_jwt_identity()
         claims = get_jwt_claims()
         role = claims['role']
+        profile_data = self.fetch_profile_data(role, user_id)
+        if profile_data is None:
+            response = helper.make_rest_fail_response("No user was found")
+            return make_response(response, 404)
+
+        response = helper.make_rest_success_response(None, profile_data)
+        return make_response(response, 200)
+
+    def fetch_profile_data(self, role, user_id):
         profile_data = None
         if role in ('IND', 'TA'):
             profile_data = User.get_user_by_id(user_id).serialize()
@@ -89,12 +98,12 @@ class UserRegister(Resource):
             profile_data = Broker.get_broker_by_contact_id(user_id).serialize()
         elif role == 'IA':
             profile_data = IndependentAgent.get_agency_by_contact_person(user_id).serialize()
+        elif role == 'IC':
+            profile_data = InsuranceCompany.get_company_by_contact_person(user_id).serialize()
         else:
-            response = helper.make_rest_fail_response("No user was found")
-            return make_response(response, 404)
+            return None
 
-        response = helper.make_rest_success_response(None, profile_data)
-        return make_response(response, 200)
+        return profile_data
 
     @jwt_required
     def put(self):
@@ -189,6 +198,8 @@ class UserRegister(Resource):
         response_msg = helper.make_rest_success_response(
             f"Update successful.")
         return make_response(response_msg, 200)
+
+
 
     @staticmethod
     def check_updated_organization_detail(previous_detail, updated_org_detiail=None):

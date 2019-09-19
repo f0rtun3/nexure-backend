@@ -50,16 +50,19 @@ class InsuranceCompany(db.Model):
 
     def serialize(self):
         return{
-            "contact_person": self.user.serialize(),
-            "company_number": self.company_phone,
-            "bank_account": self.bank_account,
-            "mpesa_paybill": self.mpesa_paybill,
-            "ira_registration_number": self.ira_registration_number,
-            "ira_license_number": self.ira_license_number,
-            "kra_pin": self.kra_pin,
-            "facebook": self.facebook,
-            "instagram": self.instagram,
-            "twitter": self.twitter
+            "organization":{
+                "org_name": self.associated_company.company_name,
+                "org_contact": self.user.serialize(),
+                "org_phone": self.company_phone,
+                "bank_account": self.bank_account,
+                "mpesa_paybill": self.mpesa_paybill,
+                "ira_registration_number": self.ira_registration_number,
+                "ira_license_number": self.ira_license_number,
+                "kra_pin": self.kra_pin,
+                "facebook": self.facebook,
+                "instagram": self.instagram,
+                "twitter": self.twitter
+            }
         }
 
     def save(self):
@@ -89,12 +92,13 @@ class InsuranceCompany(db.Model):
     def get_all_companies(cls):
         company_rows = cls.query.all()
         companies = [{
+            "org_name": company.associated_company.company_name,
             "id": company.id,
-            "contact_person": company.contact_person,
-            "company_number": company.company_phone,
+            "org_contact": company.contact_person,
+            "org_phone": company.company_phone,
             "ira_registration_number": company.ira_registration_number,
             "ira_license_number": company.ira_license_number,
-            "kra_pin": company.kra_pin,
+            "org_kra": company.kra_pin,
             "website": company.website,
             "facebook": company.facebook,
             "instagram": company.instagram,
@@ -108,3 +112,7 @@ class InsuranceCompany(db.Model):
     def get_by_associated_company(cls, assoc_id):
         company = cls.query.filter_by(associated_company=assoc_id).first()
         return company
+
+    @classmethod
+    def get_company_by_contact_person(cls, user_id):
+        return cls.query.filter_by(contact_person=user_id).first()
