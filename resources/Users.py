@@ -67,23 +67,33 @@ class UserRegister(Resource):
         subject = "Please confirm your account"
         email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                      f" to confirm your account"
-        helper.send_email(user_details['email'],
-                          subject, email_template, email_text)
+        # ToDo: Remember to uncomment the line below before commit to remote branch
+        #   helper.send_email(user_details['email'], subject, email_template, email_text)
 
         response_msg = helper.make_rest_success_response("Registration successful, kindly"
                                                          " check your email for confirmation link")
         return make_response(response_msg, 200)
 
+    @jwt_required
     def get(self):
         """
         get user profile details
         """
-        user_profile_row = UserProfile.get_all_profiles()
-        if not user_profile_row:
+        user_id = get_jwt_identity()
+        claims = get_jwt_claims()
+        role = claims['role']
+        profile_data = None
+        if role in ('IND', 'TA'):
+            profile_data = User.get_user_by_id(user_id).serialize()
+        elif role == 'BR':
+            profile_data = Broker.get_broker_by_contact_id(user_id).serialize()
+        elif role == 'IA':
+            profile_data = IndependentAgent.get_agency_by_contact_person(user_id).serialize()
+        else:
             response = helper.make_rest_fail_response("No user was found")
             return make_response(response, 404)
 
-        response = helper.make_rest_success_response(None, user_profile_row)
+        response = helper.make_rest_success_response(None, profile_data)
         return make_response(response, 200)
 
     @jwt_required
@@ -130,10 +140,52 @@ class UserRegister(Resource):
 
             elif user_details['update_type'] == "agency":
 
+<<<<<<< HEAD
+=======
+            profile_data = self.set_profile_data(user_details['gender'], user_details['occupation'],
+                                                 user_details['id_passport'], user_details['kra_pin'],
+                                                 birth_date,
+                                                 user_details['physical_address'],
+                                                 user_details['postal_address'], user_details['postal_code'],
+                                                 user_details['postal_town'], user_details['county'],
+                                                 user_details['constituency'], user_details['ward']
+                                                 )
+            self.update_profile(user_id, profile_data)
+            """
+            update the client account depending on their role: 
+            Note: that for tied agents, we only update their profiles
+            """
+            client_row = self.get_client_row(role, user_id)
+            if role == 'BR':
+                agency = Broker.get_broker_by_contact_id(user_id)
+                data = self.set_broker_data(self.check_updated_organization_detail(client_row.broker_name,
+                                                                                   user_details['org_name']),
+                                            self.check_updated_organization_detail(client_row.broker_phone_number,
+                                                                                   user_details['org_phone']),
+                                            self.check_updated_organization_detail(client_row.broker_email,
+                                                                                   user_details['org_email']),
+                                            user_details['ira_reg_no'], user_details['ira_license_no'],
+                                            user_details['org_kra_pin'], user_details['website'],
+                                            user_details['facebook'], user_details['twitter'], user_details['instagram']
+                                            )
+                agency.update(data)
+            elif role == 'IC':
+                agency = InsuranceCompany.get_company_by_contact_person(user_id)
+                phone = self.check_updated_organization_detail(client_row.company_phone, user_details['org_phone'])
+                data = self.set_ic_data(user_details['bank_account_number'], phone, user_details['mpesa_paybill'],
+                                        user_details['ira_reg_no'], user_details['ira_license_no'],
+                                        user_details['org_kra_pin'], user_details['website'],
+                                        user_details['facebook'], user_details['instagram'],
+                                        user_details['twitter']
+                                        )
+                agency.update(data)
+            elif role == 'IA':
+>>>>>>> c10a595f5de6ff91874c41955719d8d05801575f
                 """
                 update the client account depending on their role: 
                 Note: that for tied agents, we only update their profiles
                 """
+<<<<<<< HEAD
                 data = None
                 client_row = self.get_client_row(role, user_id)
                 if role == 'BR':
@@ -175,6 +227,31 @@ class UserRegister(Resource):
                         "twitter": user_details['twitter']
                     }
                 agency.update(data)
+=======
+                agency = IndependentAgent.get_agency_by_contact_person(user_id)
+                data = self.set_ia_data(self.check_updated_organization_detail(client_row.agency_name,
+                                                                          user_details['org_name']),
+                                        self.check_updated_organization_detail(client_row.agency_phone,
+                                                                               user_details['org_phone']),
+                                        self.check_updated_organization_detail(client_row.agency_email,
+                                                                               user_details['org_email']),
+                                        user_details['ira_reg_no'],
+                                        user_details['ira_license_no'],
+                                        user_details['org_kra_pin'],
+                                        user_details['website'],
+                                        user_details['facebook'],
+                                        user_details['instagram'],
+                                        user_details['twitter']
+                                        )
+                agency.update(data)
+
+            # change password if requested
+            if user_details['new_password']:
+                user = User.get_user_by_id(get_jwt_identity())
+                password = user.generate_password_hash(user_details['new_password'])
+                user.update_password(password)
+
+>>>>>>> c10a595f5de6ff91874c41955719d8d05801575f
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
@@ -187,10 +264,18 @@ class UserRegister(Resource):
         return make_response(response_msg, 200)
 
     @staticmethod
+<<<<<<< HEAD
     def check_organization_phone_number(phone, updated_phone_no=None):
         if updated_phone_no is None:
             return phone
         return updated_phone_no
+=======
+    def check_updated_organization_detail(previous_detail, updated_org_detiail=None):
+        if updated_org_detiail is None:
+            return previous_detail
+
+        return updated_org_detiail
+>>>>>>> c10a595f5de6ff91874c41955719d8d05801575f
 
     @staticmethod
     def get_client_row(role, user_id):
@@ -263,10 +348,11 @@ class UserRegister(Resource):
         }
 
     @staticmethod
-    def set_ic_data(bank_account_number, mpesa_paybill, ira_reg_no, ira_license_no, org_kra_pin, website,
+    def set_ic_data(bank_account_number, company_phone, mpesa_paybill, ira_reg_no, ira_license_no, org_kra_pin, website,
                     facebook, twitter, instagram):
         return {
             "bank_account": bank_account_number,
+            "company_phone": company_phone,
             "mpesa_paybill": mpesa_paybill,
             "ira_registration_number": ira_reg_no,
             "ira_license_number": ira_license_no,
@@ -278,9 +364,8 @@ class UserRegister(Resource):
         }
 
     @staticmethod
-    def format_birth_date(birth_date):
-        date_format = "%d/%m/%Y"
-        b_day = datetime.strptime(birth_date, date_format)
+    def format_birth_date(date_str):
+        b_day = datetime.strptime(date_str, '%d/%m/%Y')
         return b_day.date()
 
     @staticmethod
@@ -305,6 +390,7 @@ class UserRegister(Resource):
             new_insurance_company = InsuranceCompany(
                 user_id,
                 user_details['company_id'],
+                user_details['org_phone']
             )
             new_insurance_company.save()
 

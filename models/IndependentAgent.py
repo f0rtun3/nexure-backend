@@ -50,14 +50,14 @@ class IndependentAgent(db.Model):
             "agency_name": self.agency_name,
             "agency_email": self.agency_email,
             "agency_phone": self.agency_phone,
-            "contact_person": self.contact_person,
             "ira_registration_number": self.ira_registration_number,
             "ira_licence_number": self.ira_licence_number,
             "kra_pin": self.kra_pin,
             "facebook": self.facebook,
             "instagram": self.instagram,
-            "twitter": self.twitter
-        }, 200
+            "twitter": self.twitter,
+            "profile_details": self.user.serialize()
+        }
 
     def save(self):
         db.session.add(self)

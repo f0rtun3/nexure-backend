@@ -14,9 +14,10 @@ class Constituency(db.Model):
 
     def serialize(self):
         return{
+            "county_id": self.county,
             "id": self.id,
             "name": self.name,
-            "wards": [ward.serialize() for ward in self.ward]
+            #   "wards": [ward.serialize() for ward in self.ward]
         }
 
     def save(self):
@@ -27,3 +28,7 @@ class Constituency(db.Model):
     def get_constituency_by_name(cls, name):
         constituency = cls.query.filter_by(name=name).first()
         return constituency.id
+
+    @classmethod
+    def get_all_constituencies(cls):
+        return [constituency.serialize() for constituency in cls.query.all()]
