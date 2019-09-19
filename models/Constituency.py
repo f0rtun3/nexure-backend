@@ -5,8 +5,8 @@ class Constituency(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     name = db.Column(db.String(50), unique=True, nullable=False)
-    county = db.Column(db.Integer, db.ForeignKey('county.id', ondelete='CASCADE', onupdate='CASCADE'))
-    ward = db.relationship("Ward", backref="constituency_ward")
+    county_id = db.Column(db.Integer, db.ForeignKey('county.id', ondelete='CASCADE', onupdate='CASCADE'))
+    ward = db.relationship("Ward", backref="constituency")
 
     def __init__(self, name, county):
         self.name = name
@@ -14,7 +14,7 @@ class Constituency(db.Model):
 
     def serialize(self):
         return{
-            "county": self.name,
+            "county": self.county.county_name,
             "id": self.id,
             "name": self.name,
             #   "wards": [ward.serialize() for ward in self.ward]
