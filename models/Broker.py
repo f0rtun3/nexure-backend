@@ -44,17 +44,19 @@ class Broker(db.Model):
 
     def serialize(self):
         return {
-            "broker_name": self.broker_name,
-            "contact_person": self.contact_person,
-            "broker_phone_number": self.broker_phone_number,
-            "broker_email": self.broker_email,
-            "ira_registration_number": self.ira_registration_number,
-            "ira_license_number": self.ira_license_number,
-            "kra_pin": self.kra_pin,
-            "website": self.website,
-            "facebook": self.facebook,
-            "instagram": self.instagram,
-            "twitter": self.twitter,
+            "organization":{
+                "org_name": self.broker_name,
+                "org_contact": self.contact_person,
+                "org_phone": self.broker_phone_number,
+                "org_email": self.broker_email,
+                "ira_registration_number": self.ira_registration_number,
+                "ira_license_number": self.ira_license_number,
+                "org_kra_pin": self.kra_pin,
+                "website": self.website,
+                "facebook": self.facebook,
+                "instagram": self.instagram,
+                "twitter": self.twitter,
+            },
             "profile_details": self.user.serialize()
         }
 
@@ -75,13 +77,13 @@ class Broker(db.Model):
     def get_all_brokers(cls):
         broker_rows = cls.query.all()
         brokers = [{
-            "broker_name": broker.broker_name,
-            "contact_person": broker.contact_person,
-            "broker_phone_number": broker.broker_phone_number,
-            "broker_email": broker.broker_email,
+            "org_name": broker.broker_name,
+            "org_contact": broker.contact_person,
+            "org_phone": broker.broker_phone_number,
+            "org_email": broker.broker_email,
             "ira_registration_number": broker.ira_registration_number,
             "ira_license_number": broker.ira_license_number,
-            "kra_pin": broker.kra_pin,
+            "org_kra": broker.kra_pin,
             "website": broker.website,
             "facebook": broker.facebook,
             "instagram": broker.instagram,
