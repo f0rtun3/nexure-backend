@@ -99,7 +99,7 @@ class InsuranceCompany(db.Model):
             "org_phone": company.company_phone,
             "ira_registration_number": company.ira_registration_number,
             "ira_license_number": company.ira_license_number,
-            "org_kra": company.kra_pin,
+            "org_kra_pin": company.kra_pin,
             "website": company.website,
             "facebook": company.facebook,
             "instagram": company.instagram,

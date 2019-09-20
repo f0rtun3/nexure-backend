@@ -91,7 +91,7 @@ class UserRegister(Resource):
         return make_response(response, 200)
 
     def fetch_profile_data(self, role, user_id):
-        profile_data = None
+        profile_data = {}
         if role in ('IND', 'TA'):
             profile_data = User.get_user_by_id(user_id).serialize()
         elif role == 'BR':
@@ -126,11 +126,11 @@ class UserRegister(Resource):
 
             profile_data = self.set_profile_data(user_details['gender'], user_details['occupation'],
                                                  user_details['id_passport'], user_details['kra_pin'],
-                                                 birth_date,
-                                                 user_details['physical_address'],
+                                                 birth_date, user_details['physical_address'],
                                                  user_details['postal_address'], user_details['postal_code'],
-                                                 user_details['postal_town'], user_details['county'],
-                                                 user_details['constituency'], user_details['ward']
+                                                 user_details['postal_town'], user_details['country'],
+                                                 user_details['county'], user_details['constituency'],
+                                                 user_details['ward']
                                                  )
             self.update_profile(user_id, profile_data)
             """
@@ -223,7 +223,7 @@ class UserRegister(Resource):
 
     @staticmethod
     def set_profile_data(gender, occupation, id_passport, kra_pin, birth_date, physical_address,
-                         postal_address, postal_code, postal_town, county, constituency, ward):
+                         postal_address, postal_code, postal_town, country, county, constituency, ward):
         return {
             "gender": gender,
             "occupation": occupation,
@@ -234,6 +234,7 @@ class UserRegister(Resource):
             "postal_address": postal_address,
             "postal_code": postal_code,
             "postal_town": postal_town,
+            "country": country,
             "county": county,
             "constituency": constituency,
             "ward": ward
