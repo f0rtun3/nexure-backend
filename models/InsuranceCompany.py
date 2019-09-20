@@ -53,7 +53,7 @@ class InsuranceCompany(db.Model):
             "organization":{
                 "org_name": self.company_details.company_name,
                 "org_email": self.company_details.company_email,
-                "org_contact": self.user.serialize(),
+                "org_kra_pin": self.kra_pin,
                 "org_phone": self.company_phone,
                 "bank_account": self.bank_account,
                 "mpesa_paybill": self.mpesa_paybill,
