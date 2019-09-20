@@ -27,10 +27,11 @@ class LoadingsHandler(Resource):
         First add the loading to the loadingss table, regardless of insurance company
         """
         existing_loadings = Loadings.get_all_loadings()
+        names = [loading['name'] for loading in existing_loadings]
         loading_name = details['name']
 
         # check whether the benefits to be added already exist
-        if loading_name not in existing_loadings:
+        if loading_name not in names:
             new_loading = Loadings(loading_name)
             new_loading.save()
 

@@ -17,7 +17,7 @@ class ICBenefits(db.Model):
     rate = db.Column(db.Float, nullable=False)
 
     def __init__(self, insurance_company_id, benefit_id, free_limit, max_limit, rate):
-        self.insurance_company = insurance_company_id
+        self.insurance_company_id = insurance_company_id
         self.benefit = benefit_id
         self.get_benefit_id = benefit_id
         self.free_limit = free_limit

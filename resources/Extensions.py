@@ -27,10 +27,11 @@ class ExtensionHandler(Resource):
         First add the extension to the extensions table, regardless of insurance company
         """
         exisiting_extensions = Extension.get_all_extensions()
+        names = [extension['name'] for extension in exisiting_extensions]
         extension_name = details['name']
 
         # check whether the benefits to be added already exist
-        if extension_name not in exisiting_extensions:
+        if extension_name not in names:
             new_extension = Extension(extension_name)
             new_extension.save()
 
