@@ -49,6 +49,10 @@ user_parser.add_argument(
     type=str
 )
 user_parser.add_argument(
+    "country",
+    type=str
+)
+user_parser.add_argument(
     "county",
     type=str
 )

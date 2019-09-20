@@ -82,19 +82,31 @@ class UserRegister(Resource):
         user_id = get_jwt_identity()
         claims = get_jwt_claims()
         role = claims['role']
-        profile_data = None
-        if role in ('IND', 'TA'):
-            profile_data = User.get_user_by_id(user_id).serialize()
-        elif role == 'BR':
-            profile_data = Broker.get_broker_by_contact_id(user_id).serialize()
-        elif role == 'IA':
-            profile_data = IndependentAgent.get_agency_by_contact_person(user_id).serialize()
-        else:
+        profile_data = self.fetch_profile_data(role, user_id)
+        if profile_data is None:
             response = helper.make_rest_fail_response("No user was found")
             return make_response(response, 404)
 
         response = helper.make_rest_success_response(None, profile_data)
         return make_response(response, 200)
+
+    def fetch_profile_data(self, role, user_id):
+        profile_data = {}
+        if role in ('IND', 'TA'):
+            profile_data['profile_details'] = User.get_user_by_id(
+                user_id).serialize()
+        elif role == 'BR':
+            profile_data = Broker.get_broker_by_contact_id(user_id).serialize()
+        elif role == 'IA':
+            profile_data = IndependentAgent.get_agency_by_contact_person(
+                user_id).serialize()
+        elif role == 'IC':
+            profile_data = InsuranceCompany.get_company_by_contact_person(
+                user_id).serialize()
+        else:
+            return None
+
+        return profile_data
 
     @jwt_required
     def put(self):
@@ -141,37 +153,30 @@ class UserRegister(Resource):
             elif user_details['update_type'] == "agency":
 
                 """
-                update the client account depending on their role: 
+                update the client account depending on their role:
                 Note: that for tied agents, we only update their profiles
                 """
-                data = None
                 client_row = self.get_client_row(role, user_id)
                 if role == 'BR':
                     agency = Broker.get_broker_by_contact_id(user_id)
-                    phone = self.check_organization_phone_number(client_row.broker_phone_number,
-                                                                 user_details['org_phone'])
-                    data = self.set_broker_data(user_details['org_name'], phone,
-                                                user_details['org_email'], user_details['ira_reg_no'],
-                                                user_details['ira_license_no'], user_details['org_kra_pin'],
-                                                user_details['website'], user_details['facebook'], user_details['twitter'],
-                                                user_details['instagram']
+                    data = self.set_broker_data(self.check_updated_organization_detail(client_row.broker_name,
+                                                                                       user_details['org_name']),
+                                                self.check_updated_organization_detail(client_row.broker_phone_number,
+                                                                                       user_details['org_phone']),
+                                                self.check_updated_organization_detail(client_row.broker_email,
+                                                                                       user_details['org_email']),
+                                                user_details['ira_reg_no'], user_details['ira_license_no'],
+                                                user_details['org_kra_pin'], user_details['website'],
+                                                user_details['facebook'], user_details['instagram'],
+                                                user_details['twitter']
                                                 )
-                elif role == 'IC':
-                    agency = IndependentAgent.get_agency_by_contact_person(
-                        user_id)
-                    data = self.set_ic_data(user_details['bank_account_number'], user_details['mpesa_paybill'],
-                                            user_details['ira_reg_no'], user_details['ira_license_no'],
-                                            user_details['org_kra_pin'], user_details['website'],
-                                            user_details['facebook'], user_details['instagram'],
-                                            user_details['twitter']
-                                            )
                 elif role == 'IA':
                     """
-                    One contact person only represents one entity. So, we fetch the agency using the contact person's id 
+                    One contact person only represents one entity. So, we fetch the agency using the contact person's id
                     """
                     agency = IndependentAgent.get_agency_by_contact_person(
                         user_id)
-                    
+
                     data = {
                         "agency_name": user_details['org_name'],
                         "agency_phone": user_details['org_phone_number'],
@@ -236,6 +241,7 @@ class UserRegister(Resource):
             "postal_address": postal_address,
             "postal_code": postal_code,
             "postal_town": postal_town,
+            "county": county,
             "county": county,
             "constituency": constituency,
             "ward": ward

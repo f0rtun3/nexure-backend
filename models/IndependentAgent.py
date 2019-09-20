@@ -47,15 +47,17 @@ class IndependentAgent(db.Model):
 
     def serialize(self):
         return {
-            "agency_name": self.agency_name,
-            "agency_email": self.agency_email,
-            "agency_phone": self.agency_phone,
-            "ira_registration_number": self.ira_registration_number,
-            "ira_licence_number": self.ira_licence_number,
-            "kra_pin": self.kra_pin,
-            "facebook": self.facebook,
-            "instagram": self.instagram,
-            "twitter": self.twitter,
+            "organization":{
+                "org_name": self.agency_name,
+                "org_email": self.agency_email,
+                "org_contact": self.agency_phone,
+                "ira_registration_number": self.ira_registration_number,
+                "ira_licence_number": self.ira_licence_number,
+                "org_kra": self.kra_pin,
+                "facebook": self.facebook,
+                "instagram": self.instagram,
+                "twitter": self.twitter,
+            },
             "profile_details": self.user.serialize()
         }
 
@@ -76,13 +78,13 @@ class IndependentAgent(db.Model):
     def get_all_agencies(cls):
         agency_rows = cls.query.all()
         agencies = [{
-            "agency_name": agency.agency_name,
-            "contact_person": agency.contact_person,
-            "agency_email": agency.agency_email,
-            "agency_phone": agency.agency_phone,
+            "org_name": agency.agency_name,
+            "org_person": agency.contact_person,
+            "org_email": agency.agency_email,
+            "org_phone": agency.agency_phone,
             "ira_registration_number": agency.ira_registration_number,
             "ira_licence_number": agency.ira_licence_number,
-            "kra_pin": agency.kra_pin,
+            "org_kra_pin": agency.kra_pin,
             "facebook": agency.facebook,
             "instagram": agency.instagram,
             "twitter": agency.twitter
