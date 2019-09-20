@@ -66,28 +66,33 @@ class UserProfile(db.Model):
 
     def serialize(self):
         return {
-            "user_id": self.user_id,
-            "email": self.user.email,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "gender": self.gender,
-            "phone": self.phone,
-            "avatar_url": self.avatar_url,
-            "occupation": self.occupation,
-            "id_passport": self.id_passport,
-            "kra_pin": self.kra_pin,
-            "birth_date": self.birth_date,
-            "physical_address": self.physical_address,
-            "postal_code": self.postal_code,
-            "postal_town": self.postal_town,
-            "county": self.county,
-            "constituency": self.constituency,
-            "ward": self.ward,
-            "facebook": self.facebook,
-            "twitter": self.twitter,
-            "instagram": self.instagram,
-            "created_on": self.created_on.strftime('%m/%d/%Y'),
-            "updated_on": self.updated_on.strftime('%m/%d/%Y')
+            "Profile_details":{
+                "user_id": self.user_id,
+                "email": self.user.email,
+                "first_name": self.first_name,
+                "last_name": self.last_name,
+                "gender": self.gender,
+                "phone": self.phone,
+                "avatar_url": self.avatar_url,
+                "occupation": self.occupation,
+                "id_passport": self.id_passport,
+                "kra_pin": self.kra_pin,
+                "birth_date": self.birth_date,
+                "physical_address": self.physical_address,
+                "postal_address": self.postal_address,
+                "postal_code": self.postal_code,
+                "postal_town": self.postal_town,
+                #   "country": self.country,
+                "county": self.county,
+                "constituency": self.constituency,
+                "ward": self.ward,
+                "facebook": self.facebook,
+                "twitter": self.twitter,
+                "instagram": self.instagram,
+                "created_on": self.created_on.strftime('%m/%d/%Y'),
+                "updated_on": self.updated_on.strftime('%m/%d/%Y')
+            }
+            
         }
 
     def save(self):

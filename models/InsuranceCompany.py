@@ -62,7 +62,8 @@ class InsuranceCompany(db.Model):
                 "facebook": self.facebook,
                 "instagram": self.instagram,
                 "twitter": self.twitter
-            }
+            },
+            "profile_details": self.user.serialize()
         }
 
     def save(self):
