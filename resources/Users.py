@@ -93,7 +93,7 @@ class UserRegister(Resource):
     def fetch_profile_data(self, role, user_id):
         profile_data = {}
         if role in ('IND', 'TA'):
-            profile_data = User.get_user_by_id(user_id).serialize()
+            profile_data['profile_details'] = User.get_user_by_id(user_id).serialize()
         elif role == 'BR':
             profile_data = Broker.get_broker_by_contact_id(user_id).serialize()
         elif role == 'IA':
