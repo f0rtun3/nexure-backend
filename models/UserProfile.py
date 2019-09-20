@@ -66,7 +66,7 @@ class UserProfile(db.Model):
 
     def serialize(self):
         return {
-            "Profile_details":{
+            "profile_details":{
                 "user_id": self.user_id,
                 "email": self.user.email,
                 "first_name": self.first_name,
