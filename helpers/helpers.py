@@ -1,4 +1,4 @@
-import application as app
+from flask import current_app as app
 from flask import jsonify, render_template
 from botocore.exceptions import ClientError
 import string

@@ -6,9 +6,8 @@ class County(db.Model):
     id = db.Column(db.Integer, primary_key=True,
                    autoincrement=True, nullable=False)
     county_name = db.Column(db.String(50), unique=True, nullable=False)
-    constituency = db.relationship(
-        "Constituency", backref="county_constituency")
-    ward = db.relationship("Ward", backref="county_ward")
+    constituency = db.relationship("Constituency", backref="county")
+    ward = db.relationship("Ward", backref="county")
 
     def __init__(self, county_name):
         self.county_name = county_name

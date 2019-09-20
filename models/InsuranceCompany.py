@@ -54,16 +54,19 @@ class InsuranceCompany(db.Model):
 
     def serialize(self):
         return{
-            "contact_person": self.user.serialize(),
-            "company_number": self.company_phone,
-            "bank_account": self.bank_account,
-            "mpesa_paybill": self.mpesa_paybill,
-            "ira_registration_number": self.ira_registration_number,
-            "ira_license_number": self.ira_license_number,
-            "kra_pin": self.kra_pin,
-            "facebook": self.facebook,
-            "instagram": self.instagram,
-            "twitter": self.twitter
+            "organization":{
+                "org_name": self.associated_company,
+                "org_contact": self.user.serialize(),
+                "org_phone": self.company_phone,
+                "bank_account": self.bank_account,
+                "mpesa_paybill": self.mpesa_paybill,
+                "ira_registration_number": self.ira_registration_number,
+                "ira_license_number": self.ira_license_number,
+                "kra_pin": self.kra_pin,
+                "facebook": self.facebook,
+                "instagram": self.instagram,
+                "twitter": self.twitter
+            }
         }
 
     def save(self):
