@@ -140,52 +140,10 @@ class UserRegister(Resource):
 
             elif user_details['update_type'] == "agency":
 
-<<<<<<< HEAD
-=======
-            profile_data = self.set_profile_data(user_details['gender'], user_details['occupation'],
-                                                 user_details['id_passport'], user_details['kra_pin'],
-                                                 birth_date,
-                                                 user_details['physical_address'],
-                                                 user_details['postal_address'], user_details['postal_code'],
-                                                 user_details['postal_town'], user_details['county'],
-                                                 user_details['constituency'], user_details['ward']
-                                                 )
-            self.update_profile(user_id, profile_data)
-            """
-            update the client account depending on their role: 
-            Note: that for tied agents, we only update their profiles
-            """
-            client_row = self.get_client_row(role, user_id)
-            if role == 'BR':
-                agency = Broker.get_broker_by_contact_id(user_id)
-                data = self.set_broker_data(self.check_updated_organization_detail(client_row.broker_name,
-                                                                                   user_details['org_name']),
-                                            self.check_updated_organization_detail(client_row.broker_phone_number,
-                                                                                   user_details['org_phone']),
-                                            self.check_updated_organization_detail(client_row.broker_email,
-                                                                                   user_details['org_email']),
-                                            user_details['ira_reg_no'], user_details['ira_license_no'],
-                                            user_details['org_kra_pin'], user_details['website'],
-                                            user_details['facebook'], user_details['twitter'], user_details['instagram']
-                                            )
-                agency.update(data)
-            elif role == 'IC':
-                agency = InsuranceCompany.get_company_by_contact_person(user_id)
-                phone = self.check_updated_organization_detail(client_row.company_phone, user_details['org_phone'])
-                data = self.set_ic_data(user_details['bank_account_number'], phone, user_details['mpesa_paybill'],
-                                        user_details['ira_reg_no'], user_details['ira_license_no'],
-                                        user_details['org_kra_pin'], user_details['website'],
-                                        user_details['facebook'], user_details['instagram'],
-                                        user_details['twitter']
-                                        )
-                agency.update(data)
-            elif role == 'IA':
->>>>>>> c10a595f5de6ff91874c41955719d8d05801575f
                 """
                 update the client account depending on their role: 
                 Note: that for tied agents, we only update their profiles
                 """
-<<<<<<< HEAD
                 data = None
                 client_row = self.get_client_row(role, user_id)
                 if role == 'BR':
@@ -227,31 +185,6 @@ class UserRegister(Resource):
                         "twitter": user_details['twitter']
                     }
                 agency.update(data)
-=======
-                agency = IndependentAgent.get_agency_by_contact_person(user_id)
-                data = self.set_ia_data(self.check_updated_organization_detail(client_row.agency_name,
-                                                                          user_details['org_name']),
-                                        self.check_updated_organization_detail(client_row.agency_phone,
-                                                                               user_details['org_phone']),
-                                        self.check_updated_organization_detail(client_row.agency_email,
-                                                                               user_details['org_email']),
-                                        user_details['ira_reg_no'],
-                                        user_details['ira_license_no'],
-                                        user_details['org_kra_pin'],
-                                        user_details['website'],
-                                        user_details['facebook'],
-                                        user_details['instagram'],
-                                        user_details['twitter']
-                                        )
-                agency.update(data)
-
-            # change password if requested
-            if user_details['new_password']:
-                user = User.get_user_by_id(get_jwt_identity())
-                password = user.generate_password_hash(user_details['new_password'])
-                user.update_password(password)
-
->>>>>>> c10a595f5de6ff91874c41955719d8d05801575f
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
@@ -264,18 +197,11 @@ class UserRegister(Resource):
         return make_response(response_msg, 200)
 
     @staticmethod
-<<<<<<< HEAD
-    def check_organization_phone_number(phone, updated_phone_no=None):
-        if updated_phone_no is None:
-            return phone
-        return updated_phone_no
-=======
     def check_updated_organization_detail(previous_detail, updated_org_detiail=None):
         if updated_org_detiail is None:
             return previous_detail
 
         return updated_org_detiail
->>>>>>> c10a595f5de6ff91874c41955719d8d05801575f
 
     @staticmethod
     def get_client_row(role, user_id):

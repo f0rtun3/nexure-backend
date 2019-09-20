@@ -33,7 +33,7 @@ class InsuranceCompany(db.Model):
 
     def __init__(self, contact_person, associated_company, company_phone=None, ira_registration_number=None,
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
-                 mpesa_paybill=None, rate=None, company_phone=None, ncd_rate=None):
+                 mpesa_paybill=None, rate=None, ncd_rate=None):
 
         self.company_phone = company_phone
         self.contact_person = contact_person
@@ -54,12 +54,7 @@ class InsuranceCompany(db.Model):
 
     def serialize(self):
         return{
-<<<<<<< HEAD
-            "id": self.id,
-            "contact_person": self.contact_person,
-=======
             "contact_person": self.user.serialize(),
->>>>>>> c10a595f5de6ff91874c41955719d8d05801575f
             "company_number": self.company_phone,
             "bank_account": self.bank_account,
             "mpesa_paybill": self.mpesa_paybill,
@@ -68,15 +63,8 @@ class InsuranceCompany(db.Model):
             "kra_pin": self.kra_pin,
             "facebook": self.facebook,
             "instagram": self.instagram,
-<<<<<<< HEAD
-            "twitter": self.twitter,
-            "rate": self.rate,
-            "ncd_rate": self.ncd_rate
-        }, 200
-=======
             "twitter": self.twitter
         }
->>>>>>> c10a595f5de6ff91874c41955719d8d05801575f
 
     def save(self):
         db.session.add(self)

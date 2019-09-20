@@ -15,9 +15,7 @@ from flask import make_response
 
 
 class BenefitHandler(Resource):
-    """
-    Add policy enrolment benefits related to a particular company
-    """
+    # Add policy enrolment benefits related to a particular company
     @jwt_required
     def post(self):
         # benefits handler
@@ -26,10 +24,7 @@ class BenefitHandler(Resource):
         uid = get_jwt_identity()
         # use the uid to get company through the company contact_id
         company = InsuranceCompany.get_company_by_contact_person(uid)
-
-        """
-        First add the benefit to the benefits table, regardless of insurance company
-        """
+        # First add the benefit to the benefits table, regardless of insurance company
         exisiting_benefits = Benefit.get_all_benefits()
         benefit_name = details['name']
 
@@ -38,9 +33,7 @@ class BenefitHandler(Resource):
             new_benefit = Benefit(benefit_name)
             new_benefit.save()
 
-        """
-        Store benefits offered by a particular company together with limit
-        """
+        # Store benefits offered by a particular company together with limit
         # get the benefit_id
         benefit_id = Benefit.get_benefit_by_name(benefit_name)
 
@@ -48,9 +41,8 @@ class BenefitHandler(Resource):
             company.id, benefit_id, details['free_limit'], details['max_limit'], details['rate'])
         company_benefit.save()
 
-        """
-        Send success response
-        """
+        # Send success response
+
         response_msg = helper.make_rest_success_response(
             "Benefit added successfully")
         return make_response(response_msg, 200)
