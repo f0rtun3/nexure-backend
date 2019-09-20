@@ -105,7 +105,6 @@ class UserRegister(Resource):
                 user_id).serialize()
         else:
             return None
-
         return profile_data
 
     @jwt_required

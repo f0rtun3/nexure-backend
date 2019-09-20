@@ -55,9 +55,8 @@ class InsuranceCompany(db.Model):
     def serialize(self):
         return{
             "organization":{
-                "org_name": self.company_details.company_name,
-                "org_email": self.company_details.company_email,
-                "org_kra_pin": self.kra_pin,
+                "org_name": self.associated_company,
+                "org_contact": self.user.serialize(),
                 "org_phone": self.company_phone,
                 "bank_account": self.bank_account,
                 "mpesa_paybill": self.mpesa_paybill,
@@ -104,7 +103,3 @@ class InsuranceCompany(db.Model):
     def get_by_associated_company(cls, assoc_id):
         company = cls.query.filter_by(associated_company=assoc_id).first()
         return company
-
-    @classmethod
-    def get_company_by_contact_person(cls, user_id):
-        return cls.query.filter_by(contact_person=user_id).first()
