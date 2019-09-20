@@ -51,7 +51,7 @@ class InsuranceCompany(db.Model):
     def serialize(self):
         return{
             "organization":{
-                "org_name": self.associated_company.company_name,
+                "org_name": self.company_details.company_name,
                 "org_contact": self.user.serialize(),
                 "org_phone": self.company_phone,
                 "bank_account": self.bank_account,
