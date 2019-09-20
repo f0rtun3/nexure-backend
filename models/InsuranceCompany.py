@@ -52,6 +52,7 @@ class InsuranceCompany(db.Model):
         return{
             "organization":{
                 "org_name": self.company_details.company_name,
+                "org_email": self.company_details.company_email,
                 "org_contact": self.user.serialize(),
                 "org_phone": self.company_phone,
                 "bank_account": self.bank_account,
@@ -60,6 +61,7 @@ class InsuranceCompany(db.Model):
                 "ira_license_number": self.ira_license_number,
                 "kra_pin": self.kra_pin,
                 "facebook": self.facebook,
+                "website": self.website,
                 "instagram": self.instagram,
                 "twitter": self.twitter
             },
