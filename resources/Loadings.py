@@ -27,10 +27,11 @@ class LoadingsHandler(Resource):
         First add the loading to the loadingss table, regardless of insurance company
         """
         existing_loadings = Loadings.get_all_loadings()
+        names = [loading['name'] for loading in existing_loadings]
         loading_name = details['name']
 
         # check whether the benefits to be added already exist
-        if loading_name not in existing_loadings:
+        if loading_name not in names:
             new_loading = Loadings(loading_name)
             new_loading.save()
 
@@ -53,21 +54,16 @@ class LoadingsHandler(Resource):
     def put(self):
         """Update loading, change rate etc."""
         pass
-        
+
     def get(self):
         """
         Get all loadings
         """
-        loadings_list = []
         loadings = Loadings.get_all_loadings()
         if loadings:
-            for i in loadings:
-                data = {
-                    "id": i.id,
-                    "name": i.name
-                }
-                loadings_list.append(data)
+            response_msg = helper.make_rest_success_response(
+                "Loadings", loadings)
+            return make_response(response_msg, 200)
 
-        response_msg = helper.make_rest_success_response(
-            "Benefits", loadings_list)
-        return make_response(response_msg, 200)
+        return make_response(helper.make_rest_fail_response(
+            "No data was found"), 404)

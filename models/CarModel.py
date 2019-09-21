@@ -23,6 +23,13 @@ class CarModel(db.Model):
         db.session.add(self)
         db.session.commit()
     
+    def serialize(self):
+        return {
+            "model_id": self.model_id,
+            "model_name": self.model_name,
+            "series": self.series
+        }
+    
     @classmethod
     def get_models_by_make_id(cls, make_id):
         car_models = cls.query.filter_by(make=make_id)

@@ -69,6 +69,10 @@ user_parser.add_argument(
     type=str
 )
 user_parser.add_argument(
+    "update_type",
+    type=str
+)
+user_parser.add_argument(
     "kra_pin",
     type=str
 )
@@ -390,6 +394,14 @@ policy_parser.add_argument(
     type=int
 )
 policy_parser.add_argument(
+    "child_policy_id",
+    type=int
+)
+policy_parser.add_argument(
     "transaction_type",
+    type=str
+)
+policy_parser.add_argument(
+    "ncd_rate",
     type=str
 )

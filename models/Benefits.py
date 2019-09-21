@@ -23,6 +23,12 @@ class Benefit(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
+
     def update(self, data):
         for key, item in data.items():
             setattr(self, key, item)
@@ -44,5 +50,5 @@ class Benefit(db.Model):
 
     @classmethod
     def get_all_benefits(cls):
-        benefit_rows = cls.query.all()
-        return benefit_rows
+        benefit = [b.serialize() for b in cls.query.all()]
+        return benefit

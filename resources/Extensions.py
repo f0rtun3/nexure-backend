@@ -27,10 +27,11 @@ class ExtensionHandler(Resource):
         First add the extension to the extensions table, regardless of insurance company
         """
         exisiting_extensions = Extension.get_all_extensions()
+        names = [extension['name'] for extension in exisiting_extensions]
         extension_name = details['name']
 
         # check whether the benefits to be added already exist
-        if extension_name not in exisiting_extensions:
+        if extension_name not in names:
             new_extension = Extension(extension_name)
             new_extension.save()
 
@@ -52,23 +53,18 @@ class ExtensionHandler(Resource):
         return make_response(response_msg, 200)
 
     def put(self):
-        #ToDo:Update benefit, change the free limit, or max limit, change rate etc.
+        # ToDo:Update benefit, change the free limit, or max limit, change rate etc.
         pass
 
     def get(self):
         """
         Get all extensions
         """
-        extensions_list = []
         extensions = Extension.get_all_extensions()
         if extensions:
-            for i in extensions:
-                data = {
-                    "id": i.id,
-                    "name": i.name
-                }
-                extensions_list.append(data)
+            response = helper.make_rest_success_response(
+                "Extensions", extensions)
+            return make_response(response, 200)
 
-        response_msg = helper.make_rest_success_response(
-            "Extensions", extensions_list)
-        return make_response(response_msg, 200)
+        return make_response(helper.make_rest_fail_response(
+            "No data was found"), 404)

@@ -48,9 +48,6 @@ class CompanyDetails(Resource):
                 new_product = ICProducts(
                     company.id, insurance_class, i)
                 new_product.save()
-            response = helper.make_rest_success_response(
-                "Product added successfully")
-            return make_response(response, 200)
 
         if policy_details['rate']:
             # set the insurance_company's rate
@@ -58,9 +55,16 @@ class CompanyDetails(Resource):
                 "rate": policy_details['rate']
             }
             company.update(data)
-            response = helper.make_rest_success_response(
-                "Rate added successfully")
-            return make_response(response, 200)
+
+        if policy_details["ncd_rate"]:
+            data = {
+                "ncd_rate": policy_details["ncd_rate"]
+            }
+            company.update(data)
+
+        response = helper.make_rest_success_response(
+            "Success")
+        return make_response(response, 200)
 
     @staticmethod
     def get_agency_id(role, uid):
