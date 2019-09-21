@@ -25,7 +25,7 @@ class UserProfile(db.Model):
     postal_address = db.Column(db.String(100))
     postal_code = db.Column(db.Integer)
     postal_town = db.Column(db.String(30))
-    country = db.Column(db.String(3))
+    country = db.Column(db.String(30))
     county = db.Column(db.String(30))
     constituency = db.Column(db.String(30))
     ward = db.Column(db.String(30))
