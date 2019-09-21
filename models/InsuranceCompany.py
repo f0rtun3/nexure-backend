@@ -13,7 +13,7 @@ class InsuranceCompany(db.Model):
     website = db.Column(db.String(150), unique=True)
     bank_account = db.Column(db.String(50), unique=True)
     mpesa_paybill = db.Column(db.String(50), unique=True)
-    company = db.Column(db.Integer, db.ForeignKey(
+    company_details_fkey = db.Column(db.Integer, db.ForeignKey(
         'company_details.id', ondelete='CASCADE', onupdate='CASCADE'))
     rate = db.Column(db.Float, nullable=True)
     ncd_rate = db.Column(db.Float, nullable=True)
@@ -31,7 +31,7 @@ class InsuranceCompany(db.Model):
     child_policy = db.relationship(
         'ChildPolicy', backref="insurance_company", lazy='dynamic')
 
-    def __init__(self, contact_person, company, company_phone=None, ira_registration_number=None,
+    def __init__(self, contact_person, company_details_fkey, company_phone=None, ira_registration_number=None,
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
                  mpesa_paybill=None, rate=None, ncd_rate=None):
 
@@ -45,7 +45,7 @@ class InsuranceCompany(db.Model):
         self.instagram = instagram
         self.twitter = twitter
         self.mpesa_paybill = mpesa_paybill
-        self.company_details = company
+        self.company_details = company_details_fkey
         self.rate = rate
         self.ncd_rate = ncd_rate
 
