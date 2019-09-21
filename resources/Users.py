@@ -144,8 +144,9 @@ class UserRegister(Resource):
             elif user_details['update_type'] == "location":
                 location_data = self.set_location_data(user_details['physical_address'],
                                                        user_details['postal_address'], user_details['postal_code'],
-                                                       user_details['postal_town'], user_details['country'], user_details['county'],
-                                                       user_details['constituency'], user_details['ward']
+                                                       user_details['postal_town'], user_details['country'],
+                                                       user_details['county'], user_details['constituency'],
+                                                       user_details['ward']
                                                        )
                 self.update_profile(user_id, location_data)
 
