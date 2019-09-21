@@ -52,4 +52,4 @@ class Testing(Config):
     PORT = 5000
     ALLOWED_HOSTS = "127.0.0.1"
     #   SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
-    #   SQLALCHEMY_DATABASE_URI = "postgresql://paulodera:Jsv0#XY^ri@localhost/nexure_test"
+    SQLALCHEMY_DATABASE_URI = "postgresql://paulodera:Jsv0#XY^ri@localhost/nexure_test"
