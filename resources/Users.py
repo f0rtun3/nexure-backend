@@ -199,7 +199,16 @@ class UserRegister(Resource):
                     "instagram": user_details['instagram'],
                     "twitter": user_details['twitter']
                 }
-                agency.update(data)
+            
+            elif role == 'IC':
+                agency = InsuranceCompany.get_company_by_contact_person(user_id)
+                data = self.set_ic_data(user_details['bank_account_number'], user_details['mpesa_paybill'],
+                                        user_details['ira_reg_no'], user_details['ira_license_no'],
+                                        user_details['org_kra_pin'], user_details['website'],
+                                        user_details['facebook'], user_details['instagram'],
+                                        user_details['twitter']
+                                        )
+            agency.update(data)
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
