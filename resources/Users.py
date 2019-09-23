@@ -87,7 +87,7 @@ class UserRegister(Resource):
             response = helper.make_rest_fail_response("No user was found")
             return make_response(response, 404)
 
-        response = helper.make_rest_success_response(None, profile_data)
+        response = helper.make_rest_success_response(None, {"profile_details": profile_data})
         return make_response(response, 200)
 
     def fetch_profile_data(self, role, user_id):

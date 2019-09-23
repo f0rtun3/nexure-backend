@@ -27,7 +27,7 @@ class ICExtensions(db.Model):
 
     def serialize(self):
         return {
-            "insurance_company": self.insurance_company_id.company_details.company_name,
+            "insurance_company": self.insurance_company.company_details.company_name,
             "name": self.extension.name,
             "free_limit": self.free_limit,
             "max_limit": self.max_limit,
@@ -53,8 +53,8 @@ class ICExtensions(db.Model):
         Returns id, extension_id, free_limit, max_limit and rate for
         every list of extensions under a particular company 
         """
-        extension_rows = cls.query.filter_by(
-            insurance_company_id=company_id).all()
+        extension_rows = [ extension.serialize() for extension in cls.query.filter_by(
+            insurance_company_id=company_id).all()]
         return extension_rows
 
     @classmethod
