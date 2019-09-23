@@ -25,7 +25,7 @@ class UserProfile(db.Model):
     postal_address = db.Column(db.String(100))
     postal_code = db.Column(db.Integer)
     postal_town = db.Column(db.String(30))
-    country = db.Column(db.String(30))
+    country = db.Column(db.String(3))
     county = db.Column(db.String(30))
     constituency = db.Column(db.String(30))
     ward = db.Column(db.String(30))
@@ -80,6 +80,7 @@ class UserProfile(db.Model):
             "kra_pin": self.kra_pin,
             "birth_date": self.birth_date,
             "physical_address": self.physical_address,
+            "postal_address": self.postal_address,
             "postal_code": self.postal_code,
             "postal_town": self.postal_town,
             "country": self.country,

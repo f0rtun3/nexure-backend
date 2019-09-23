@@ -84,7 +84,7 @@ class IndependentAgent(db.Model):
             "org_phone": agency.agency_phone,
             "ira_registration_number": agency.ira_registration_number,
             "ira_licence_number": agency.ira_licence_number,
-            "kra_pin": agency.kra_pin,
+            "org_kra_pin": agency.kra_pin,
             "facebook": agency.facebook,
             "instagram": agency.instagram,
             "twitter": agency.twitter

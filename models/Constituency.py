@@ -14,10 +14,9 @@ class Constituency(db.Model):
 
     def serialize(self):
         return{
-            "county": self.county.county_name,
-            "id": self.id,
+            "id": self.id
             "name": self.name,
-            #   "wards": [ward.serialize() for ward in self.ward]
+            "county": self.county.county_name,
         }
 
     def save(self):

@@ -57,7 +57,7 @@ class InsuranceCompany(db.Model):
             "organization":{
                 "org_name": self.company_details.company_name,
                 "org_email": self.company_details.company_email,
-                "org_contact": self.user.serialize(),
+                "org_kra_pin": self.kra_pin,
                 "org_phone": self.company_phone,
                 "bank_account": self.bank_account,
                 "mpesa_paybill": self.mpesa_paybill,
@@ -65,9 +65,11 @@ class InsuranceCompany(db.Model):
                 "ira_license_number": self.ira_license_number,
                 "kra_pin": self.kra_pin,
                 "facebook": self.facebook,
+                "website": self.website,
                 "instagram": self.instagram,
                 "twitter": self.twitter
-            }
+            },
+            "profile_details": self.user.serialize()
         }
 
     def save(self):
@@ -95,7 +97,23 @@ class InsuranceCompany(db.Model):
 
     @classmethod
     def get_all_companies(cls):
-        companies = [company.serialize() for company in cls.query.all()]
+        company_rows = cls.query.all()
+        companies = [{
+            "org_name": company.company_details.company_name,
+            "org_eamil": company.company_details.company_email,
+            "id": company.id,
+            "org_contact": company.contact_person,
+            "org_phone": company.company_phone,
+            "ira_registration_number": company.ira_registration_number,
+            "ira_license_number": company.ira_license_number,
+            "org_kra_pin": company.kra_pin,
+            "website": company.website,
+            "facebook": company.facebook,
+            "instagram": company.instagram,
+            "twitter": company.twitter,
+            "rate": company.rate
+        } for company in company_rows]
+
         return companies
 
     @classmethod
