@@ -1,22 +1,25 @@
-from flask import current_app as application
-from flask import make_response
-from flask_restful import Resource
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims, jwt_refresh_token_required
-from models.User import User
-from models.UserProfile import UserProfile
-from models.IndependentAgent import IndependentAgent
-from models.TiedAgent import TiedAgents
-from models.Broker import Broker
-from models.Role import Role
-from models.UserRolePlacement import UserRolePlacement
-from models.InsuranceCompany import InsuranceCompany
-from models.UserPermissions import UserPermissions
-#   from models.IndividualCustomer import IndividualCustomer
-from helpers import helpers as helper
-import helpers.tokens as token_handler
-from helpers.parsers import user_parser
 import uuid
 from datetime import datetime
+
+from flask import current_app as application
+from flask import make_response
+from flask_jwt_extended import (get_jwt_claims, get_jwt_identity,
+                                jwt_refresh_token_required, jwt_required)
+from flask_restful import Resource
+
+import helpers.tokens as token_handler
+#   from models.IndividualCustomer import IndividualCustomer
+from helpers import helpers as helper
+from helpers.parsers import user_parser
+from models.Broker import Broker
+from models.IndependentAgent import IndependentAgent
+from models.InsuranceCompany import InsuranceCompany
+from models.Role import Role
+from models.TiedAgent import TiedAgents
+from models.User import User
+from models.UserPermissions import UserPermissions
+from models.UserProfile import UserProfile
+from models.UserRolePlacement import UserRolePlacement
 
 
 class UserRegister(Resource):
@@ -87,7 +90,8 @@ class UserRegister(Resource):
             response = helper.make_rest_fail_response("No user was found")
             return make_response(response, 404)
 
-        response = helper.make_rest_success_response(None, {"profile_details": profile_data})
+        response = helper.make_rest_success_response(
+            None, profile_data)
         return make_response(response, 200)
 
     def fetch_profile_data(self, role, user_id):
@@ -189,7 +193,7 @@ class UserRegister(Resource):
 
                 data = {
                     "agency_name": user_details['org_name'],
-                    "agency_phone": user_details['org_phone_number'],
+                    "agency_phone": user_details['org_phone'],
                     "agency_email": user_details['org_email'],
                     "ira_registration_number": user_details['ira_reg_no'],
                     "ira_license_number": user_details['ira_license_no'],
@@ -199,10 +203,12 @@ class UserRegister(Resource):
                     "instagram": user_details['instagram'],
                     "twitter": user_details['twitter']
                 }
-            
+
             elif role == 'IC':
-                agency = InsuranceCompany.get_company_by_contact_person(user_id)
-                data = self.set_ic_data(user_details['bank_account_number'], user_details['mpesa_paybill'],
+                agency = InsuranceCompany.get_company_by_contact_person(
+                    user_id)
+                data = self.set_ic_data(user_details['bank_account_number'], self.check_updated_organization_detail(
+                                        agency.company_phone, user_details['org_phone']), user_details['mpesa_paybill'],
                                         user_details['ira_reg_no'], user_details['ira_license_no'],
                                         user_details['org_kra_pin'], user_details['website'],
                                         user_details['facebook'], user_details['instagram'],
@@ -221,11 +227,11 @@ class UserRegister(Resource):
         return make_response(response_msg, 200)
 
     @staticmethod
-    def check_updated_organization_detail(previous_detail, updated_org_detiail=None):
-        if updated_org_detiail is None:
+    def check_updated_organization_detail(previous_detail, updated_org_detail=None):
+        if updated_org_detail is None:
             return previous_detail
 
-        return updated_org_detiail
+        return updated_org_detail
 
     @staticmethod
     def get_client_row(role, user_id):
@@ -255,7 +261,7 @@ class UserRegister(Resource):
         }
 
     @staticmethod
-    def set_location_data(physical_address, postal_address, postal_code, postal_town,country, county, constituency,
+    def set_location_data(physical_address, postal_address, postal_code, postal_town, country, county, constituency,
                           ward):
         return {
             "physical_address": physical_address,
