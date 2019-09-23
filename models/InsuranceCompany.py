@@ -31,7 +31,7 @@ class InsuranceCompany(db.Model):
     child_policy = db.relationship(
         'ChildPolicy', backref="insurance_company", lazy='dynamic')
     ic_loadings = db.relationship(
-        'ICLoadings',backref='insurance_company', lazy='dynamic')
+        'ICLoadings', backref='insurance_company', lazy='dynamic')
 
     def __init__(self, contact_person, associated_company, company_phone=None, ira_registration_number=None,
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
@@ -52,11 +52,12 @@ class InsuranceCompany(db.Model):
         self.ncd_rate = ncd_rate
 
     def __repr__(self):
-        return f"{self.ira_registration_number}"
+        return f"{self.id}"
 
     def serialize(self):
         return{
-            "organization":{
+            "organization": {
+                "id": self.id,
                 "org_name": self.company_details.company_name,
                 "org_email": self.company_details.company_email,
                 "org_kra_pin": self.kra_pin,

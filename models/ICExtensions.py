@@ -27,6 +27,7 @@ class ICExtensions(db.Model):
 
     def serialize(self):
         return {
+            "id": self.id,
             "insurance_company": self.insurance_company.company_details.company_name,
             "name": self.extension.name,
             "free_limit": self.free_limit,

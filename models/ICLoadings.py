@@ -13,13 +13,14 @@ class ICLoadings(db.Model):
         'loading.id', onupdate='CASCADE', ondelete='CASCADE'))
     rate = db.Column(db.Float, nullable=False)
 
-    def __init__(self, insurance_company, loading, rate):
-        self.insurance_company = insurance_company
-        self.loading = loading
+    def __init__(self, insurance_company_id, loading_id, rate):
+        self.insurance_company_id = insurance_company_id
+        self.loading_id = loading_id
         self.rate = rate
     
     def serialize(self):
         return {
+            "id": self.id,
             "insurance_company": self.insurance_company.company_details.company_name,
             "name": self.loading.name,
             "rate": self.rate

@@ -103,7 +103,7 @@ API = Api(application)
 
 API.add_resource(Companies, '/api/companies/all')
 API.add_resource(CustomerDetails, '/api/customer_details/<string:email>')
-API.add_resource(CompanyDetails, '/api/company_details/')
+API.add_resource(CompanyDetails, '/api/company_details')
 API.add_resource(CompanyDetailsHandler, '/api/company_details/<int:company_id>')
 API.add_resource(UserRegister, '/api/user')
 API.add_resource(MasterDetails, '/api/master_details/<int:master_id>')

@@ -93,22 +93,23 @@ class CompanyDetails(Resource):
 
 class CompanyDetailsHandler(Resource):
     """
-    Gets the company details given the company
+    Gets the company details given the associated company ID
     """
     @jwt_required
     def get(self, company_id):
-        company_profile = InsuranceCompany.get_company_by_id(
-            company_id).serialize()
-        benefits = ICBenefits.get_benefits_by_company_id(
-            company_id)
-        loadings = ICLoadings.get_loadings_by_company_id(company_id)
-        extensions = ICExtensions.get_extensions_by_company_id(company_id)
-        company_data = {
+        # get the company linked to the associated company       
+        company = InsuranceCompany.get_by_associated_company(company_id)
+        # get the benefits, loadings and extensions
+        benefits = ICBenefits.get_benefits_by_company_id(company.id)
+        loadings = ICLoadings.get_loadings_by_company_id(company.id)
+        extensions = ICExtensions.get_extensions_by_company_id(company.id)
+        data = {
             "benefits": benefits,
+            "loadings": loadings,
             "extensions": extensions,
-            "loadings": loadings
+            "discount": company.ncd_rate,
+            "rate": company.rate
         }
-        company_data.update(company_profile)
         response_msg = helper.make_rest_success_response(
-            "Success", company_data)
+            "Success", data)
         return make_response(response_msg, 200)

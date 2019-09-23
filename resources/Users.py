@@ -137,14 +137,21 @@ class UserRegister(Resource):
                     user.update_password(password)
 
             elif user_details['update_type'] == "personal":
+                client_row = self.get_client_row(role, user_id)
+                # first_name, last_name, mob, gender, occupation, id_passport, kra_pin, birth_date
                 personal_data = self.set_profile_data(user_details['first_name'], user_details['last_name'],
                                                       user_details['mob'], user_details['gender'],
                                                       user_details['occupation'],
                                                       user_details['id_passport'], user_details['kra_pin'],
-                                                      birth_date
+                                                      birth_date,
+                                                      self.check_updated_organization_detail(client_row.facebook,
+                                                                                             user_details['facebook']),
+                                                      self.check_updated_organization_detail(client_row.twitter,
+                                                                                             user_details['twitter']),
+                                                      self.check_updated_organization_detail(client_row.instagram,
+                                                                                             user_details['instagram']),
                                                       )
                 self.update_profile(user_id, personal_data)
-            
 
             elif user_details['update_type'] == "location":
                 location_data = self.set_location_data(user_details['physical_address'],
@@ -154,10 +161,9 @@ class UserRegister(Resource):
                                                        user_details['ward']
                                                        )
                 self.update_profile(user_id, location_data)
-
             elif user_details['update_type'] == "agency":
                 """
-                update the client account depending on their role: 
+                update the client account depending on their role:
                 Note: that for tied agents, we only update their profiles
                 """
                 client_row = self.get_client_row(role, user_id)
@@ -177,7 +183,7 @@ class UserRegister(Resource):
                     agency.update(data)
                 elif role == 'IA':
                     """
-                    One contact person only represents one entity. So, we fetch the agency using the contact person's id 
+                    One contact person only represents one entity. So, we fetch the agency using the contact person's id
                     """
                     agency = IndependentAgent.get_agency_by_contact_person(
                         user_id)
@@ -205,7 +211,7 @@ class UserRegister(Resource):
                                             user_details['facebook'], user_details['instagram'],
                                             user_details['twitter']
                                             )
-                    agency.update(data)
+                    agency.update(data)               
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
@@ -226,6 +232,7 @@ class UserRegister(Resource):
 
     @staticmethod
     def get_client_row(role, user_id):
+        client_row = {}
         if role == 'BR':
             client_row = Broker.get_broker_by_contact_id(user_id)
         elif role == 'IA':
@@ -233,13 +240,14 @@ class UserRegister(Resource):
         elif role == 'IC':
             client_row = InsuranceCompany.get_company_by_contact_person(
                 user_id)
-        else:
-            return False
+        elif role in ('IND', 'TA'):
+            client_row = UserProfile.get_profile_by_user_id(user_id)
 
         return client_row
 
     @staticmethod
-    def set_profile_data(first_name, last_name, gender, occupation, id_passport, kra_pin, birth_date):
+    def set_profile_data(first_name, last_name, mob, gender, occupation, id_passport, kra_pin, birth_date,
+                         facebook, twitter, instagram):
         return {
             "first_name": first_name,
             "last_name": last_name,
@@ -247,7 +255,11 @@ class UserRegister(Resource):
             "occupation": occupation,
             "id_passport": id_passport,
             "kra_pin": kra_pin,
-            "birth_date": birth_date
+            "phone": mob,
+            "birth_date": birth_date,
+            "facebook": facebook,
+            "twitter": twitter,
+            "instagram": instagram
         }
 
     @staticmethod
