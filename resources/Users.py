@@ -121,7 +121,6 @@ class UserRegister(Resource):
         user_id = get_jwt_identity()
         # get the user details from the request sent by the client
         user_details = user_parser.parse_args()
-        user_details['birth_date'] = self.format_birth_date(user_details['birth_date'])
         # check if the user exists
         user = User.get_user_by_id(user_id)
         # if user exists, then update their details
@@ -133,6 +132,7 @@ class UserRegister(Resource):
                 update_controller.update_user_password(user_details['new_password'], user_id)
 
             elif user_details['update_type'] == "personal":
+                user_details['birth_date'] = self.format_birth_date(user_details['birth_date'])
                 update_controller.update_personal_details(user_details, user_id)
 
             elif user_details['update_type'] == "location":
@@ -143,7 +143,6 @@ class UserRegister(Resource):
 
             elif user_details['update_type'] == "complete_profile":
                 update_controller.complete_user_profile(user_details, user_id, role)
-
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
