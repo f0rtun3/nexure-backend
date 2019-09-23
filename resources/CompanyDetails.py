@@ -99,6 +99,7 @@ class CompanyDetailsHandler(Resource):
     def get(self, company_id):
         company_data = {}
         # get the company benefits
+        com
         benefits = ICBenefits.get_benefits_by_company_id(company_id)
         benefits_list = []
         if benefits:
