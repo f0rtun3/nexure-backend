@@ -14,7 +14,7 @@ class Constituency(db.Model):
 
     def serialize(self):
         return{
-            "id": self.id
+            "id": self.id,
             "name": self.name,
             "county": self.county.county_name,
         }

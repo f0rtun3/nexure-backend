@@ -99,9 +99,10 @@ class CompanyDetailsHandler(Resource):
     def get(self, company_id):
         company_data = {}
         # get the company benefits
-        com
-        benefits = ICBenefits.get_benefits_by_company_id(company_id)
+        company_profile = InsuranceCompany.get_company_by_id(company_id)
+        company_data.update(company_profile.serialize()) 
         benefits_list = []
+        benefits = ICBenefits.get_benefits_by_company_id(company_id)
         if benefits:
             for i in benefits:
                 # first get the benefit name since ICBenefits model only returns the benefit id
