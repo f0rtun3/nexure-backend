@@ -30,6 +30,8 @@ class InsuranceCompany(db.Model):
         'ICExtensions', backref="insurance_company", lazy='dynamic')
     child_policy = db.relationship(
         'ChildPolicy', backref="insurance_company", lazy='dynamic')
+    ic_loadings = db.relationship(
+        'ICLoadings',backref='insurance_company', lazy='dynamic')
 
     def __init__(self, contact_person, associated_company, company_phone=None, ira_registration_number=None,
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,

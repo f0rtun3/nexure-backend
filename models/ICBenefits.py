@@ -26,7 +26,7 @@ class ICBenefits(db.Model):
 
     def serialize(self):
         return {
-            "insurance_company": self.insurance_company_id.company_details.company_name,
+            "insurance_company": self.insurance_company.company_details.company_name,
             "name": self.benefit.name,
             "free_limit": self.free_limit,
             "max_limit": self.max_limit,
@@ -52,7 +52,7 @@ class ICBenefits(db.Model):
         Returns id, benefit_id, free_limit, max_limit and rate for
         every list of benefits under a particular company 
         """
-        benefit_rows = cls.query.filter_by(insurance_company_id=company_id).all()
+        benefit_rows = [benefit.serialize() for benefit in cls.query.filter_by(insurance_company_id=company_id).all()]
         return benefit_rows
 
     @classmethod
