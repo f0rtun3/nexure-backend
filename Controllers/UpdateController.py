@@ -8,22 +8,26 @@ from models.IndependentAgent import IndependentAgent
 from models.InsuranceCompany import InsuranceCompany
 from models.Broker import Broker
 
+
 def update_personal_details(data, user_id):
     profile_row = UserProfile.get_profile_by_user_id(user_id)
     personal_data = {
-        "first_name": data['first_name'],
-        "last_name": data['last_name'],
+        "first_name": verify_updated_details(profile_row.first_name, data['first_name']),
+        "last_name": verify_updated_details(profile_row.last_name, data['last_name']),
         "gender": data['gender'],
         "occupation": data['occupation'],
         "id_passport": data['id_passport'],
         "kra_pin": data['kra_pin'],
-        "phone": data['mob'],
+        "phone": verify_updated_details(profile_row.phone, data['mob']),
         "birth_date": data['birth_date'],
         "facebook": verify_updated_details(profile_row.facebook, data['facebook']),
         "twitter": verify_updated_details(profile_row.twitter, data['twitter']),
         "instagram": verify_updated_details(profile_row.instagram, data['instagram'])
     }
-    return profile_row.update(personal_data)
+    user_auth_detail = User.get_user_by_id(user_id)
+    contact_email = {"email": verify_updated_details(user_auth_detail.email, data['email'])}
+    return profile_row.update(personal_data) and user_auth_detail.update(contact_email)
+
 
 def update_location_details(data, user_id):
     profile_row = UserProfile.get_profile_by_user_id(user_id)
@@ -39,10 +43,12 @@ def update_location_details(data, user_id):
     }
     return profile_row.update(location_data)
 
+
 def update_user_password(new_password, user_id):
     profile_row = User.get_user_by_id(user_id)
     pwd_hash = profile_row.generate_password_hash(new_password)
     return profile_row.update_password(pwd_hash)
+
 
 def update_agency_details(data, role, user_id):
     if role == 'BR':
@@ -54,13 +60,15 @@ def update_agency_details(data, role, user_id):
     else:
         return False
 
+
 def complete_user_profile(data, user_id, role):
-    if update_personal_details(data, user_id) and\
-        update_location_details(data, user_id) and\
-        update_agency_details(data, role, user_id):
+    if update_personal_details(data, user_id) and \
+            update_location_details(data, user_id) and \
+            update_agency_details(data, role, user_id):
         return True
 
     return False
+
 
 def update_independent_agent(data, user_id):
     agency = IndependentAgent.get_agency_by_contact_person(user_id=user_id)
@@ -78,6 +86,7 @@ def update_independent_agent(data, user_id):
     }
     return agency.update(agency_data)
 
+
 def update_broker_agent(data, user_id):
     agency = Broker.get_broker_by_contact_id(user_id=user_id)
     agency_data = {
@@ -93,6 +102,7 @@ def update_broker_agent(data, user_id):
         "twitter": data['instagram']
     }
     return agency.update(agency_data)
+
 
 def update_insurance_company(data, user_id):
     agency = InsuranceCompany.get_company_by_contact_person(
@@ -111,7 +121,8 @@ def update_insurance_company(data, user_id):
     }
     return agency.update(agency_data)
 
-def verify_updated_details(current_set_data, new_data = None):
+
+def verify_updated_details(current_set_data, new_data=None):
     if new_data is None:
         return current_set_data
 
