@@ -137,11 +137,19 @@ class UserRegister(Resource):
                     user.update_password(password)
 
             elif user_details['update_type'] == "personal":
-                personal_data = self.set_personal_data(user_details['first_name'], user_details['last_name'],
-                                                       user_details['mob'], user_details['gender'],
-                                                       user_details['occupation'],
-                                                       user_details['id_passport'], user_details['kra_pin'],
-                                                       birth_date
+                client_row = self.get_client_row(role, user_id)
+                # first_name, last_name, mob, gender, occupation, id_passport, kra_pin, birth_date
+                personal_data = self.set_profile_data(user_details['first_name'], user_details['last_name'],
+                                                        user_details['mob'], user_details['gender'],
+                                                        user_details['occupation'],
+                                                        user_details['id_passport'], user_details['kra_pin'],
+                                                        birth_date,
+                                                      self.check_updated_organization_detail(client_row.facebook,
+                                                                                             user_details['facebook']),
+                                                      self.check_updated_organization_detail(client_row.twitter,
+                                                                                             user_details['twitter']),
+                                                      self.check_updated_organization_detail(client_row.instagram,
+                                                                                             user_details['instagram']),
                                                        )
                 self.update_profile(user_id, personal_data)
 
@@ -153,68 +161,57 @@ class UserRegister(Resource):
                                                        user_details['ward']
                                                        )
                 self.update_profile(user_id, location_data)
-
             elif user_details['update_type'] == "agency":
+                """
+                update the client account depending on their role: 
+                Note: that for tied agents, we only update their profiles
+                """
+                client_row = self.get_client_row(role, user_id)
+                if role == 'BR':
+                    agency = Broker.get_broker_by_contact_id(user_id)
+                    data = self.set_broker_data(self.check_updated_organization_detail(client_row.broker_name,
+                                                                                       user_details['org_name']),
+                                                self.check_updated_organization_detail(client_row.broker_phone_number,
+                                                                                       user_details['org_phone']),
+                                                self.check_updated_organization_detail(client_row.broker_email,
+                                                                                       user_details['org_email']),
+                                                user_details['ira_reg_no'], user_details['ira_license_no'],
+                                                user_details['org_kra_pin'], user_details['website'],
+                                                user_details['facebook'], user_details['instagram'],
+                                                user_details['twitter']
+                                                )
+                    agency.update(data)
+                elif role == 'IA':
+                    """
+                    One contact person only represents one entity. So, we fetch the agency using the contact person's id 
+                    """
+                    agency = IndependentAgent.get_agency_by_contact_person(
+                        user_id)
 
-                profile_data = self.set_profile_data(user_details['first_name'], user_details['last_name'],
-                                                     user_details['gender'], user_details['occupation'],
-                                                     user_details['id_passport'], user_details['kra_pin'],
-                                                     birth_date, user_details['physical_address'],
-                                                     user_details['postal_address'], user_details['postal_code'],
-                                                     user_details['postal_town'], user_details['country'],
-                                                     user_details['county'], user_details['constituency'],
-                                                     user_details['ward']
-                                                     )
-                self.update_profile(user_id, profile_data)
-            """
-            update the client account depending on their role: 
-            Note: that for tied agents, we only update their profiles
-            """
-            client_row = self.get_client_row(role, user_id)
-            if role == 'BR':
-                agency = Broker.get_broker_by_contact_id(user_id)
-                data = self.set_broker_data(self.check_updated_organization_detail(client_row.broker_name,
-                                                                                   user_details['org_name']),
-                                            self.check_updated_organization_detail(client_row.broker_phone_number,
-                                                                                   user_details['org_phone']),
-                                            self.check_updated_organization_detail(client_row.broker_email,
-                                                                                   user_details['org_email']),
+                    data = {
+                        "agency_name": user_details['org_name'],
+                        "agency_phone": user_details['org_phone'],
+                        "agency_email": user_details['org_email'],
+                        "ira_registration_number": user_details['ira_reg_no'],
+                        "ira_license_number": user_details['ira_license_no'],
+                        "kra_pin": user_details['org_kra_pin'],
+                        "website": user_details['website'],
+                        "facebook": user_details['facebook'],
+                        "instagram": user_details['instagram'],
+                        "twitter": user_details['twitter']
+                    }
+                    agency.update(data)
+                elif role == 'IC':
+                    agency = InsuranceCompany.get_company_by_contact_person(
+                        user_id)
+                    data = self.set_ic_data(user_details['bank_account_number'], self.check_updated_organization_detail(
+                                            agency.company_phone, user_details['org_phone']), user_details['mpesa_paybill'],
                                             user_details['ira_reg_no'], user_details['ira_license_no'],
                                             user_details['org_kra_pin'], user_details['website'],
                                             user_details['facebook'], user_details['instagram'],
                                             user_details['twitter']
                                             )
-            elif role == 'IA':
-                """
-                One contact person only represents one entity. So, we fetch the agency using the contact person's id 
-                """
-                agency = IndependentAgent.get_agency_by_contact_person(
-                    user_id)
-
-                data = {
-                    "agency_name": user_details['org_name'],
-                    "agency_phone": user_details['org_phone'],
-                    "agency_email": user_details['org_email'],
-                    "ira_registration_number": user_details['ira_reg_no'],
-                    "ira_license_number": user_details['ira_license_no'],
-                    "kra_pin": user_details['org_kra_pin'],
-                    "website": user_details['website'],
-                    "facebook": user_details['facebook'],
-                    "instagram": user_details['instagram'],
-                    "twitter": user_details['twitter']
-                }
-
-            elif role == 'IC':
-                agency = InsuranceCompany.get_company_by_contact_person(
-                    user_id)
-                data = self.set_ic_data(user_details['bank_account_number'], self.check_updated_organization_detail(
-                                        agency.company_phone, user_details['org_phone']), user_details['mpesa_paybill'],
-                                        user_details['ira_reg_no'], user_details['ira_license_no'],
-                                        user_details['org_kra_pin'], user_details['website'],
-                                        user_details['facebook'], user_details['instagram'],
-                                        user_details['twitter']
-                                        )
-            agency.update(data)
+                    agency.update(data)
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
@@ -235,6 +232,7 @@ class UserRegister(Resource):
 
     @staticmethod
     def get_client_row(role, user_id):
+        client_row = {}
         if role == 'BR':
             client_row = Broker.get_broker_by_contact_id(user_id)
         elif role == 'IA':
@@ -242,14 +240,14 @@ class UserRegister(Resource):
         elif role == 'IC':
             client_row = InsuranceCompany.get_company_by_contact_person(
                 user_id)
-        else:
-            return False
+        elif role in ('IND', 'TA'):
+            client_row = UserProfile.get_profile_by_user_id(user_id)
 
         return client_row
 
     @staticmethod
-    def set_profile_data(first_name, last_name, gender, occupation, id_passport, kra_pin, birth_date, physical_address,
-                         postal_address, postal_code, postal_town, country, county, constituency, ward):
+    def set_profile_data(first_name, last_name, mob, gender, occupation, id_passport, kra_pin, birth_date,
+                         facebook, twitter, instagram):
         return {
             "first_name": first_name,
             "last_name": last_name,
@@ -257,7 +255,11 @@ class UserRegister(Resource):
             "occupation": occupation,
             "id_passport": id_passport,
             "kra_pin": kra_pin,
-            "birth_date": birth_date
+            "phone": mob,
+            "birth_date": birth_date,
+            "facebook": facebook,
+            "twitter": twitter,
+            "instagram": instagram
         }
 
     @staticmethod
