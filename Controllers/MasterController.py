@@ -67,4 +67,4 @@ class MasterController:
                               date_expiry,
                               new_company.id)
         master.save()
-        return master.id
+        return master

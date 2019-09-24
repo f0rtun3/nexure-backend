@@ -44,7 +44,7 @@ class ChildController:
         new_modification.save()
 
     def create_child_policy(self, policy_number, customer_number, rate, date_expiry, premium_amount, transaction_type,
-                            agency_id, associated_company, pricing_model, master_id, subclass, vehicle_id=None):
+                            agency_id, associated_company, pricing_model, master_id, subclass):
         # Get insurance company given the company details
         new_company = InsuranceCompany.get_by_associated_company(
             associated_company)
@@ -52,7 +52,7 @@ class ChildController:
         # create child policy
         new_child = ChildPolicy(
             policy_number,
-            vehicle_id if not None else self.vehicle_id,
+            self.vehicle_id,
             customer_number,
             rate,
             date_expiry,
@@ -85,7 +85,7 @@ class ChildController:
             ic_extension = ICExtensions.get_ic_extension(
                 extension.id)
             policy_extension = PolicyExtensions(
-                child_id, ic_extension, i["value"])
+                child_id, ic_extension.id, i["value"])
             policy_extension.save()
 
     @staticmethod

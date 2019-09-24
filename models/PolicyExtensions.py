@@ -13,9 +13,9 @@ class PolicyExtensions(db.Model):
     ic_extension_id = db.Column(db.Integer, db.ForeignKey('ic_extension.id', ondelete='CASCADE', onupdate='CASCADE'))
     amount = db.Column(db.Float, nullable=False)
 
-    def __init__(self, policy_id, ic_extension, amount):
+    def __init__(self, policy_id, ic_extension_id, amount):
         self.policy_id = policy_id
-        self.ic_benefit = ic_extension
+        self.ic_extension_id = ic_extension_id
         self.amount = amount
 
     def serialize(self):
@@ -42,6 +42,6 @@ class PolicyExtensions(db.Model):
             return None
 
         for ext in extensions:
-            extensions.add(ext.ic_extension)
+            extensions.add(ext.ic_extension_id)
 
         return extension_set
