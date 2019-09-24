@@ -22,6 +22,7 @@ from models.UserProfile import UserProfile
 from models.UserRolePlacement import UserRolePlacement
 import Controllers.UpdateController as update_controller
 
+
 class UserRegister(Resource):
     def post(self):
         # get the user details from the request sent by the client
