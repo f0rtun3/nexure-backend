@@ -12,7 +12,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAIL_SERVER = 'email-smtp.us-east-1.amazonaws.com'
     MAIL_PORT = 465
-    MAIL_DEFAULT_USER = 'no-reply@nexure.co.ke'
+    MAIL_DEFAULT_USER = 'info@nexure-plc.co.ke'
     MAIL_USE_TLS = False
     MAIL_USE_SSL = False
     AWS_REGION = 'us-east-1'
@@ -20,9 +20,9 @@ class Config(object):
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
     S3_BUCKET = os.environ['S3_BUCKET']
     S3_LOCATION = f"https://{os.environ['S3_BUCKET']}.s3.amazonaws.com/"
-    CONFIRMATION_ENDPOINT = 'https://nexure.co.ke/confirm'
-    LOGIN_ENDPOINT = 'https://nexure.co.ke/login'
-    ACCOUNT_RESET_ENDPOINT = 'https://nexure.co.ke/reset'
+    CONFIRMATION_ENDPOINT = 'https://nexure-plc.co.ke/confirm'
+    LOGIN_ENDPOINT = 'https://nexure-plc.co.ke/login'
+    ACCOUNT_RESET_ENDPOINT = 'https://nexure-plc.co.ke/reset'
 
 
 class Production(Config):
@@ -41,7 +41,7 @@ class Staging(Config):
 class Development(Config):
     DEVELOPMENT = True
     DEBUG = True
-    HOST = "0.0.0.0"
+    HOST = "127.0.0.1"
     PORT = 5000
     ALLOWED_HOSTS = "*"
 

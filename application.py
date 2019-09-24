@@ -7,7 +7,6 @@ from flask_restful import Api
 from database.db import db
 
 import os
-import boto3
 
 from models import *
 from resources.Users import UserRegister
@@ -46,17 +45,6 @@ CORS(application, resources={
      r"/*": {"origins": application.config['ALLOWED_HOSTS']}})
 migrate = Migrate(application, db)
 jwt = JWTManager(application)
-ses = boto3.client(
-    "ses",
-    region_name=application.config['AWS_REGION'],
-    aws_access_key_id=application.config['AWS_ACCESS_KEY_ID'],
-    aws_secret_access_key=application.config['AWS_SECRET_ACCESS_KEY']
-)
-s3 = boto3.client(
-    's3',
-    aws_access_key_id=application.config['AWS_ACCESS_KEY_ID'],
-    aws_secret_access_key=application.config['AWS_SECRET_ACCESS_KEY']
-)
 
 
 @jwt.expired_token_loader
