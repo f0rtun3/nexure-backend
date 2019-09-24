@@ -6,6 +6,8 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from database.db import db
 
+
+
 import os
 import boto3
 
@@ -31,6 +33,7 @@ from resources.Location import Location
 from resources.CustomerDetails import CustomerDetails
 from resources.MasterDetails import MasterDetails
 from resources.ChildDetails import ChildDetails
+
 """
 automatically set the application's os environment
 variables from the .env file
@@ -97,7 +100,6 @@ def fresh_token_loader_handler():
         'message': 'Needs a fresh token'
     }
     return make_response(jsonify(response), 401)
-
 
 API = Api(application)
 

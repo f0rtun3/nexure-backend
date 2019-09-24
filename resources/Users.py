@@ -70,8 +70,8 @@ class UserRegister(Resource):
         subject = "Please confirm your account"
         email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                      f" to confirm your account"
-        # ToDo: Remember to uncomment the line below before commit to remote branch
-        #   helper.send_email(user_details['email'], subject, email_template, email_text)
+
+        helper.send_email(user_details['email'], subject, email_template, email_text)
 
         response_msg = helper.make_rest_success_response("Registration successful, kindly"
                                                          " check your email for confirmation link")

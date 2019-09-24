@@ -20,9 +20,9 @@ def update_personal_details(data, user_id):
         "kra_pin": data['kra_pin'],
         "phone": verify_updated_details(profile_row.phone, data['mob']),
         "birth_date": data['birth_date'],
-        "facebook": verify_updated_details(profile_row.facebook, data['facebook']),
-        "twitter": verify_updated_details(profile_row.twitter, data['twitter']),
-        "instagram": verify_updated_details(profile_row.instagram, data['instagram'])
+        "facebook": data['facebook'],
+        "twitter": data['twitter'],
+        "instagram": data['instagram']
     }
     user_auth_detail = User.get_user_by_id(user_id)
     contact_email = {"email": verify_updated_details(user_auth_detail.email, data['email'])}
@@ -58,13 +58,14 @@ def update_agency_details(data, role, user_id):
     elif role == 'IC':
         return update_insurance_company(data, user_id)
     else:
-        return False
+        return
 
 
 def complete_user_profile(data, user_id, role):
+    if role in ('IA', 'BR', 'IC'):
+        update_agency_details(data, role, user_id)
     update_personal_details(data, user_id)
     update_location_details(data, user_id)
-    update_agency_details(data, role, user_id)
 
 
 def update_independent_agent(data, user_id):
@@ -73,29 +74,43 @@ def update_independent_agent(data, user_id):
         "agency_name": verify_updated_details(agency.agency_name, data['org_name']),
         "agency_phone": verify_updated_details(agency.agency_phone, data['org_phone']),
         "agency_email": verify_updated_details(agency.agency_email, data['org_email']),
-        "ira_registration_number": verify_updated_details(agency.ira_registration_number, data['ira_reg_no']),
-        "ira_licence_number": verify_updated_details(agency.ira_licence_number, data['ira_license_no']),
-        "kra_pin": verify_updated_details(agency.kra_pin, data['org_kra_pin']),
-        "facebook": verify_updated_details(agency.facebook, data['facebook']),
-        "instagram": verify_updated_details(agency.instagram, data['instagram']),
-        "twitter": verify_updated_details(agency.twitter, data['twitter'])
+        "ira_registration_number": data['ira_reg_no'],
+        "ira_licence_number": data['ira_license_no'],
+        "kra_pin": data['org_kra_pin']
     }
     return agency.update(agency_data)
+
+
+def update_social_profile(data, user_id, role):
+    social_data = {
+        "facebook": data['facebook'],
+        "twitter": data['twitter'],
+        "instagram": data['instagram']
+    }
+    if role == 'IC':
+        agency = InsuranceCompany.get_company_by_contact_person(user_id)
+        return agency.update(social_data)
+    elif role == 'IA':
+        agency = IndependentAgent.get_agency_by_contact_person(user_id)
+        return agency.update(social_data)
+    elif role == 'BR':
+        agency = Broker.get_broker_by_contact_id(user_id)
+        return agency.update(social_data)
+    elif role in ('TA', 'IND'):
+        user = User.get_user_by_id(user_id)
+        user.update(social_data)
 
 
 def update_broker_agent(data, user_id):
     agency = Broker.get_broker_by_contact_id(user_id=user_id)
     agency_data = {
-        "broker_name": data['org_name'],
+        "broker_name": verify_updated_details(agency.broker_name, data['org_name']),
         "broker_phone_number": verify_updated_details(agency.broker_phone_number, data['org_phone']),
         "broker_email": verify_updated_details(agency.broker_email, data['org_email']),
-        "ira_registration_number": verify_updated_details(agency.ira_registration_number, data['ira_reg_no']),
-        "ira_licence_number": verify_updated_details(agency.ira_licence_number, data['ira_license_no']),
-        "website": verify_updated_details(agency.website, data['website']),
-        "kra_pin": verify_updated_details(agency.kra_pin, data['org_kra_pin']),
-        "facebook": verify_updated_details(agency.facebook, data['facebook']),
-        "instagram": verify_updated_details(agency.instagram, data['instagram']),
-        "twitter": verify_updated_details(agency.twitter, data['twitter'])
+        "ira_registration_number": data['ira_reg_no'],
+        "ira_licence_number": data['ira_license_no'],
+        "website": data['website'],
+        "kra_pin": data['org_kra_pin']
     }
     return agency.update(agency_data)
 
@@ -104,16 +119,13 @@ def update_insurance_company(data, user_id):
     agency = InsuranceCompany.get_company_by_contact_person(
         user_id)
     agency_data = {
-        "bank_account": verify_updated_details(agency.company_phone, data['bank_account_number']),
-        "company_phone": verify_updated_details(agency.company_phone, data['company_phone']),
-        "mpesa_paybill": verify_updated_details(agency.mpesa_paybill, data['mpesa_paybill']),
-        "ira_registration_number": verify_updated_details(agency.ira_registration_number, data['ira_reg_no']),
-        "ira_licence_number": verify_updated_details(agency.ira_licence_number, data['ira_license_no']),
-        "website": verify_updated_details(agency.website, data['website']),
-        "kra_pin": verify_updated_details(agency.kra_pin, data['org_kra_pin']),
-        "facebook": verify_updated_details(agency.facebook, data['facebook']),
-        "instagram": verify_updated_details(agency.instagram, data['instagram']),
-        "twitter": verify_updated_details(agency.twitter, data['twitter'])
+        "bank_account": data['bank_account_number'],
+        "company_phone": data['company_phone'],
+        "mpesa_paybill": data['mpesa_paybill'],
+        "ira_registration_number": data['ira_reg_no'],
+        "ira_licence_number": data['ira_license_no'],
+        "website": data['website'],
+        "kra_pin": data['org_kra_pin']
     }
     return agency.update(agency_data)
 
