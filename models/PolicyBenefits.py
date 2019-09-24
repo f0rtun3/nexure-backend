@@ -13,9 +13,9 @@ class PolicyBenefits(db.Model):
     ic_benefit_id = db.Column(db.Integer, db.ForeignKey('ic_benefit.id', ondelete='CASCADE', onupdate='CASCADE'))
     amount = db.Column(db.Float, nullable=False)
 
-    def __init__(self, policy_id, ic_benefit, amount):
+    def __init__(self, policy_id, ic_benefit_id, amount):
         self.policy_id = policy_id
-        self.ic_benefit = ic_benefit
+        self.ic_benefit_id = ic_benefit_id
         self.amount = amount
 
     def serialize(self):
@@ -39,6 +39,6 @@ class PolicyBenefits(db.Model):
         benefit_set = set()
         benefits = cls.query.filter_by(policy_id=child_policy_id)
         for benefit in benefits:
-            benefit_set.add(benefit.ic_benefit)
+            benefit_set.add(benefit.ic_benefit_id)
 
         return benefit_set

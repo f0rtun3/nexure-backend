@@ -62,8 +62,8 @@ class ChildPolicy(db.Model):
             "pricing_model": self.pricing_model,
             "date_activated": self.date_activated.strftime('%m/%d/%Y'),
             "subclass": self.subclass,
-            "benefits": [benefit.serialize() for benefit in self.benefits],
-            "extensions": [extension.serialize() for extension in self.extensions]
+            "benefits": [benefit.serialize() for benefit in self.benefits if self.benefits],
+            "extensions": [extension.serialize() for extension in self.extensions if self.extensions]
         }
 
     def save(self):
