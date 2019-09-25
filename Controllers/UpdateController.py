@@ -62,9 +62,10 @@ def update_agency_details(data, role, user_id):
 
 
 def complete_user_profile(data, user_id, role):
+    if role in ('IA', 'BR', 'IC'):
+        update_agency_details(data, role, user_id)
     update_personal_details(data, user_id)
     update_location_details(data, user_id)
-    update_agency_details(data, role, user_id)
 
 
 def update_independent_agent(data, user_id):
