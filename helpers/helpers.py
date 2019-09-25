@@ -83,7 +83,7 @@ def create_user_password():
 
 def get_customer_id(customer_number):
     """ get the customer id from the customer number with format (type/year/customer_id/country)
-   :param customer_number  string 
+   :param customer_number string 
    :return customer_id     int
    """
     customer_number_array = customer_number.split('/')

@@ -12,6 +12,9 @@ class LicencedClasses(db.Model):
     def __init__(self, company, insurance_class):
         self.company = company
         self.insurance_class = insurance_class
+    
+    def __repr__(self):
+        return self.insurance_class
 
     def save(self):
         db.session.add(self)

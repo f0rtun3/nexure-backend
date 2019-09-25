@@ -1,5 +1,6 @@
 from database.db import db
 
+
 class CompanyDetails(db.Model):
     """Store info about the insurance company, to be associated at login"""
     __tablename__ = "company_details"
@@ -12,6 +13,8 @@ class CompanyDetails(db.Model):
     avatar = db.Column(db.String(50), nullable=True)
     insurance_company = db.relationship('InsuranceCompany', backref="company_details",
                                         cascade="all, delete, delete-orphan")
+    licenced_classes = db.relationship('LicencedClasses', backref="company_details",
+                                       cascade="all, delete, delete-orphan")
 
     def __init__(self, company_name, company_email, physical_address, website, avatar=None):
         self.company_name = company_name
@@ -26,6 +29,13 @@ class CompanyDetails(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.company_name,
+            "products": [i.insurance_class for i in self.licenced_classes]
+        }
 
     def update(self, data):
         for key, item in data.items():
@@ -38,7 +48,8 @@ class CompanyDetails(db.Model):
 
     @classmethod
     def get_companies(cls):
-        return cls.query.all()
+        companies = [company.serialize() for company in cls.query.all()]
+        return companies
 
     @classmethod
     def get_company_by_id(cls, id):
