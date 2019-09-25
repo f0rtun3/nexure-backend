@@ -72,7 +72,7 @@ class UserRegister(Resource):
         email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                      f" to confirm your account"
 
-        helper.send_email(user_details['email'], subject, email_template, email_text)
+        #   helper.send_email(user_details['email'], subject, email_template, email_text)
 
         response_msg = helper.make_rest_success_response("Registration successful, kindly"
                                                          " check your email for confirmation link")
@@ -133,7 +133,7 @@ class UserRegister(Resource):
                 update_controller.update_user_password(user_details['new_password'], user_id)
 
             elif user_details['update_type'] == "personal":
-                user_details['birth_date'] = self.format_birth_date(user_details['birth_date'])
+                user_details.update({'birth_date': UserRegister.format_birth_date(str(user_details['birth_date']))})
                 update_controller.update_personal_details(user_details, user_id)
 
             elif user_details['update_type'] == "location":
@@ -143,6 +143,7 @@ class UserRegister(Resource):
                 update_controller.update_agency_details(user_details, role, user_id)
 
             elif user_details['update_type'] == "complete_profile":
+                user_details['birth_date']=UserRegister.format_birth_date(user_details['birth_date'])
                 update_controller.complete_user_profile(user_details, user_id, role)
         else:
             # if user does not exist
@@ -152,7 +153,7 @@ class UserRegister(Resource):
 
         # update was successful
         response_msg = helper.make_rest_success_response(
-            f"Update successful.")
+            f"Update successful {user_details['birth_date']}.")
         return make_response(response_msg, 200)
 
     @staticmethod
@@ -288,7 +289,8 @@ class UserLogin(Resource):
                     user_db_row.id, role)
                 response_dict = {
                     "authentication": auth_tokens,
-                    "role": role
+                    "role": role,
+                    "is_complete": user_db_row.is_complete
                 }
                 if role in ("BRSTF", "TASTF", "IASTF"):
                     # if the authenticated user is a staff member,
