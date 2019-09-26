@@ -11,6 +11,7 @@ from helpers.CustomerNumber import CustomerNumber
 from helpers.parsers import user_parser
 import helpers.tokens as token_handler
 import uuid
+import random
 
 
 class Companies(Resource):
@@ -19,20 +20,22 @@ class Companies(Resource):
 
     def get(self):
         """
-        Get all insurance companies, together with the company details"""   
+        Get all insurance companies, together with the company details"""
         # fetch all companies, then their details.
         companies_list = CompanyDetails.get_companies()
         if companies_list:
             # get company details
             list_of_companies = []
             for company in companies_list:
-                policies = LicencedClasses.get_company_classes(company.id)
-                data = {
-                    "id": company.id,
-                    "name": company.company_name,
-                    "products": policies
-                }
-                list_of_companies.append(data)
+
+                list_of_products = company['products']
+                licenced_classes = [1, 2, 3, 4, 5,
+                                    6, 7, 8, 9, 10, 11, 12, 13, 14]
+
+                # Only return companies that sell general insurance policies
+                if len(company['products']) != 0:
+                    if random.choice(company['products']) in licenced_classes:
+                        list_of_companies.append(company)
 
             response = helper.make_rest_success_response(
                 "Success", list_of_companies)

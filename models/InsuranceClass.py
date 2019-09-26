@@ -12,6 +12,8 @@ class InsuranceClass(db.Model):
     acronym = db.Column(db.String(3), unique=True, nullable=False)
     sector = db.Column(db.String(100), nullable=False)
     subclass = db.relationship("InsuranceSubclass", backref="subclass")
+    licenced_classes = db.relationship('LicencedClasses', backref="classes",
+                                       cascade="all, delete, delete-orphan")
 
     def __init__(self, class_id, class_name, acronym, sector):
         self.class_id = class_id
@@ -19,6 +21,9 @@ class InsuranceClass(db.Model):
         self.acronym = acronym
         self.sector = sector
 
+    def __repr__(self):
+        return f"{self.class_name}"
+        
     def save(self):
         db.session.add(self)
         db.session.commit()
