@@ -20,7 +20,7 @@ from models.User import User
 from models.UserPermissions import UserPermissions
 from models.UserProfile import UserProfile
 from models.UserRolePlacement import UserRolePlacement
-import Controllers.UpdateController as update_controller
+import Controllers.UpdateController as updateController
 
 
 class UserRegister(Resource):
@@ -130,21 +130,21 @@ class UserRegister(Resource):
             claims = get_jwt_claims()
             role = claims['role']
             if user_details['update_type'] == "password":
-                update_controller.update_user_password(user_details['new_password'], user_id)
+                updateController.update_user_password(user_details['new_password'], user_id)
 
             elif user_details['update_type'] == "personal":
                 user_details.update({'birth_date': UserRegister.format_birth_date(str(user_details['birth_date']))})
-                update_controller.update_personal_details(user_details, user_id)
+                updateController.update_personal_details(user_details, user_id)
 
             elif user_details['update_type'] == "location":
-                update_controller.update_location_details(user_details, user_id)
+                updateController.update_location_details(user_details, user_id)
 
             elif user_details['update_type'] == "agency":
-                update_controller.update_agency_details(user_details, role, user_id)
+                updateController.update_agency_details(user_details, role, user_id)
 
             elif user_details['update_type'] == "complete_profile":
                 user_details['birth_date']=UserRegister.format_birth_date(user_details['birth_date'])
-                update_controller.complete_user_profile(user_details, user_id, role)
+                updateController.complete_user_profile(user_details, user_id, role)
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
@@ -153,7 +153,7 @@ class UserRegister(Resource):
 
         # update was successful
         response_msg = helper.make_rest_success_response(
-            f"Update successful {user_details['birth_date']}.")
+            f"Update successful.")
         return make_response(response_msg, 200)
 
     @staticmethod

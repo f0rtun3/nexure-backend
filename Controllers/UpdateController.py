@@ -19,10 +19,7 @@ def update_personal_details(data, user_id):
         "id_passport": data['id_passport'],
         "kra_pin": data['kra_pin'],
         "phone": verify_updated_details(profile_row.phone, data['mob']),
-        "birth_date": data['birth_date'],
-        "facebook": data['facebook'],
-        "twitter": data['twitter'],
-        "instagram": data['instagram']
+        "birth_date": data['birth_date']
     }
     user_auth_detail = User.get_user_by_id(user_id)
     contact_email = {"email": verify_updated_details(user_auth_detail.email, data['email'])}
@@ -66,6 +63,7 @@ def complete_user_profile(data, user_id, role):
         update_agency_details(data, role, user_id)
     update_personal_details(data, user_id)
     update_location_details(data, user_id)
+    update_social_profile(data, user_id, role)
 
 
 def update_independent_agent(data, user_id):
@@ -75,8 +73,12 @@ def update_independent_agent(data, user_id):
         "agency_phone": verify_updated_details(agency.agency_phone, data['org_phone']),
         "agency_email": verify_updated_details(agency.agency_email, data['org_email']),
         "ira_registration_number": data['ira_reg_no'],
-        "ira_licence_number": data['ira_license_no'],
-        "kra_pin": data['org_kra_pin']
+        "ira_license_number": data['ira_license_no'],
+        "website": data['website'],
+        "kra_pin": data['org_kra_pin'],
+        "facebook": data['facebook'],
+        "instagram": data['instagram'],
+        "twitter": data['twitter']
     }
     return agency.update(agency_data)
 
@@ -108,7 +110,7 @@ def update_broker_agent(data, user_id):
         "broker_phone_number": verify_updated_details(agency.broker_phone_number, data['org_phone']),
         "broker_email": verify_updated_details(agency.broker_email, data['org_email']),
         "ira_registration_number": data['ira_reg_no'],
-        "ira_licence_number": data['ira_license_no'],
+        "ira_license_number": data['ira_license_no'],
         "website": data['website'],
         "kra_pin": data['org_kra_pin']
     }
@@ -123,7 +125,7 @@ def update_insurance_company(data, user_id):
         "company_phone": data['company_phone'],
         "mpesa_paybill": data['mpesa_paybill'],
         "ira_registration_number": data['ira_reg_no'],
-        "ira_licence_number": data['ira_license_no'],
+        "ira_license_number": data['ira_license_no'],
         "website": data['website'],
         "kra_pin": data['org_kra_pin']
     }
