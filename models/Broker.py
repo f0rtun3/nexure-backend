@@ -23,14 +23,14 @@ class Broker(db.Model):
     br_staff = db.relationship("BRStaff", backref="broker")
 
     def __init__(self, broker_name, broker_phone_number, broker_email, contact_person, ira_registration_number=None,
-                 ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
+                 ira_license_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
                  avatar_url=None, mpesa_paybill=None):
         self.broker_name = broker_name
         self.broker_phone_number = broker_phone_number
         self.broker_email = broker_email
         self.contact_person = contact_person
         self.ira_registration_number = ira_registration_number
-        self.ira_license_number = ira_licence_number
+        self.ira_license_number = ira_license_number
         self.kra_pin = kra_pin
         self.website = website
         self.facebook = facebook
@@ -44,7 +44,7 @@ class Broker(db.Model):
 
     def serialize(self):
         return {
-            "organization":{
+            "organization": {
                 "org_name": self.broker_name,
                 "org_contact": self.contact_person,
                 "org_phone": self.broker_phone_number,
@@ -95,7 +95,7 @@ class Broker(db.Model):
     @classmethod
     def get_broker_by_id(cls, broker_id):
         return cls.query.filter_by(broker_id=broker_id).first()
-    
+
     @classmethod
     def get_broker_by_contact_id(cls, user_id):
         brokerage = cls.query.filter_by(contact_person=user_id).first()
