@@ -44,7 +44,7 @@ class Broker(db.Model):
 
     def serialize(self):
         return {
-            "organization":{
+            "organization": {
                 "org_name": self.broker_name,
                 "org_contact": self.contact_person,
                 "org_phone": self.broker_phone_number,
@@ -95,7 +95,7 @@ class Broker(db.Model):
     @classmethod
     def get_broker_by_id(cls, broker_id):
         return cls.query.filter_by(broker_id=broker_id).first()
-    
+
     @classmethod
     def get_broker_by_contact_id(cls, user_id):
         brokerage = cls.query.filter_by(contact_person=user_id).first()
