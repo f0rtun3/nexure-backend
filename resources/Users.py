@@ -143,7 +143,7 @@ class UserRegister(Resource):
                 updateController.update_agency_details(user_details, role, user_id)
 
             elif user_details['update_type'] == "complete_profile":
-                user_details['birth_date']=UserRegister.format_birth_date(user_details['birth_date'])
+                user_details['birth_date'] = UserRegister.format_birth_date(user_details['birth_date'])
                 updateController.complete_user_profile(user_details, user_id, role)
         else:
             # if user does not exist

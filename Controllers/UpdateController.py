@@ -64,6 +64,8 @@ def complete_user_profile(data, user_id, role):
     update_personal_details(data, user_id)
     update_location_details(data, user_id)
     update_social_profile(data, user_id, role)
+    user = User.get_user_by_id(user_id)
+    user.update({'is_complete': True})
 
 
 def update_independent_agent(data, user_id):

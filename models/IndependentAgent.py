@@ -29,14 +29,14 @@ class IndependentAgent(db.Model):
         return f"{self.agency_name}"
 
     def __init__(self, agency_name, agency_phone, agency_email, contact_person, ira_registration_number=None,
-                 ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
+                 ira_license_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
                  avatar_url=None, mpesa_paybill=None):
         self.agency_name = agency_name
         self.agency_email = agency_email
         self.agency_phone = agency_phone
         self.contact_person = contact_person
         self.ira_registration_number = ira_registration_number
-        self.ira_license_number = ira_licence_number
+        self.ira_license_number = ira_license_number
         self.kra_pin = kra_pin
         self.website = website
         self.facebook = facebook
@@ -52,7 +52,7 @@ class IndependentAgent(db.Model):
                 "org_email": self.agency_email,
                 "org_contact": self.agency_phone,
                 "ira_registration_number": self.ira_registration_number,
-                "ira_license_number": self.ira_licence_number,
+                "ira_license_number": self.ira_license_number,
                 "org_kra": self.kra_pin,
                 "facebook": self.facebook,
                 "instagram": self.instagram,
