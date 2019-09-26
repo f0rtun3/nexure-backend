@@ -66,7 +66,6 @@ class InsuranceCompany(db.Model):
                 "mpesa_paybill": self.mpesa_paybill,
                 "ira_registration_number": self.ira_registration_number,
                 "ira_license_number": self.ira_license_number,
-                "kra_pin": self.kra_pin,
                 "facebook": self.facebook,
                 "website": self.website,
                 "instagram": self.instagram,
