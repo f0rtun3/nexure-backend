@@ -34,7 +34,8 @@ class CompanyDetails(db.Model):
         return {
             "id": self.id,
             "name": self.company_name,
-            "products": [i.insurance_class for i in self.licenced_classes]
+            "products": [i.insurance_class for i in self.licenced_classes],
+            "insurance_company": [i.id for i in self.insurance_company]
         }
 
     def update(self, data):

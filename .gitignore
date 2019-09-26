@@ -134,4 +134,4 @@ helpers/__pycache__/
 !.elasticbeanstalk/*.global.yml
 
 #migrations
-migrations
+migrations/
