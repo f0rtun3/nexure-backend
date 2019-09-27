@@ -145,6 +145,10 @@ class UserRegister(Resource):
             elif user_details['update_type'] == "complete_profile":
                 user_details['birth_date'] = UserRegister.format_birth_date(user_details['birth_date'])
                 updateController.complete_user_profile(user_details, user_id, role)
+
+            elif user_details['update_type'] == "social":
+                updateController.update_social_profile(user_details, user_id, role)
+
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
@@ -357,12 +361,13 @@ class AccountRecovery(Resource):
         user_details = user_parser.parse_args()
         user_row = User.get_user_by_email(user_details['email'])
         if user_row:
+            profile_details = UserProfile.get_profile_by_user_id(user_row.id)
             account_token = token_handler.user_account_confirmation_token(
                 user_row.id)
-            email_text = f"To Please follow this link to reset your password " \
+            email_text = f"To reset your account password, please follow this link " \
                          f"{application.config['ACCOUNT_RESET_ENDPOINT']}/{account_token}"
             email_template = helper.generate_account_recovery_template(application.config['ACCOUNT_RESET_ENDPOINT'],
-                                                                       account_token)
+                                                                       account_token, profile_details.first_name)
             subject = "Account Password Recovery"
             helper.send_email(
                 user_details['email'], subject, email_template, email_text)
@@ -385,9 +390,7 @@ class AccountRecovery(Resource):
         user_details = user_parser.parse_args()
         user = User.get_user_by_id(user_id)
         if user:
-            password = user.generate_password_hash(
-                user_details['new_password'])
-            user.update_password(password)
+            updateController.update_user_password(user_details['new_password'], user_id)
             response_msg = helper.make_rest_success_response(
                 "Successfully recovered user account")
             return make_response(response_msg, 200)

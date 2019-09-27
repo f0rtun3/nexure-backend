@@ -50,10 +50,10 @@ class IndependentAgent(db.Model):
             "organization":{
                 "org_name": self.agency_name,
                 "org_email": self.agency_email,
-                "org_contact": self.agency_phone,
+                "org_phone": self.agency_phone,
                 "ira_registration_number": self.ira_registration_number,
                 "ira_license_number": self.ira_license_number,
-                "org_kra": self.kra_pin,
+                "org_kra_pin": self.kra_pin,
                 "facebook": self.facebook,
                 "instagram": self.instagram,
                 "twitter": self.twitter,
