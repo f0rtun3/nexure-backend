@@ -13,8 +13,8 @@ class OrganizationCustomer(db.Model):
     org_name = db.Column(db.String(100), unique=True)
     org_phone = db.Column(db.BIGINT)
     org_email = db.Column(db.String(100))
-    org_registration_number = db.Column(db.String(50))
-    physical_address = db.Column(db.String(100))
+    org_reg_number = db.Column(db.String(50))
+    physical_address = db.Column(db.String(150))
     postal_address = db.Column(db.String(100))
     postal_code = db.Column(db.Integer)
     postal_town = db.Column(db.String(30))
@@ -30,14 +30,14 @@ class OrganizationCustomer(db.Model):
     created_on = db.Column(db.DateTime, default=db.func.now())
     updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
-    def __init__(self, org_type, org_name, org_phone, email, org_registration_number, physical_address, postal_address,
-                 postal_code, postal_town, county, facebook, instagram, twitter, constituency, ward, contact_person,
+    def __init__(self, org_type, org_name, org_phone, org_email, org_reg_number, physical_address, postal_address,
+                 postal_code, postal_town, county, constituency, ward, facebook, instagram, twitter, contact_person,
                  customer_number):
         self.org_type = org_type
         self.org_name = org_name
         self.org_phone = org_phone
-        self.email = email
-        self.org_registration_number = org_registration_number
+        self.org_email = org_email
+        self.org_reg_number = org_reg_number
         self.physical_address = physical_address
         self.postal_address = postal_address
         self.postal_code = postal_code

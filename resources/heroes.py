@@ -43,12 +43,11 @@ class CustomerOnBoarding(Resource):
     def post(self):
         customer_details = customer_parser.parse_args()
         customer = User.get_user_by_email(customer_details['email'])
-        customer_acc_number = None
         if not customer:
-            # Create temporary seven digit password
-            temporary_pass = helper.create_user_password()
             # create a new user account if not existing
             user_id = uuid.uuid4()
+            # Create temporary seven digit password
+            temporary_pass = helper.create_user_password()
             # create new user
             new_account = User(
                 user_id,
@@ -56,91 +55,81 @@ class CustomerOnBoarding(Resource):
                 temporary_pass
             )
             new_account.save()
-        
-            # if onboarding an individual customer
-            if customer_details['type'] == 'Individual':
-                customer = User.get_user_by_email(customer_details['email'])
-                customer_id = new_account.id
-                # create individual customer's profile
-                new_individual_profile = UserProfile(
-                    customer_id,
-                    customer_details["first_name"],
-                    customer_details["last_name"],
-                    customer_details["phone"],
-                    customer_details["gender"],
-                    customer_details["avatar_url"],
-                    customer_details["occupation"],
-                    customer_details["id_passport"],
-                    customer_details["kra_pin"],
-                    customer_details["birth_date"],
-                    customer_details['physical_address'],
-                    customer_details['postal_address'],
-                    customer_details['postal_code'],
-                    customer_details['postal_town'],
-                    customer_details['county'],
-                    customer_details['constituency'],
-                    customer_details['ward'],
-                    customer_details['facebook'],
-                    customer_details['instagram'],
-                    customer_details['twitter']
-                )
-                new_individual_profile.save()
+            customer_id = new_account.id
+            # create individual customer's profile
+            new_individual_profile = UserProfile(
+                customer_id,
+                customer_details["first_name"],
+                customer_details["last_name"],
+                customer_details["phone"],
+                customer_details["gender"],
+                customer_details["avatar_url"],
+                customer_details["occupation"],
+                customer_details["id_passport"],
+                customer_details["kra_pin"],
+                customer_details["birth_date"],
+                customer_details['physical_address'],
+                customer_details['postal_address'],
+                customer_details['postal_code'],
+                customer_details['postal_town'],
+                customer_details['county'],
+                customer_details['constituency'],
+                customer_details['ward'],
+                customer_details['facebook'],
+                customer_details['instagram'],
+                customer_details['twitter']
+            )
+            new_individual_profile.save()
+            
+            email_template = helper.generate_confirmation_template(application.config['LOGIN_ENDPOINT'],
+                                                                   temporary_pass)
+            subject = "Nexure Temporary Password"
+            email_text = f"Follow {application.config['LOGIN_ENDPOINT']} to login and use {temporary_pass} " \
+                         f"as your temporary password"
+            helper.send_email(customer_details['email'], subject, email_template, email_text)
 
-                #  create a new individual customer detail
-                customer_number = self.create_customer_number(
-                    "IN", customer_id, customer_details['country'])
-                self.create_individual_customer(
-                    customer_id, customer_number, customer_details['salutation'])
-                self.role_placement(customer_id, "IND")
+            #  Generate a user account activation email
+            confirmation_code = token_handler.user_account_confirmation_token(customer_id)
+            email_template = helper.generate_confirmation_template(application.config['CONFIRMATION_ENDPOINT'],
+                                                                   confirmation_code)
+            subject = "Please confirm your account"
+            email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
+                         f" to confirm your account"
+            helper.send_email(customer_details['email'], subject, email_template, email_text)
+        else:
+            customer_id = customer.id
 
-                # send activation email
-                self.send_activation_email(customer_details['email'], customer_id, temporary_pass)
+        if customer_details['type'] == "Individual":
+            #   create a new individual customer detail
+            customer_acc_number = self.create_customer_number("IN", customer_id, customer_details['country'])
+            self.create_individual_customer(customer_id, customer_acc_number, customer_details['salutation'])
+            self.role_placement(customer_id, "IND")
+        elif customer_details['type'] == "Organization":
+            customer_acc_number = self.create_customer_number(customer_details['org_type'],
+                                                              customer_id, customer_details['country'])
 
-                # assign customer number to individual customer number
-                customer_acc_number = customer_number
-
-            # if onboarding an organization
-            elif customer_details['type'] == "organization":
-                customer_id = new_account.id
-                customer_number = self.create_customer_number(customer_details['org_type'],
-                                                                customer_id, customer_details['country'])
-                # Add contact person details
-                contact_person = UserProfile(
-                    customer_id,
-                    customer_details['first_name'],
-                    customer_details['last_name'],
-                    customer_details["phone"]                
-                )
-                contact_person.save()
-
-                new_org_customer = OrganizationCustomer(
-                    customer_details['org_type'],
-                    customer_details["org_name"],
-                    customer_details['org_phone'],
-                    customer_details['org_email'],
-                    customer_details['reg_number'],
-                    customer_details['physical_address'],
-                    customer_details['postal_address'],
-                    customer_details['postal_code'],
-                    customer_details['postal_town'],
-                    customer_details['county'],
-                    customer_details['constituency'],
-                    customer_details['ward'],
-                    customer_details['facebook'],
-                    customer_details['instagram'],
-                    customer_details['twitter'],
-                    customer_id,
-                    customer_number
-                )
-                new_org_customer.save()
-                self.role_placement(customer_id, "ORG")
-
-                # send activation email
-                self.send_activation_email(customer_details['email'], customer_id, temporary_pass)
-
-                # assign customer number to individual customer number
-                customer_acc_number = customer_number
-
+            
+            new_org_customer = OrganizationCustomer(
+                customer_details['org_type'],
+                customer_details["org_name"],
+                customer_details['org_phone'],
+                customer_details['org_email'],
+                customer_details['reg_number'],
+                customer_details['physical_address'],
+                customer_details['postal_address'],
+                customer_details['postal_code'],
+                customer_details['postal_town'],
+                customer_details['county'],
+                customer_details['constituency'],
+                customer_details['ward'],
+                customer_details['facebook'],
+                customer_details['instagram'],
+                customer_details['twitter'],
+                customer_id,
+                customer_acc_number
+            )
+            new_org_customer.save()
+            self.role_placement(customer_id, "ORG")
 
         # create a new affiliation between the customer and broker/agent
         # each affiliation must only exist once in the db
@@ -155,24 +144,19 @@ class CustomerOnBoarding(Resource):
             # the current user is not a staff member
             # we also need to ensure the affiliation created is not a duplicate one
             if not self.is_affiliation_duplicate(role_name, agent_broker, customer_acc_number):
-                self.register_customer(
-                    role_name, customer_acc_number, agent_broker, uid)
+                self.register_customer(role_name, customer_acc_number, agent_broker, uid)
             else:
-                response_msg = helper.make_rest_fail_response(
-                    "This affiliation was already created")
+                response_msg = helper.make_rest_fail_response("This affiliation was already created")
                 return make_response(response_msg, 409)
         else:
             broker_agent_id = self.get_broker_agent_id(uid, role_name)
             if not self.is_affiliation_duplicate(role_name, broker_agent_id, customer_acc_number):
-                self.register_customer(
-                    role_name, customer_acc_number, broker_agent_id)
+                self.register_customer(role_name, customer_acc_number, broker_agent_id)
             else:
-                response_msg = helper.make_rest_fail_response(
-                    "This affiliation was already created")
+                response_msg = helper.make_rest_fail_response("This affiliation was already created")
                 return make_response(response_msg, 409)
 
-        response_msg = helper.make_rest_success_response(
-            "Customer has been onbarded successfully", {"customer_number": customer_acc_number})
+        response_msg = helper.make_rest_success_response("Customer has been onbarded successfully")
         return make_response(response_msg, 200)
 
     @jwt_required
@@ -219,36 +203,13 @@ class CustomerOnBoarding(Resource):
 
         # update the respective organization or individual details
         self.update_cust_details(cust_id, cust_no, cust_info)
-        self.update_cust_agency_relationship(
-            role, cust_no, cust_info['status'])
+        self.update_cust_agency_relationship(role, cust_no, cust_info['status'])
         response = helper.make_rest_success_response("Update was successful")
         return make_response(response, 200)
 
     @staticmethod
-    def send_activation_email(email, customer_id, temporary_pass):
-        email_template = helper.generate_confirmation_template(application.config['LOGIN_ENDPOINT'],
-                                                               temporary_pass)
-        subject = "Nexure Temporary Password"
-        email_text = f"Follow {application.config['LOGIN_ENDPOINT']} to login and use {temporary_pass} " \
-            f"as your temporary password"
-        helper.send_email(
-            email, subject, email_template, email_text)
-
-        #  Generate a user account activation email
-        confirmation_code = token_handler.user_account_confirmation_token(
-            customer_id)
-        email_template = helper.generate_confirmation_template(application.config['CONFIRMATION_ENDPOINT'],
-                                                               confirmation_code)
-        subject = "Please confirm your account"
-        email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
-            f" to confirm your account"
-        helper.send_email(
-            email, subject, email_template, email_text)
-
-    @staticmethod
     def create_individual_customer(cust_id, customer_number, salutation):
-        new_individual_cust = IndividualCustomer(
-            cust_id, customer_number, salutation)
+        new_individual_cust = IndividualCustomer(cust_id, customer_number, salutation)
         new_individual_cust.save()
 
     def get_role_name(self, uid):
@@ -264,8 +225,7 @@ class CustomerOnBoarding(Resource):
             agent_broker_id = TiedAgents.get_tied_agent_by_user_id(contact_id)
             return agent_broker_id.id
         else:
-            agent_broker_id = IndependentAgent.get_agency_by_contact_person(
-                contact_id)
+            agent_broker_id = IndependentAgent.get_agency_by_contact_person(contact_id)
             return agent_broker_id.id
 
     def check_staff(self, uid, role_name):
