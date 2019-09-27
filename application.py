@@ -91,7 +91,7 @@ def fresh_token_loader_handler():
 
 API = Api(application)
 
-API.add_resource(Companies, '/api/companies/<int:status>')
+API.add_resource(Companies, '/api/companies/<string:status>')
 API.add_resource(CustomerDetails, '/api/customer_details/<string:email>')
 API.add_resource(CompanyDetails, '/api/company_details')
 API.add_resource(CompanyDetailsHandler, '/api/company_details/<int:company_id>')
