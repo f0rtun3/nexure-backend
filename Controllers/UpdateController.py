@@ -124,7 +124,7 @@ def update_insurance_company(data, user_id):
         user_id)
     agency_data = {
         "bank_account": data['bank_account_number'],
-        "company_phone": data['company_phone'],
+        "company_phone": data['org_phone'],
         "mpesa_paybill": data['mpesa_paybill'],
         "ira_registration_number": data['ira_reg_no'],
         "ira_license_number": data['ira_license_no'],
