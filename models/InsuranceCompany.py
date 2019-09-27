@@ -99,23 +99,7 @@ class InsuranceCompany(db.Model):
 
     @classmethod
     def get_all_companies(cls):
-        company_rows = cls.query.all()
-        companies = [{
-            "org_name": company.company_details.company_name,
-            "org_eamil": company.company_details.company_email,
-            "id": company.id,
-            "org_contact": company.contact_person,
-            "org_phone": company.company_phone,
-            "ira_registration_number": company.ira_registration_number,
-            "ira_license_number": company.ira_license_number,
-            "org_kra_pin": company.kra_pin,
-            "website": company.website,
-            "facebook": company.facebook,
-            "instagram": company.instagram,
-            "twitter": company.twitter,
-            "rate": company.rate
-        } for company in company_rows]
-
+        companies = [company.serialize() for company in cls.query.all()]
         return companies
 
     @classmethod
