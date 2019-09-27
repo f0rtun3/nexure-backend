@@ -123,6 +123,10 @@ class MPIUnderwriting(Resource):
                     return make_response(helper.make_rest_success_response("Failed to extend policy"))
 
             elif transaction_type == 'REFUND':
+                # get existing child policy
+                # get the number of days it has lasted
+                # get refund type
+                # if refund type is 
                 pass
             elif transaction_type == 'CNC':
                 # To cancel a transaction
