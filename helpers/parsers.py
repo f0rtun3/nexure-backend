@@ -1,5 +1,4 @@
 from flask_restful import reqparse
-import json
 
 user_parser = reqparse.RequestParser()
 

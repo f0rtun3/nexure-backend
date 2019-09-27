@@ -1,22 +1,26 @@
-from flask import current_app as application
-from flask import make_response
-from flask_restful import Resource
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims, jwt_refresh_token_required
-from models.User import User
-from models.UserProfile import UserProfile
-from models.IndependentAgent import IndependentAgent
-from models.TiedAgent import TiedAgents
-from models.Broker import Broker
-from models.Role import Role
-from models.UserRolePlacement import UserRolePlacement
-from models.InsuranceCompany import InsuranceCompany
-from models.UserPermissions import UserPermissions
-#   from models.IndividualCustomer import IndividualCustomer
-from helpers import helpers as helper
-import helpers.tokens as token_handler
-from helpers.parsers import user_parser
 import uuid
 from datetime import datetime
+
+from flask import current_app as application
+from flask import make_response
+from flask_jwt_extended import (get_jwt_claims, get_jwt_identity,
+                                jwt_refresh_token_required, jwt_required)
+from flask_restful import Resource
+
+import helpers.tokens as token_handler
+#   from models.IndividualCustomer import IndividualCustomer
+from helpers import helpers as helper
+from helpers.parsers import user_parser
+from models.Broker import Broker
+from models.IndependentAgent import IndependentAgent
+from models.InsuranceCompany import InsuranceCompany
+from models.Role import Role
+from models.TiedAgent import TiedAgents
+from models.User import User
+from models.UserPermissions import UserPermissions
+from models.UserProfile import UserProfile
+from models.UserRolePlacement import UserRolePlacement
+import Controllers.UpdateController as updateController
 
 
 class UserRegister(Resource):
@@ -67,8 +71,8 @@ class UserRegister(Resource):
         subject = "Please confirm your account"
         email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                      f" to confirm your account"
-        # ToDo: Remember to uncomment the line below before commit to remote branch
-        #   helper.send_email(user_details['email'], subject, email_template, email_text)
+
+        helper.send_email(user_details['email'], subject, email_template, email_text)
 
         response_msg = helper.make_rest_success_response("Registration successful, kindly"
                                                          " check your email for confirmation link")
@@ -87,7 +91,8 @@ class UserRegister(Resource):
             response = helper.make_rest_fail_response("No user was found")
             return make_response(response, 404)
 
-        response = helper.make_rest_success_response(None, profile_data)
+        response = helper.make_rest_success_response(
+            None, profile_data)
         return make_response(response, 200)
 
     def fetch_profile_data(self, role, user_id):
@@ -124,72 +129,26 @@ class UserRegister(Resource):
             # get their role
             claims = get_jwt_claims()
             role = claims['role']
-            birth_date = self.format_birth_date(user_details['birth_date'])
             if user_details['update_type'] == "password":
-                if user_details['new_password']:
-                    user = User.get_user_by_id(get_jwt_identity())
-                    password = user.generate_password_hash(
-                        user_details['new_password'])
-                    user.update_password(password)
+                updateController.update_user_password(user_details['new_password'], user_id)
 
             elif user_details['update_type'] == "personal":
-                personal_data = self.set_personal_data(user_details['first_name'], user_details['last_name'],
-                                                       user_details['mob'], user_details['gender'],
-                                                       user_details['occupation'],
-                                                       user_details['id_passport'], user_details['kra_pin'],
-                                                       birth_date
-                                                       )
-                self.update_profile(user_id, personal_data)
+                user_details.update({'birth_date': UserRegister.format_birth_date(str(user_details['birth_date']))})
+                updateController.update_personal_details(user_details, user_id)
 
             elif user_details['update_type'] == "location":
-                location_data = self.set_location_data(user_details['physical_address'],
-                                                       user_details['postal_address'], user_details['postal_code'],
-                                                       user_details['postal_town'], user_details['country'],
-                                                       user_details['county'], user_details['constituency'],
-                                                       user_details['ward']
-                                                       )
-                self.update_profile(user_id, location_data)
+                updateController.update_location_details(user_details, user_id)
 
             elif user_details['update_type'] == "agency":
+                updateController.update_agency_details(user_details, role, user_id)
 
-                """
-                update the client account depending on their role:
-                Note: that for tied agents, we only update their profiles
-                """
-                client_row = self.get_client_row(role, user_id)
-                if role == 'BR':
-                    agency = Broker.get_broker_by_contact_id(user_id)
-                    data = self.set_broker_data(self.check_updated_organization_detail(client_row.broker_name,
-                                                                                       user_details['org_name']),
-                                                self.check_updated_organization_detail(client_row.broker_phone_number,
-                                                                                       user_details['org_phone']),
-                                                self.check_updated_organization_detail(client_row.broker_email,
-                                                                                       user_details['org_email']),
-                                                user_details['ira_reg_no'], user_details['ira_license_no'],
-                                                user_details['org_kra_pin'], user_details['website'],
-                                                user_details['facebook'], user_details['instagram'],
-                                                user_details['twitter']
-                                                )
-                elif role == 'IA':
-                    """
-                    One contact person only represents one entity. So, we fetch the agency using the contact person's id
-                    """
-                    agency = IndependentAgent.get_agency_by_contact_person(
-                        user_id)
+            elif user_details['update_type'] == "complete_profile":
+                user_details['birth_date'] = UserRegister.format_birth_date(user_details['birth_date'])
+                updateController.complete_user_profile(user_details, user_id, role)
 
-                    data = {
-                        "agency_name": user_details['org_name'],
-                        "agency_phone": user_details['org_phone_number'],
-                        "agency_email": user_details['org_email'],
-                        "ira_registration_number": user_details['ira_reg_no'],
-                        "ira_license_number": user_details['ira_license_no'],
-                        "kra_pin": user_details['org_kra_pin'],
-                        "website": user_details['website'],
-                        "facebook": user_details['facebook'],
-                        "instagram": user_details['instagram'],
-                        "twitter": user_details['twitter']
-                    }
-                agency.update(data)
+            elif user_details['update_type'] == "social":
+                updateController.update_social_profile(user_details, user_id, role)
+
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
@@ -202,108 +161,9 @@ class UserRegister(Resource):
         return make_response(response_msg, 200)
 
     @staticmethod
-    def check_updated_organization_detail(previous_detail, updated_org_detiail=None):
-        if updated_org_detiail is None:
-            return previous_detail
-
-        return updated_org_detiail
-
-    @staticmethod
-    def get_client_row(role, user_id):
-        if role == 'BR':
-            client_row = Broker.get_broker_by_contact_id(user_id)
-        elif role == 'IA':
-            client_row = IndependentAgent.get_agency_by_contact_person(user_id)
-        elif role == 'IC':
-            client_row = InsuranceCompany.get_company_by_contact_person(
-                user_id)
-        else:
-            return False
-
-        return client_row
-
-    @staticmethod
-    def set_personal_data(first_name, last_name, phone, gender, occupation, id_passport, kra_pin, birth_date):
-        return {
-            "first_name": first_name,
-            "last_name": last_name,
-            "gender": gender,
-            "occupation": occupation,
-            "id_passport": id_passport,
-            "kra_pin": kra_pin,
-            "birth_date": birth_date
-        }
-
-    @staticmethod
-    def set_location_data(physical_address, postal_address, postal_code, postal_town, country, county, constituency, ward):
-        return {
-            "physical_address": physical_address,
-            "postal_address": postal_address,
-            "postal_code": postal_code,
-            "postal_town": postal_town,
-            "country": country,
-            "county": county,
-            "constituency": constituency,
-            "ward": ward
-        }
-
-    @staticmethod
-    def set_broker_data(org_name, org_phone_number, org_email, ira_reg_no, ira_license_no, org_kra_pin, website,
-                        facebook, twitter, instagram):
-        return {
-            "broker_name": org_name,
-            "broker_phone_number": org_phone_number,
-            "broker_email": org_email,
-            "ira_registration_number": ira_reg_no,
-            "ira_license_number": ira_license_no,
-            "kra_pin": org_kra_pin,
-            "website": website,
-            "facebook": facebook,
-            "instagram": twitter,
-            "twitter": instagram
-        }
-
-    @staticmethod
-    def set_ia_data(org_name, org_phone_number, org_email, ira_reg_no, ira_license_no, org_kra_pin, website,
-                    facebook, twitter, instagram):
-        return {
-            "agency_name": org_name,
-            "agency_phone": org_phone_number,
-            "agency_email": org_email,
-            "ira_registration_number": ira_reg_no,
-            "ira_licence_number": ira_license_no,
-            "kra_pin": org_kra_pin,
-            "website": website,
-            "facebook": facebook,
-            "instagram": instagram,
-            "twitter": twitter
-        }
-
-    @staticmethod
-    def set_ic_data(bank_account_number, company_phone, mpesa_paybill, ira_reg_no, ira_license_no, org_kra_pin, website,
-                    facebook, twitter, instagram):
-        return {
-            "bank_account": bank_account_number,
-            "company_phone": company_phone,
-            "mpesa_paybill": mpesa_paybill,
-            "ira_registration_number": ira_reg_no,
-            "ira_license_number": ira_license_no,
-            "kra_pin": org_kra_pin,
-            "website": website,
-            "facebook": facebook,
-            "instagram": instagram,
-            "twitter": twitter,
-        }
-
-    @staticmethod
     def format_birth_date(date_str):
         b_day = datetime.strptime(date_str, '%d/%m/%Y')
         return b_day.date()
-
-    @staticmethod
-    def update_profile(uid, data):
-        profile = UserProfile.get_profile_by_user_id(uid)
-        profile.update(data)
 
     def onboard_client(self, role, user_id, user_details):
         # Use user's role to determine where the details will be stored
@@ -433,7 +293,8 @@ class UserLogin(Resource):
                     user_db_row.id, role)
                 response_dict = {
                     "authentication": auth_tokens,
-                    "role": role
+                    "role": role,
+                    "is_complete": user_db_row.is_complete
                 }
                 if role in ("BRSTF", "TASTF", "IASTF"):
                     # if the authenticated user is a staff member,
@@ -500,12 +361,13 @@ class AccountRecovery(Resource):
         user_details = user_parser.parse_args()
         user_row = User.get_user_by_email(user_details['email'])
         if user_row:
+            profile_details = UserProfile.get_profile_by_user_id(user_row.id)
             account_token = token_handler.user_account_confirmation_token(
                 user_row.id)
-            email_text = f"To Please follow this link to reset your password " \
+            email_text = f"To reset your account password, please follow this link " \
                          f"{application.config['ACCOUNT_RESET_ENDPOINT']}/{account_token}"
             email_template = helper.generate_account_recovery_template(application.config['ACCOUNT_RESET_ENDPOINT'],
-                                                                       account_token)
+                                                                       account_token, profile_details.first_name)
             subject = "Account Password Recovery"
             helper.send_email(
                 user_details['email'], subject, email_template, email_text)
@@ -528,9 +390,7 @@ class AccountRecovery(Resource):
         user_details = user_parser.parse_args()
         user = User.get_user_by_id(user_id)
         if user:
-            password = user.generate_password_hash(
-                user_details['new_password'])
-            user.update_password(password)
+            updateController.update_user_password(user_details['new_password'], user_id)
             response_msg = helper.make_rest_success_response(
                 "Successfully recovered user account")
             return make_response(response_msg, 200)

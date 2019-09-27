@@ -36,7 +36,7 @@ def create_user_token(identity, role):
     :param role:
     :return: dictionary
     """
-    expires = datetime.timedelta(minutes=40)
+    expires = datetime.timedelta(minutes=120)
     user_access_token = create_access_token(identity=identity, user_claims={"role": role},
                                             fresh=True, expires_delta=expires)
     user_refresh_token = create_refresh_token(identity=identity, user_claims={"role": role})
@@ -51,7 +51,7 @@ def refresh_user_token(identity, role):
     :param role:
     :return: string
     """
-    expires = datetime.timedelta(minutes=40)
+    expires = datetime.timedelta(minutes=120)
     user_refresh_token = create_access_token(identity=identity, user_claims={"role": role},
                                              fresh=False, expires_delta=expires)
     return user_refresh_token

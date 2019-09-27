@@ -16,18 +16,19 @@ class ICExtensions(db.Model):
     free_limit = db.Column(db.Float, nullable=False)
     max_limit = db.Column(db.Float, nullable=False)
     rate = db.Column(db.Float, nullable=False)
-    policy_extension = db.relationship('PolicyExtensions', backref="ic_extension")
+    policy_extension_id = db.relationship('PolicyExtensions', backref="ic_extension")
 
     def __init__(self, insurance_company_id, extension_id, free_limit, max_limit, rate):
         self.insurance_company_id = insurance_company_id
-        self.extension = extension_id
+        self.extension_id = extension_id
         self.free_limit = free_limit
         self.max_limit = max_limit
         self.rate = rate
 
     def serialize(self):
         return {
-            "insurance_company": self.insurance_company_id.company_details.company_name,
+            "id": self.id,
+            "insurance_company": self.insurance_company.company_details.company_name,
             "name": self.extension.name,
             "free_limit": self.free_limit,
             "max_limit": self.max_limit,
@@ -53,13 +54,13 @@ class ICExtensions(db.Model):
         Returns id, extension_id, free_limit, max_limit and rate for
         every list of extensions under a particular company 
         """
-        extension_rows = cls.query.filter_by(
-            insurance_company_id=company_id).all()
+        extension_rows = [ extension.serialize() for extension in cls.query.filter_by(
+            insurance_company_id=company_id).all()]
         return extension_rows
 
     @classmethod
     def get_ic_extension(cls, extension_id):
-        extension = cls.query.filter_by(extension=extension_id).first()
+        extension = cls.query.filter_by(extension_id=extension_id).first()
         return extension
 
     @classmethod

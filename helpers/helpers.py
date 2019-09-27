@@ -1,4 +1,5 @@
 from flask import current_app as app
+from helpers import aws_configs as aws_config
 from flask import jsonify, render_template
 from botocore.exceptions import ClientError
 import string
@@ -40,10 +41,11 @@ def generate_account_recovery_template(url_endpoint, code, salutation=""):
 
 
 def send_email(recipient, subject, template, email_text):
-    sender = app.application.config['MAIL_DEFAULT_USER']
+    sender = app.config['MAIL_DEFAULT_USER']
+    ses = aws_config.get_ses()
     recipient = [recipient]
     try:
-        response = app.ses.send_email(
+        response = ses.send_email(
             Source=sender,
             Destination={
                 'ToAddresses': recipient
@@ -81,7 +83,7 @@ def create_user_password():
 
 def get_customer_id(customer_number):
     """ get the customer id from the customer number with format (type/year/customer_id/country)
-   :param customer_number  string 
+   :param customer_number string 
    :return customer_id     int
    """
     customer_number_array = customer_number.split('/')

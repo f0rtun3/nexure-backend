@@ -93,61 +93,23 @@ class CompanyDetails(Resource):
 
 class CompanyDetailsHandler(Resource):
     """
-    Gets the company details given the company
+    Gets the company details given the associated company ID
     """
     @jwt_required
     def get(self, company_id):
-        company_data = {}
-        # get the company benefits
-        benefits = ICBenefits.get_benefits_by_company_id(company_id)
-        benefits_list = []
-        if benefits:
-            for i in benefits:
-                # first get the benefit name since ICBenefits model only returns the benefit id
-                benefit_name = Benefit.get_name_by_id(i.benefit)
-                data = {
-                    "id": i.id,
-                    "name": benefit_name,
-                    "free_limit": i.free_limit,
-                    "max_limit": i.max_limit,
-                    "rate": i.rate
-                }
-                benefits_list.append(data)
-        # append benefits data to the company details list
-        company_data.update({"benefits": benefits_list})
-
-        # get the company loadings
-        loadings_list = []
-        loadings = ICLoadings.get_loadings_by_company_id(company_id)
-        if loadings:
-            for i in loadings:
-                # first get the extension name since ICExtension model only returns the benefit id
-                loading_name = Loadings.get_name_by_id(i.loading)
-                data = {
-                    "id": i.id,
-                    "name": loading_name,
-                    "rate": i.rate
-                }
-                loadings_list.append(data)
-            # append loadings data to the company details list
-            company_data.update({"loadings": loadings_list})
-
-        # get the company extensions
-        extensions_list = []
-        extensions = ICExtensions.get_extensions_by_company_id(company_id)
-        if extensions:
-            for i in extensions:
-                # first get the extension name since ICExtension model only returns the benefit id
-                extension_name = Extension.get_name_by_id(i.extension)
-                data = {
-                    "id": i.id,
-                    "name": extension_name,
-                    "free_limit": i.free_limit,
-                    "max_limit": i.max_limit,
-                    "rate": i.rate
-                }
-                extensions_list.append(data)
-            company_data.update({"extensions": extensions_list})
+        # get the company linked to the associated company       
+        company = InsuranceCompany.get_by_associated_company(company_id)
+        # get the benefits, loadings and extensions
+        benefits = ICBenefits.get_benefits_by_company_id(company.id)
+        loadings = ICLoadings.get_loadings_by_company_id(company.id)
+        extensions = ICExtensions.get_extensions_by_company_id(company.id)
+        data = {
+            "benefits": benefits,
+            "loadings": loadings,
+            "extensions": extensions,
+            "discount": company.ncd_rate,
+            "rate": company.rate
+        }
         response_msg = helper.make_rest_success_response(
-            "Success", company_data)
+            "Success", data)
         return make_response(response_msg, 200)

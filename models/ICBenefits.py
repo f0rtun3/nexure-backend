@@ -11,14 +11,14 @@ class ICBenefits(db.Model):
     benefit_id = db.Column(db.Integer, db.ForeignKey(
         'benefit.id', onupdate='CASCADE', ondelete='CASCADE'))
     # links to the association table for benefits
-    policy_benefit = db.relationship('PolicyBenefits', backref="ic_benefit")
+    policy_benefit_id = db.relationship('PolicyBenefits', backref="ic_benefit")
     free_limit = db.Column(db.Float, nullable=False)
     max_limit = db.Column(db.Float, nullable=False)
     rate = db.Column(db.Float, nullable=False)
 
     def __init__(self, insurance_company_id, benefit_id, free_limit, max_limit, rate):
         self.insurance_company_id = insurance_company_id
-        self.benefit = benefit_id
+        self.benefit_id = benefit_id
         self.get_benefit_id = benefit_id
         self.free_limit = free_limit
         self.max_limit = max_limit
@@ -26,7 +26,8 @@ class ICBenefits(db.Model):
 
     def serialize(self):
         return {
-            "insurance_company": self.insurance_company_id.company_details.company_name,
+            "id": self.id,
+            "insurance_company": self.insurance_company.company_details.company_name,
             "name": self.benefit.name,
             "free_limit": self.free_limit,
             "max_limit": self.max_limit,
@@ -52,12 +53,12 @@ class ICBenefits(db.Model):
         Returns id, benefit_id, free_limit, max_limit and rate for
         every list of benefits under a particular company 
         """
-        benefit_rows = cls.query.filter_by(insurance_company_id=company_id).all()
+        benefit_rows = [benefit.serialize() for benefit in cls.query.filter_by(insurance_company_id=company_id).all()]
         return benefit_rows
 
     @classmethod
     def get_ic_benefit(cls, benefit_id):
-        benefit = cls.query.filter_by(benefit=benefit_id).first()
+        benefit = cls.query.filter_by(benefit_id=benefit_id).first()
         return benefit
 
     @classmethod

@@ -38,9 +38,8 @@ class LoadingsHandler(Resource):
         """
         Store loadings offered by a particular company together with limit
         """
-        # get the extension_id
+        # get the loading_id
         loading_id = Loadings.get_loading_id_by_name(loading_name)
-
         company_loading = ICLoadings(company.id, loading_id, details['rate'])
         company_loading.save()
 

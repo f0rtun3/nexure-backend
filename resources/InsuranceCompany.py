@@ -11,28 +11,48 @@ from helpers.CustomerNumber import CustomerNumber
 from helpers.parsers import user_parser
 import helpers.tokens as token_handler
 import uuid
+import random
 
 
 class Companies(Resource):
     def post(self):
         pass
 
-    def get(self):
+    def get(self, status):
         """
-        Get all insurance companies, together with the company details"""   
+        Get all insurance companies, together with the company details"""
         # fetch all companies, then their details.
         companies_list = CompanyDetails.get_companies()
+        list_of_companies = []
         if companies_list:
-            # get company details
-            list_of_companies = []
             for company in companies_list:
-                policies = LicencedClasses.get_company_classes(company.id)
-                data = {
-                    "id": company.id,
-                    "name": company.company_name,
-                    "products": policies
-                }
-                list_of_companies.append(data)
+                list_of_products = company['products']
+                licenced_classes = [1, 2, 3, 4, 5,
+                                    6, 7, 8, 9, 10, 11, 12, 13, 14]
+
+                # status 1 for registered and O for unregistered
+                if status == 0:
+                    # return unregistered companies
+                    # Only return companies that sell general insurance policies and
+                    # don't have an associated insurance company yet
+                    if len(company['products']) != 0 and len(company['insurance_company']) == 0:
+                        if random.choice(company['products']) in licenced_classes:
+                            data = {
+                                "id": company['id'],
+                                "name": company['name']
+                            }
+                            list_of_companies.append(data)
+                
+                if status == 1:
+                    # only return companies that are registered
+                    if len(company['products']) != 0 and len(company['insurance_company']) != 0:
+                        if random.choice(company['products']) in licenced_classes:
+                            data = {
+                                "id": company['id'],
+                                "name": company['name'],
+                                "products": company['products']
+                            }
+                            list_of_companies.append(data)
 
             response = helper.make_rest_success_response(
                 "Success", list_of_companies)

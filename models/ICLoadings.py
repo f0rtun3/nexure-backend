@@ -7,16 +7,24 @@ class ICLoadings(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True,
                    primary_key=True, nullable=False)
-    insurance_company = db.Column(db.Integer, db.ForeignKey(
+    insurance_company_id = db.Column(db.Integer, db.ForeignKey(
         'insurance_company.id', onupdate='CASCADE', ondelete='CASCADE'))
-    loading = db.Column(db.Integer, db.ForeignKey(
+    loading_id = db.Column(db.Integer, db.ForeignKey(
         'loading.id', onupdate='CASCADE', ondelete='CASCADE'))
     rate = db.Column(db.Float, nullable=False)
 
-    def __init__(self, insurance_company, loading, rate):
-        self.insurance_company = insurance_company
-        self.loading = loading
+    def __init__(self, insurance_company_id, loading_id, rate):
+        self.insurance_company_id = insurance_company_id
+        self.loading_id = loading_id
         self.rate = rate
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "insurance_company": self.insurance_company.company_details.company_name,
+            "name": self.loading.name,
+            "rate": self.rate
+        }
 
     def save(self):
         db.session.add(self)
@@ -37,7 +45,7 @@ class ICLoadings(db.Model):
         Returns id, loading_id and rate for
         every list of loadings under a particular company 
         """
-        loading_rows = cls.query.filter_by(insurance_company=company_id).all()
+        loading_rows = [loading.serialize() for loading in cls.query.filter_by(insurance_company_id=company_id).all()]
         return loading_rows
 
     

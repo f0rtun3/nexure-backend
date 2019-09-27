@@ -7,6 +7,7 @@ class Loadings(db.Model):
     id = db.Column(db.Integer, autoincrement=True,
                    primary_key=True, nullable=False)
     name = db.Column(db.String(100))
+    ic_loadings = db.relationship('ICLoadings', backref='loading', lazy='dynamic')
 
     def __init__(self, name):
         self.name = name

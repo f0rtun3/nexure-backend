@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: e641468fbab4
+Revision ID: 01b5c3faa6f9
 Revises: 
-Create Date: 2019-09-13 15:39:17.123320
+Create Date: 2019-09-24 18:33:25.268539
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = 'e641468fbab4'
+revision = '01b5c3faa6f9'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -168,8 +168,8 @@ def upgrade():
     op.create_table('constituency',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
-    sa.Column('county', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['county'], ['county.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.Column('county_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['county_id'], ['county.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
@@ -213,6 +213,7 @@ def upgrade():
     sa.Column('mpesa_paybill', sa.String(length=50), nullable=True),
     sa.Column('associated_company', sa.Integer(), nullable=True),
     sa.Column('rate', sa.Float(), nullable=True),
+    sa.Column('ncd_rate', sa.Float(), nullable=True),
     sa.Column('year', sa.Float(), nullable=True),
     sa.Column('facebook', sa.String(length=150), nullable=True),
     sa.Column('instagram', sa.String(length=150), nullable=True),
@@ -299,6 +300,7 @@ def upgrade():
     sa.Column('postal_address', sa.String(length=100), nullable=True),
     sa.Column('postal_code', sa.Integer(), nullable=True),
     sa.Column('postal_town', sa.String(length=30), nullable=True),
+    sa.Column('country', sa.String(length=3), nullable=True),
     sa.Column('county', sa.String(length=30), nullable=True),
     sa.Column('constituency', sa.String(length=30), nullable=True),
     sa.Column('ward', sa.String(length=30), nullable=True),
@@ -363,11 +365,11 @@ def upgrade():
     )
     op.create_table('ic_loadings',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('insurance_company', sa.Integer(), nullable=True),
-    sa.Column('loading', sa.Integer(), nullable=True),
+    sa.Column('insurance_company_id', sa.Integer(), nullable=True),
+    sa.Column('loading_id', sa.Integer(), nullable=True),
     sa.Column('rate', sa.Float(), nullable=False),
-    sa.ForeignKeyConstraint(['insurance_company'], ['insurance_company.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['loading'], ['loading.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['insurance_company_id'], ['insurance_company.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['loading_id'], ['loading.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('ic_products',
@@ -378,13 +380,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['company'], ['insurance_company.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['insurance_class'], ['insurance_class.class_id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['sub_class'], ['insurance_subclass.class_code'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('ic_rate_discount',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('rates', sa.String(length=20), nullable=False),
-    sa.Column('ic_company_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['ic_company_id'], ['insurance_company.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('master_policy',
@@ -427,10 +422,10 @@ def upgrade():
     op.create_table('ward',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
-    sa.Column('constituency', sa.Integer(), nullable=True),
-    sa.Column('county', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['constituency'], ['constituency.id'], onupdate='CASCADE', ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['county'], ['county.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.Column('constituency_id', sa.Integer(), nullable=True),
+    sa.Column('county_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['constituency_id'], ['constituency.id'], onupdate='CASCADE', ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['county_id'], ['county.id'], onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('br_customer',
@@ -543,7 +538,6 @@ def downgrade():
     op.drop_table('vehicle_details')
     op.drop_table('ta_staff')
     op.drop_table('master_policy')
-    op.drop_table('ic_rate_discount')
     op.drop_table('ic_products')
     op.drop_table('ic_loadings')
     op.drop_table('ic_extension')

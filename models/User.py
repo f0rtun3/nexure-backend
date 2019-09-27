@@ -21,6 +21,10 @@ class User(db.Model):
     # an account, once created must be activated by the user
     # through an email sent
     is_active = db.Column(db.Boolean, default=False)
+    # with every login, we need to know whether the user completed
+    # profile filling section upon first time login
+    # this is necessary to make appropriate routes in the client
+    is_complete = db.Column(db.Boolean, default=False)
     # define the relationship to user_profile
     # this allows us access the generated user uuid for exposure
     user_profile = db.relationship("UserProfile", backref="user", uselist=False)
