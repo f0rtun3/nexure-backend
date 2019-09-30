@@ -148,6 +148,7 @@ class MPIUnderwriting(Resource):
             # get brokerage by contact person
             broker = Broker.get_broker_by_contact_id(uid)
             return broker.broker_id
+            
         elif role == "TA":
             # get tied agency
             tied_agent = TiedAgents.get_tied_agent_by_user_id(uid)
