@@ -36,10 +36,10 @@ class BenefitHandler(Resource):
 
         # Store benefits offered by a particular company together with limit
         # get the benefit_id
-        benefit = Benefit.get_benefit_by_name(benefit_name)
+        benefit_id = Benefit.get_benefit_by_name(benefit_name)
 
         company_benefit = ICBenefits(
-            company.id, benefit.id, details['free_limit'], details['max_limit'], details['rate'])
+            company.id, benefit_id, details['free_limit'], details['max_limit'], details['rate'])
         company_benefit.save()
 
         # Send success response

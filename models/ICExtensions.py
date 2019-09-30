@@ -2,8 +2,7 @@ from database.db import db
 
 
 class ICExtensions(db.Model):
-    """
-    Stores the extensions
+    """Stores the extensions
     that offered by a company, for a particular policy, together with the rate and limits for them"""
 
     __tablename__ = 'ic_extension'
@@ -28,6 +27,7 @@ class ICExtensions(db.Model):
 
     def serialize(self):
         return {
+            "id": self.id,
             "insurance_company": self.insurance_company.company_details.company_name,
             "name": self.extension.name,
             "free_limit": self.free_limit,

@@ -124,44 +124,10 @@ class MPIUnderwriting(Resource):
 
             elif transaction_type == 'REFUND':
                 # get existing child policy
-                refund_policy = ChildPolicy.get_child_by_id(
-                    policy_details['child_policy_id'])
-                # get the number of days it has lasted and passed
-                days_passed = datetime.now - child_policy.date_activated
-                days_remaining = child_policy.date_expiry - datetime.now
-                refund_type = policy_details['refund_type']
-                premium_amount = child_policy.premium_amount
-
-                # TODO: add amount paid so far from the transactions table
-                amount_paid = 800  # dummy value
-                # initialize refund amount
-                refund_amount = None
-
-                if refund_type == "sold":
-                    # accept
-                    # if the vehicle insured was sold, then refund premium paid based on the number of remaining days,
-                    # refund full amount paid if it's sold during the first thirty days
-                    if days_passed <= 30:
-                        refund_amount = amount_paid
-                    else:
-                        # get cost covered so far
-                        cost_covered = (premium_amount / 365) * days_passed
-                        # get the amount to refund based on the cost covered and amount paid
-                        refund_amount = amount_paid - cost_covered
-
-                elif refund_type == "remove_benefit":
-                    # accept new details with removed benefit
-                    # store the new details,
-                    # return the amount paid for the removed benefit
-                    pass
-                elif refund_type == "sum_insured":
-                    # receive new details with the new sum insured,
-                    # store the transaction,
-                    # then return the refund amount
-                    pass
-                return make_response(helper.make_rest_success_response("Success!", {"amount_to refund": refund_amount}),
-                                     200)
-
+                # get the number of days it has lasted
+                # get refund type
+                # if refund type is 
+                pass
             elif transaction_type == 'CNC':
                 # To cancel a transaction
                 child_controller = ChildController()

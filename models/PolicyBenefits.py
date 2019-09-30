@@ -9,10 +9,8 @@ class PolicyBenefits(db.Model):
     __tablename__ = 'policy_benefits'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    policy_id = db.Column(db.Integer, db.ForeignKey(
-        'child_policy.id', ondelete='CASCADE', onupdate='CASCADE'))
-    ic_benefit_id = db.Column(db.Integer, db.ForeignKey(
-        'ic_benefit.id', ondelete='CASCADE', onupdate='CASCADE'))
+    policy_id = db.Column(db.Integer, db.ForeignKey('child_policy.id', ondelete='CASCADE', onupdate='CASCADE'))
+    ic_benefit_id = db.Column(db.Integer, db.ForeignKey('ic_benefit.id', ondelete='CASCADE', onupdate='CASCADE'))
     amount = db.Column(db.Float, nullable=False)
 
     def __init__(self, policy_id, ic_benefit_id, amount):
@@ -21,11 +19,7 @@ class PolicyBenefits(db.Model):
         self.amount = amount
 
     def serialize(self):
-        #  We use the PolicyBenefits ID instead of the ICBenefits
-        #  ID to return a unique benefit for each child policy
-        data = self.ic_benefit.serialize()
-        data.update({"id": self.id})
-        return data
+        return self.ic_benefit.serialize()
 
     def save(self):
         db.session.add(self)

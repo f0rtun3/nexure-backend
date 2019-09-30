@@ -5,7 +5,7 @@ from datetime import datetime
 class UserProfile(db.Model):
     __tablename__ = 'user_profile'
 
-    # For normal indexing
+    # for normal indexing
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     # we need to know user whose profile we are storing
     user_id = db.Column(db.Integer, db.ForeignKey(
@@ -29,6 +29,7 @@ class UserProfile(db.Model):
     county = db.Column(db.String(30))
     constituency = db.Column(db.String(30))
     ward = db.Column(db.String(30))
+
     # social media handles
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
