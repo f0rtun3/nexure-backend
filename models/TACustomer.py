@@ -1,4 +1,7 @@
 from database.db import db
+from models.IndividualCustomer import IndividualCustomer
+from models.OrganizationCustomer import OrganizationCustomer
+from helpers import helpers as helper
 
 
 class TACustomer(db.Model):
@@ -41,3 +44,23 @@ class TACustomer(db.Model):
     @classmethod
     def get_affiliation_by_customer(cls, cust_no):
         return cls.query.filter_by(customer_number=cust_no).first()
+
+    @classmethod
+    def get_customers(cls, agent_id):
+        """
+        Get broker specific customer details according to the Tied Agent Details
+        :param agent_id:
+        :return:
+        """
+        customer_numbers = [str(customer) for customer in cls.query.filter_by(id=agent_id).all()]
+        customer_data = []
+        for customer_number in customer_numbers:
+            customer_type = helper.get_customer_type(customer_number)
+            if customer_type == 'IN':
+                detail = IndividualCustomer.query.filter_by(customer_number=customer_number).first()
+                customer_data.append(detail.serialize())
+            else:
+                detail = OrganizationCustomer.query.filter_by(customer_number=customer_number).first()
+                customer_data.append(detail.serialize())
+
+        return customer_data

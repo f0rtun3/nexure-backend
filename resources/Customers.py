@@ -352,3 +352,32 @@ class CustomerOnBoarding(Resource):
         else:
             customer = OrganizationCustomer.get_customer_by_contact(cust_id)
             customer.update(cust_info)
+
+
+class AgencyCustomers(Resource):
+    """
+    Handles agency customer details
+    """
+    @jwt_required
+    def get(self, agency_id):
+        """
+        get agent specific customer
+        :param agency_id:
+        :return:
+        """
+        current_user_claims = get_jwt_claims()
+        current_user_role = current_user_claims['role']
+        result = []
+        if current_user_role == 'IA':
+            result = IACustomer.get_customers(agency_id)
+        elif current_user_role == 'BR':
+            result = BRCustomer.get_customers(agency_id)
+        elif current_user_role == 'TA':
+            result = TACustomer.get_customers(agency_id)
+
+        if result:
+            return make_response(helper.make_rest_success_response("Success", result),
+                                 200)
+        else:
+            return make_response(helper.make_rest_fail_response("No customers, better get to work!"),
+                                 404)

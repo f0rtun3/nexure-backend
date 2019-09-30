@@ -308,12 +308,12 @@ class UserLogin(Resource):
             else:
                 response_msg = helper.make_rest_fail_response(
                     "Please confirm your account before signing in.")
-                return make_response(response_msg, 401)
+                return make_response(response_msg, 400)
         else:
             # wrong credentials passed, return the appropriate message
             response_msg = helper.make_rest_fail_response(
                 "Wrong credentials passed, please try again")
-            return make_response(response_msg, 401)
+            return make_response(response_msg, 400)
 
     @staticmethod
     def get_user_role(user_id):
@@ -328,19 +328,19 @@ class UserLogin(Resource):
 class TokenRefresh(Resource):
     """
     A token refresh resource
-    method['POST']
+    method['GET']
     obtain a fresh token after previous one has expired
     """
     @jwt_refresh_token_required
     def get(self):
         """
-        generate an  unfresh token
+        generate an unfresh token
         unfortunately this token is limited to certain CRUD operations
         """
         curr_user_id = get_jwt_identity()  # Fetch supervisor_id
         claims = get_jwt_claims()
         role = claims['role']
-        new_token = token_handler.create_refresh_token(curr_user_id, role)
+        new_token = token_handler.refresh_user_token(curr_user_id, role)
         response = {
             'access_token': new_token
         }

@@ -18,6 +18,7 @@ from resources.Users import AccountConfirmation
 from resources.Users import AccountRecovery
 from resources.Users import AccountConfirmationResource
 from resources.Customers import CustomerOnBoarding
+from resources.Customers import AgencyCustomers
 from resources.StaffRegistration import StaffRegistration
 from resources.Organizations import OrganizationHandler
 from resources.Cars import CarHandler
@@ -93,6 +94,7 @@ API = Api(application)
 
 API.add_resource(Companies, '/api/companies/<int:status>')
 API.add_resource(CustomerDetails, '/api/customer_details/<string:email>')
+API.add_resource(AgencyCustomers, '/api/customer_details/<int:agency_id>')
 API.add_resource(CompanyDetails, '/api/company_details')
 API.add_resource(CompanyDetailsHandler, '/api/company_details/<int:company_id>')
 API.add_resource(UserRegister, '/api/user')
