@@ -56,25 +56,25 @@ class OrganizationCustomer(db.Model):
 
     def serialize(self):
         return {
-            "org_type": self.org_type,
-            "org_name": self.org_name,
-            "org_phone": self.org_phone,
-            "email": self.email,
-            "org_registration_number": self.org_registration_number,
-            "physical_address": self.physical_address,
-            "postal_code": self.postal_code,
-            "postal_town": self.postal_town,
-            "county": self.county,
-            "constituency": self.constituency,
-            "ward": self.ward,
-            "contact_first_name": self.user.user_profile.first_name,
-            "contact_last_name": self.user.user_profile.last_name,
-            "contact_phone_number": self.user.user_profile.phone,
-            "contact_email": self.user.user_profile.email,
-            "facebook": self.facebook,
-            "instagram": self.instagram,
-            "twitter": self.twitter
-        }, 200
+            "organization": {
+                "org_type": self.org_type,
+                "org_name": self.org_name,
+                "org_phone": self.org_phone,
+                "customer_number": self.customer_number,
+                "org_email": self.email,
+                "org_registration_number": self.org_registration_number,
+                "physical_address": self.physical_address,
+                "postal_code": self.postal_code,
+                "postal_town": self.postal_town,
+                "county": self.county,
+                "constituency": self.constituency,
+                "ward": self.ward,
+                "facebook": self.facebook,
+                "instagram": self.instagram,
+                "twitter": self.twitter
+            },
+            "profile_details": self.user.serialize()
+        }
 
     def save(self):
         db.session.add(self)

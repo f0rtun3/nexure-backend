@@ -40,11 +40,12 @@ class Broker(db.Model):
         self.mpesa_paybill = mpesa_paybill
 
     def __repr__(self):
-        return f"{self.broker_name}"
+        return f"{self.broker_id}"
 
     def serialize(self):
         return {
             "organization": {
+                "broker_id": self.broker_id,
                 "org_name": self.broker_name,
                 "org_contact": self.contact_person,
                 "org_phone": self.broker_phone_number,
