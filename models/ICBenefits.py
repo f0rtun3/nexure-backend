@@ -26,7 +26,7 @@ class ICBenefits(db.Model):
 
     def serialize(self):
         return {
-            "id": self.id,
+            "id": self.policy_benefit_id,
             "insurance_company": self.insurance_company.company_details.company_name,
             "name": self.benefit.name,
             "free_limit": self.free_limit,

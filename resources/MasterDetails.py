@@ -46,5 +46,5 @@ class MasterDetails(Resource):
         if result:
             return make_response(helper.make_rest_success_response("Successfully fetched",
                                                                    result), 200)
-
+                
         return make_response(helper.make_rest_fail_response("Policy was not found"), 404)
