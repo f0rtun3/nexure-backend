@@ -6,8 +6,6 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from database.db import db
 
-
-
 import os
 
 from models import *
@@ -41,12 +39,11 @@ to avoid manual and repetitive setting of the same
 """
 load_dotenv()
 
-
 application = Flask(__name__)
 application.config.from_object(os.environ['APP_SETTINGS'])
 db.init_app(application)
 CORS(application, resources={
-     r"/*": {"origins": application.config['ALLOWED_HOSTS']}})
+    r"/*": {"origins": application.config['ALLOWED_HOSTS']}})
 migrate = Migrate(application, db)
 jwt = JWTManager(application)
 
@@ -90,11 +87,12 @@ def fresh_token_loader_handler():
     }
     return make_response(jsonify(response), 401)
 
+
 API = Api(application)
 
 API.add_resource(Companies, '/api/companies/<int:status>')
 API.add_resource(CustomerDetails, '/api/customer_details/<string:email>')
-API.add_resource(AgencyCustomers, '/api/customer_details/<int:agency_id>')
+API.add_resource(AgencyCustomers, '/api/customer_details')
 API.add_resource(CompanyDetails, '/api/company_details')
 API.add_resource(CompanyDetailsHandler, '/api/company_details/<int:company_id>')
 API.add_resource(UserRegister, '/api/user')

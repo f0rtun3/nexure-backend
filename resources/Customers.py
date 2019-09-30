@@ -359,25 +359,52 @@ class AgencyCustomers(Resource):
     Handles agency customer details
     """
     @jwt_required
-    def get(self, agency_id):
+    def get(self):
         """
         get agent specific customer
-        :param agency_id:
         :return:
         """
+        current_user = get_jwt_identity()
         current_user_claims = get_jwt_claims()
         current_user_role = current_user_claims['role']
-        result = []
-        if current_user_role == 'IA':
-            result = IACustomer.get_customers(agency_id)
-        elif current_user_role == 'BR':
-            result = BRCustomer.get_customers(agency_id)
-        elif current_user_role == 'TA':
-            result = TACustomer.get_customers(agency_id)
+        agency_id = self.get_agent_id(current_user_role, current_user)
+        agency_customers = self.get_customer_details(current_user_role, agency_id)
 
-        if result:
-            return make_response(helper.make_rest_success_response("Success", result),
+        if agency_customers:
+            return make_response(helper.make_rest_success_response("Success", agency_customers),
                                  200)
         else:
             return make_response(helper.make_rest_fail_response("No customers, better get to work!"),
                                  404)
+
+    @staticmethod
+    def get_agent_id(current_user_role, current_user):
+        if current_user_role == 'IA':
+            agency_id = IAStaff.query.filter_by(user_id=current_user).first().agent_id
+
+        elif current_user_role == 'BR':
+            agency_id = BRStaff.query.filter_by(user_id=current_user).first().broker_id
+
+        elif current_user_role == 'TA':
+            agency_id = TAStaff.query.filter_by(user_id=current_user).first().agent_id
+
+        else:
+            return None
+
+        return agency_id
+
+    @staticmethod
+    def get_customer_details(current_user_role, agency_id):
+        if current_user_role == 'IA':
+            result = IACustomer.get_customers(agency_id)
+
+        elif current_user_role == 'BR':
+            result = BRCustomer.get_customers(agency_id)
+
+        elif current_user_role == 'TA':
+            result = TACustomer.get_customers(agency_id)
+
+        else:
+            return None
+
+        return result
