@@ -29,7 +29,7 @@ from helpers.PolicyNumber import PolicyNoGenerator
 import helpers.tokens as token_handler
 import uuid
 import json
-from Controllers.MasterController import MasterController
+from Controllers.master_policy import MasterController
 
 
 class MasterDetails(Resource):

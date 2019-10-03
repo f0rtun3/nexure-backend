@@ -28,7 +28,7 @@ from helpers.parsers import underwriting_parser
 import helpers.tokens as token_handler
 import uuid
 import json
-from Controllers.ChildController import ChildController
+from Controllers.child_policy import ChildController
 
 
 class ChildDetails(Resource):

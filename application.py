@@ -17,6 +17,7 @@ from resources.Users import AccountRecovery
 from resources.Users import AccountConfirmationResource
 from resources.Customers import CustomerOnBoarding
 from resources.Customers import AgencyCustomers
+from resources.Customers import CustomerPolicyHandler
 from resources.StaffRegistration import StaffRegistration
 from resources.Organizations import OrganizationHandler
 from resources.Cars import CarHandler
@@ -60,7 +61,7 @@ def expired_token_handler():
 
 @jwt.invalid_token_loader
 def invalid_token_handler():
-    """token sent deos not match generated token"""
+    """token sent does not match generated token"""
     response = {
         'status_message': 'failed',
         'message': 'Token is invalid'
@@ -93,6 +94,7 @@ API = Api(application)
 API.add_resource(Companies, '/api/companies/<int:status>')
 API.add_resource(CustomerDetails, '/api/customer_details/<string:email>')
 API.add_resource(AgencyCustomers, '/api/customer_details')
+API.add_resource(CustomerPolicyHandler, '/api/customer_details/<path:customer_number>')
 API.add_resource(CompanyDetails, '/api/company_details')
 API.add_resource(CompanyDetailsHandler, '/api/company_details/<int:company_id>')
 API.add_resource(UserRegister, '/api/user')

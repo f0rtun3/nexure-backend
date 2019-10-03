@@ -2,7 +2,7 @@
 Handles master policy, updating(endorsing), renewal etc.
 """
 from models.MasterPolicy import MasterPolicy
-from Controllers.ChildController import ChildController
+from Controllers.child_policy import ChildController
 from models.InsuranceCompany import InsuranceCompany
 
 

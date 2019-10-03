@@ -49,8 +49,14 @@ class ChildPolicy(db.Model):
         self.pricing_model = pricing_model
         self.subclass = subclass
 
-    def serialize(self):
-        return {
+    def serialize(self, types=None):
+        # todo: when other products are added, make vehicles parent to child policy table and dynamically
+        # todo: add the item
+
+        if types is None:
+            types = ['benefits', 'extensions']
+
+        child_policy = {
             "vehicle": self.vehicle_details.serialize(),
             "cp_number": self.cp_number,
             "rate": self.rate,
@@ -61,10 +67,17 @@ class ChildPolicy(db.Model):
             "master_policy": self.master_policy,
             "pricing_model": self.pricing_model,
             "date_activated": self.date_activated.strftime('%m/%d/%Y'),
-            "subclass": self.subclass,
-            "benefits": [benefit.serialize() for benefit in self.benefits if self.benefits],
-            "extensions": [extension.serialize() for extension in self.extensions if self.extensions]
+            "subclass": self.subclass
         }
+
+        if 'benefits' in types:
+            child_policy.update({'benefits': [benefit.serialize() for benefit in self.benefits if self.benefits]})
+
+        if 'extensions' in types:
+            child_policy.update({'extensions': [extension.serialize() for extension in self.extensions
+                                                if self.extensions]})
+
+        return child_policy
 
     def save(self):
         db.session.add(self)
@@ -99,3 +112,13 @@ class ChildPolicy(db.Model):
     @classmethod
     def get_child_by_master_policy(cls, id):
         return [policy.serialize() for policy in cls.query.filter_by(master_policy=id).all()]
+
+    @classmethod
+    def get_child_policies(cls, customer_number):
+        """
+        for payments tracking, we need to get all the child policies of a customer which are active
+        :param customer_number:
+        :return {Array}:
+        """
+        return [child_policy.serialize('no_benefits_and_extensions')
+                for child_policy in cls.query.filter_by(customer_number=customer_number, is_active=True)]

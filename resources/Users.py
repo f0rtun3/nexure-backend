@@ -20,7 +20,7 @@ from models.User import User
 from models.UserPermissions import UserPermissions
 from models.UserProfile import UserProfile
 from models.UserRolePlacement import UserRolePlacement
-import Controllers.UpdateController as updateController
+import Controllers.user_update as updateController
 
 
 class UserRegister(Resource):

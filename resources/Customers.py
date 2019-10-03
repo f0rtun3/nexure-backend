@@ -6,6 +6,7 @@ from flask import current_app as application
 from flask import make_response
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
+from Controllers import customer
 from models.User import User
 from models.IndividualCustomer import IndividualCustomer
 from models.UserProfile import UserProfile
@@ -21,6 +22,7 @@ from models.IAStaff import IAStaff
 from models.Role import Role
 from models.UserRolePlacement import UserRolePlacement
 from models.InsuranceCompany import InsuranceCompany
+from models.ChildPolicy import ChildPolicy
 from models.OrganizationCustomer import OrganizationCustomer
 from models.OrganizationTypes import OrganizationTypes
 from helpers import helpers as helper
@@ -140,7 +142,6 @@ class CustomerOnBoarding(Resource):
 
                 # assign customer number to individual customer number
                 customer_acc_number = customer_number
-
 
         # create a new affiliation between the customer and broker/agent
         # each affiliation must only exist once in the db
@@ -345,13 +346,13 @@ class CustomerOnBoarding(Resource):
 
     @staticmethod
     def update_cust_details(cust_id, cust_no, cust_info):
-        cust_type = helper.get_customer_type(cust_no)
-        if cust_type == 'IN':
-            customer = IndividualCustomer.get_customer_by_user_id(cust_id)
-            customer.update(cust_info)
+        customer_type = helper.get_customer_type(cust_no)
+        if customer_type == 'IN':
+            customer_details = IndividualCustomer.get_customer_by_user_id(cust_id)
+            customer_details.update(cust_info)
         else:
-            customer = OrganizationCustomer.get_customer_by_contact(cust_id)
-            customer.update(cust_info)
+            customer_details = OrganizationCustomer.get_customer_by_contact(cust_id)
+            customer_details.update(cust_info)
 
 
 class AgencyCustomers(Resource):
@@ -361,14 +362,14 @@ class AgencyCustomers(Resource):
     @jwt_required
     def get(self):
         """
-        get agent specific customer
+        get agent specific customers
         :return:
         """
         current_user = get_jwt_identity()
         current_user_claims = get_jwt_claims()
         current_user_role = current_user_claims['role']
-        agency_id = self.get_agent_id(current_user_role, current_user)
-        agency_customers = self.get_customer_details(current_user_role, agency_id)
+        agency_id = customer.get_agent_id(current_user_role, current_user)
+        agency_customers = customer.get_customer_details(current_user_role, agency_id)
 
         if agency_customers:
             return make_response(helper.make_rest_success_response("Success", agency_customers),
@@ -377,34 +378,23 @@ class AgencyCustomers(Resource):
             return make_response(helper.make_rest_fail_response("No customers, better get to work!"),
                                  404)
 
-    @staticmethod
-    def get_agent_id(current_user_role, current_user):
-        if current_user_role == 'IA':
-            agency_id = IAStaff.query.filter_by(user_id=current_user).first().agent_id
 
-        elif current_user_role == 'BR':
-            agency_id = BRStaff.query.filter_by(user_id=current_user).first().broker_id
+class CustomerPolicyHandler(Resource):
+    """
+    handles customer specific policies
+    """
+    #   @jwt_required
+    def get(self, customer_number):
+        """
+        get the customer active child policies
+        this is needed for the payments module where user's active policy payments will be tracked
+        :return:
+        """
+        customers = ChildPolicy.get_child_policies(customer_number)
+        if customers:
+            return make_response(helper.make_rest_success_response("success", customers), 200)
 
-        elif current_user_role == 'TA':
-            agency_id = TAStaff.query.filter_by(user_id=current_user).first().agent_id
+        return make_response(helper.make_rest_fail_response("No customer policies were found"), 404)
 
-        else:
-            return None
 
-        return agency_id
 
-    @staticmethod
-    def get_customer_details(current_user_role, agency_id):
-        if current_user_role == 'IA':
-            result = IACustomer.get_customers(agency_id)
-
-        elif current_user_role == 'BR':
-            result = BRCustomer.get_customers(agency_id)
-
-        elif current_user_role == 'TA':
-            result = TACustomer.get_customers(agency_id)
-
-        else:
-            return None
-
-        return result

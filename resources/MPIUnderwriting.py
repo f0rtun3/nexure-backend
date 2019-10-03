@@ -17,8 +17,8 @@ from models.InsuranceClass import InsuranceClass
 from models.InsuranceSubclass import InsuranceSubclass
 from models.InsuranceCompany import InsuranceCompany
 from models.OrganizationCustomer import OrganizationCustomer
-from Controllers.ChildController import ChildController
-from Controllers.MasterController import MasterController
+from Controllers.child_policy import ChildController
+from Controllers.master_policy import MasterController
 from helpers import helpers as helper
 from helpers.parsers import underwriting_parser
 from helpers.CustomerNumber import CustomerNumber
