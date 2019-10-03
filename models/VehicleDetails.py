@@ -22,9 +22,9 @@ class VehicleDetails(db.Model):
     engine_capacity = db.Column(db.Integer, nullable=False)
     # link to vehicle modifications
     modifications = db.relationship("VehicleModifications", backref="vehicle_details")
-    vehicle_details = db.relationship("ChildPolicy", backref="vehicle_details")
+    child_policy = db.relationship("ChildPolicy", backref="vehicle_details")
 
-    def __init__(self, reg_number, model, color, body_type, origin, sum_insured, driver_id,
+    def __init__(self, reg_number, model, color, body_type, sum_insured, origin, driver_id,
                  no_of_seats, manufacture_year, engine_capacity):
         self.reg_number = reg_number
         self.model = model
@@ -39,6 +39,7 @@ class VehicleDetails(db.Model):
 
     def serialize(self):
         return {
+            "id": self.id,
             "reg_number": self.reg_number,
             "model": self.car_model.model_name,
             "color": self.color,

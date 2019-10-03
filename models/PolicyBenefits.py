@@ -19,7 +19,11 @@ class PolicyBenefits(db.Model):
         self.amount = amount
 
     def serialize(self):
-        return self.ic_benefit.serialize()
+        data = self.ic_benefit.serialize()
+        # We need the actual policy_id for this object, so pop the ic_benefit id and add the policy_benefits id instead
+        data.pop("id")
+        data.update({"amount_paid": self.amount, "id": self.id})
+        return data
 
     def save(self):
         db.session.add(self)
@@ -42,3 +46,8 @@ class PolicyBenefits(db.Model):
             benefit_set.add(benefit.ic_benefit_id)
 
         return benefit_set
+    
+    @classmethod
+    def get_policy_benefit_by_id(cls, id):
+        benefit = cls.query.filter_by(id=id)
+        return benefit

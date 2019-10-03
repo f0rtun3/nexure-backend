@@ -343,8 +343,12 @@ underwriting_parser.add_argument(
     action='append'
 )
 underwriting_parser.add_argument(
-    "master_policy",
-    type=str
+    "master_policy_id",
+    type=int
+)
+underwriting_parser.add_argument(
+    "child_policy_id",
+    type=int
 )
 underwriting_parser.add_argument(
     "date_expiry",
@@ -354,6 +358,22 @@ underwriting_parser.add_argument(
     "rate",
     type=str
 )
+# for refunds
+underwriting_parser.add_argument(
+    "refund_type",
+    type=str
+)
+
+underwriting_parser.add_argument(
+    "vehicle_id",
+    type=int
+)
+
+underwriting_parser.add_argument(
+    "benefit_id",
+    type=int
+)
+
 
 # Insurance Policy products handler parser
 """Contains details that are specific to a particular company for a particular policy such as benefits, extensions, loadings"""

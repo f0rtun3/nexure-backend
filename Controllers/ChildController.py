@@ -44,15 +44,18 @@ class ChildController:
         new_modification.save()
 
     def create_child_policy(self, policy_number, customer_number, rate, date_expiry, premium_amount, transaction_type,
-                            agency_id, associated_company, pricing_model, master_id, subclass):
+                            agency_id, associated_company, pricing_model, master_id, subclass, vehicle_id=None, reason=None, ):
         # Get insurance company given the company details
         new_company = InsuranceCompany.get_by_associated_company(
             associated_company)
+        
+        if vehicle_id is None:
+            vehicle_id = self.vehicle_id
 
         # create child policy
         new_child = ChildPolicy(
             policy_number,
-            self.vehicle_id,
+            vehicle_id,
             customer_number,
             rate,
             date_expiry,
@@ -62,9 +65,11 @@ class ChildController:
             new_company.id,
             pricing_model,
             master_id,
-            subclass
+            subclass,
+            reason
         )
         new_child.save()
+
         return new_child.id
 
     @staticmethod
@@ -74,7 +79,7 @@ class ChildController:
                 i["name"])
             ic_benefit = ICBenefits.get_ic_benefit(benefit.id)
             policy_benefit = PolicyBenefits(
-                child_id, ic_benefit.id, i["value"])
+                child_id, ic_benefit.id, i["amount_paid"])
             policy_benefit.save()
 
     @staticmethod
@@ -85,7 +90,7 @@ class ChildController:
             ic_extension = ICExtensions.get_ic_extension(
                 extension.id)
             policy_extension = PolicyExtensions(
-                child_id, ic_extension.id, i["value"])
+                child_id, ic_extension.id, i["amount_paid"])
             policy_extension.save()
 
     @staticmethod
@@ -133,7 +138,7 @@ class ChildController:
         To cancel a child policy, set 'is_active' to false and 'transaction_type' to 'CNC' for cancelled
         """
         # get child policy
-        child_policy = ChildPolicy.get_child_by_id(child_policy_id)
+        child_policy = ChildPolicy.get_recent_by_id(child_policy_id)
         # deactivate child policy
         data = {
             "transaction_type": 'CNC',

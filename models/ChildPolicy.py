@@ -1,4 +1,5 @@
 from database.db import db
+from sqlalchemy import desc
 
 
 class ChildPolicy(db.Model):
@@ -10,9 +11,9 @@ class ChildPolicy(db.Model):
     __tablename__ = 'child_policy'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    vehicle = db.Column(db.Integer, db.ForeignKey('vehicle_details.id', ondelete='CASCADE', onupdate='CASCADE'))
+    vehicle = db.Column(db.Integer, db.ForeignKey(
+        'vehicle_details.id', ondelete='CASCADE', onupdate='CASCADE'))
     cp_number = db.Column(db.String(22), nullable=False, unique=True)
-    # links to the association table for loadings
     customer_number = db.Column(db.String(50))
     rate = db.Column(db.Float, nullable=True)
     date_registered = db.Column(db.DateTime, default=db.func.now())
@@ -26,16 +27,18 @@ class ChildPolicy(db.Model):
     company = db.Column(db.Integer, db.ForeignKey(
         'insurance_company.id', onupdate='CASCADE', ondelete='CASCADE'))
     pricing_model = db.Column(db.String(50), nullable=False)
-    date_activated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    date_activated = db.Column(
+        db.DateTime, default=db.func.now(), onupdate=db.func.now())
     is_active = db.Column(db.Boolean, default=False)
     subclass = db.Column(db.String(22), nullable=True)
+    reason = db.Column(db.String(10), nullable=True)
     # links to the association table for benefits
     benefits = db.relationship("PolicyBenefits", backref="child_policy")
     # links to the association table for extensions
     extensions = db.relationship("PolicyExtensions", backref="child_policy")
 
     def __init__(self, cp_number, vehicle, customer_number, rate, date_expiry, premium_amount, transaction_type,
-                 agency_id, company, pricing_model, master_policy, subclass):
+                 agency_id, company, pricing_model, master_policy, subclass, reason=None):
         self.vehicle = vehicle
         self.cp_number = cp_number
         self.customer_number = customer_number
@@ -48,6 +51,7 @@ class ChildPolicy(db.Model):
         self.company = company
         self.pricing_model = pricing_model
         self.subclass = subclass
+        self.reason = reason
 
     def serialize(self):
         return {
@@ -79,21 +83,22 @@ class ChildPolicy(db.Model):
         db.session.remove(self)
         db.session.commit()
 
-    def add_benefit(self, benefit, amount_paid):
-        self.benefits.append(benefit, amount_paid)
-        self.save()
+    def deactivate(self):
+        if self.is_active:
+            self.is_active = False
+        db.session.commit()
 
-    def add_loading(self, loading_id, amount_paid):
-        self.loadings.append(loading_id, amount_paid)
-        self.save()
+    def activate(self):
+        if not self.is_active:
+            self.is_active = True
+        db.session.commit()
 
-    def add_extension(self, extension_id, amount_paid):
-        self.extensions.append(extension_id, amount_paid)
-        self.save()
-    
     @classmethod
-    def get_child_by_id(cls, id):
-        child = cls.query.filter_by(id=id).first()
+    def get_child_by_id(cls, child_id, status=None):
+        if status is None:
+            status = True
+        child = cls.query.filter_by(
+            id=child_id, is_active=status).first()
         return child
 
     @classmethod

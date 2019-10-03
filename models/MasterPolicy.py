@@ -1,5 +1,6 @@
-from database.db import db
 from sqlalchemy import desc
+
+from database.db import db
 
 
 class MasterPolicy(db.Model):
@@ -35,7 +36,9 @@ class MasterPolicy(db.Model):
         self.date_expiry = date_expiry
         self.company = company
 
-    def serialize(self):
+    def serialize(self, type=None):
+        if type is None:
+            type = [True, False]
         return {
             "id": self.id,
             "mp_number": self.mp_number,
@@ -44,7 +47,7 @@ class MasterPolicy(db.Model):
             "date_expiry": self.date_expiry.strftime('%m/%d/%Y'),
             "status": self.status,
             "company": self.insurance_company.company_details.company_name,
-            "child_policies": [child_policy.serialize() for child_policy in self.child]
+            "child_policies": [child_policy.serialize() for child_policy in self.child if child_policy.is_active in type]
         }
 
     def save(self):

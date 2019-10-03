@@ -4,9 +4,12 @@ from database.db import db
 class BRStaff(db.Model):
     __tablename__ = 'br_staff'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
-    broker_id = db.Column(db.Integer, db.ForeignKey('broker.broker_id', ondelete='CASCADE', onupdate='CASCADE'))
+    id = db.Column(db.Integer, primary_key=True,
+                   autoincrement=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id', ondelete='CASCADE', onupdate='CASCADE'))
+    broker_id = db.Column(db.Integer, db.ForeignKey(
+        'broker.broker_id', ondelete='CASCADE', onupdate='CASCADE'))
     br_customer = db.relationship("BRCustomer", backref="br_customer_member")
     active = db.Column(db.Boolean, default=True)
 
@@ -25,8 +28,7 @@ class BRStaff(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    @staticmethod
-    def deactivate_staff(company_id, staff_id):
+    def deactivate_staff(self, company_id, staff_id):
         staff = self.query.filter_by(user_id=staff_id, broker_id=company_id)
         staff.active = False
         self.save()

@@ -9,8 +9,10 @@ class PolicyExtensions(db.Model):
     __tablename__ = 'policy_extension'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    policy_id = db.Column(db.Integer, db.ForeignKey('child_policy.id', ondelete='CASCADE', onupdate='CASCADE'))
-    ic_extension_id = db.Column(db.Integer, db.ForeignKey('ic_extension.id', ondelete='CASCADE', onupdate='CASCADE'))
+    policy_id = db.Column(db.Integer, db.ForeignKey(
+        'child_policy.id', ondelete='CASCADE', onupdate='CASCADE'))
+    ic_extension_id = db.Column(db.Integer, db.ForeignKey(
+        'ic_extension.id', ondelete='CASCADE', onupdate='CASCADE'))
     amount = db.Column(db.Float, nullable=False)
 
     def __init__(self, policy_id, ic_extension_id, amount):
@@ -19,7 +21,9 @@ class PolicyExtensions(db.Model):
         self.amount = amount
 
     def serialize(self):
-        return self.ic_extension.serialize()
+        data = self.ic_extension.serialize()
+        data.update({"amount_paid": self.amount})
+        return data
 
     def save(self):
         db.session.add(self)
