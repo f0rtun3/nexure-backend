@@ -102,7 +102,7 @@ class CustomerOnBoarding(Resource):
                 customer_acc_number = customer_number
 
             # if onboarding an organization
-            elif customer_details['type'] == "organization":
+            elif customer_details['type'] == "Organization":
                 customer_id = new_account.id
                 customer_number = self.create_customer_number(customer_details['org_type'],
                                                                 customer_id, customer_details['country'])
