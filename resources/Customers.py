@@ -383,7 +383,7 @@ class CustomerPolicyHandler(Resource):
     """
     handles customer specific policies
     """
-    #   @jwt_required
+    @jwt_required
     def get(self, customer_number):
         """
         get the customer active child policies
