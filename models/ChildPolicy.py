@@ -91,18 +91,6 @@ class ChildPolicy(db.Model):
     def delete(self):
         db.session.remove(self)
         db.session.commit()
-
-    def add_benefit(self, benefit, amount_paid):
-        self.benefits.append(benefit, amount_paid)
-        self.save()
-
-    def add_loading(self, loading_id, amount_paid):
-        self.loadings.append(loading_id, amount_paid)
-        self.save()
-
-    def add_extension(self, extension_id, amount_paid):
-        self.extensions.append(extension_id, amount_paid)
-        self.save()
     
     @classmethod
     def get_child_by_id(cls, id):
