@@ -17,6 +17,9 @@ class TAStaff(db.Model):
         self.user_id = user_id
         self.agent_id = agent_id
 
+    def serialize(self):
+        return self.user.serialize()
+
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -50,3 +53,7 @@ class TAStaff(db.Model):
         for i in staff:
             staff_ids.append(i.user_id)
         return staff_ids
+
+    @classmethod
+    def fetch_staff_by_agency_id(cls, agency_id):
+        return [staff.serialize() for staff in cls.query.filter_by(agency_id).all()]
