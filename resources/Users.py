@@ -34,6 +34,14 @@ class UserRegister(Resource):
             response_msg = helper.make_rest_fail_response(err_msg)
             return make_response(response_msg, 409)
 
+        # check if user phone number exists
+        phone_number = UserProfile.get_profile_by_phone_number(
+            user_details["mob"])
+        if phone_number:
+            err_msg = f"{user_details['mob']} already exists"
+            response_msg = helper.make_rest_fail_response(err_msg)
+            return make_response(response_msg, 409)
+
         # save the user authentication details and profile details
         # in their respective database tables
         user_uuid = uuid.uuid4()
@@ -72,7 +80,8 @@ class UserRegister(Resource):
         email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                      f" to confirm your account"
 
-        helper.send_email(user_details['email'], subject, email_template, email_text)
+        helper.send_email(user_details['email'],
+                          subject, email_template, email_text)
 
         response_msg = helper.make_rest_success_response("Registration successful, kindly"
                                                          " check your email for confirmation link")
@@ -130,24 +139,30 @@ class UserRegister(Resource):
             claims = get_jwt_claims()
             role = claims['role']
             if user_details['update_type'] == "password":
-                updateController.update_user_password(user_details['new_password'], user_id)
+                updateController.update_user_password(
+                    user_details['new_password'], user_id)
 
             elif user_details['update_type'] == "personal":
-                user_details.update({'birth_date': UserRegister.format_birth_date(str(user_details['birth_date']))})
+                user_details.update(
+                    {'birth_date': UserRegister.format_birth_date(str(user_details['birth_date']))})
                 updateController.update_personal_details(user_details, user_id)
 
             elif user_details['update_type'] == "location":
                 updateController.update_location_details(user_details, user_id)
 
             elif user_details['update_type'] == "agency":
-                updateController.update_agency_details(user_details, role, user_id)
+                updateController.update_agency_details(
+                    user_details, role, user_id)
 
             elif user_details['update_type'] == "complete_profile":
-                user_details['birth_date'] = UserRegister.format_birth_date(user_details['birth_date'])
-                updateController.complete_user_profile(user_details, user_id, role)
+                user_details['birth_date'] = UserRegister.format_birth_date(
+                    user_details['birth_date'])
+                updateController.complete_user_profile(
+                    user_details, user_id, role)
 
             elif user_details['update_type'] == "social":
-                updateController.update_social_profile(user_details, user_id, role)
+                updateController.update_social_profile(
+                    user_details, user_id, role)
 
         else:
             # if user does not exist
@@ -390,7 +405,8 @@ class AccountRecovery(Resource):
         user_details = user_parser.parse_args()
         user = User.get_user_by_id(user_id)
         if user:
-            updateController.update_user_password(user_details['new_password'], user_id)
+            updateController.update_user_password(
+                user_details['new_password'], user_id)
             response_msg = helper.make_rest_success_response(
                 "Successfully recovered user account")
             return make_response(response_msg, 200)
