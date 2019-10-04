@@ -34,6 +34,14 @@ class UserRegister(Resource):
             response_msg = helper.make_rest_fail_response(err_msg)
             return make_response(response_msg, 409)
 
+        # check if user phone number exists
+        phone_number = UserProfile.get_profile_by_phone_number(
+            user_details["mob"])
+        if phone_number:
+            err_msg = f"{user_details['mob']} already exists"
+            response_msg = helper.make_rest_fail_response(err_msg)
+            return make_response(response_msg, 409)
+
         # save the user authentication details and profile details
         # in their respective database tables
         user_uuid = uuid.uuid4()

@@ -45,7 +45,7 @@ class CustomerOnBoarding(Resource):
     def post(self):
         customer_details = customer_parser.parse_args()
         customer = User.get_user_by_email(customer_details['email'])
-        customer_acc_number = None
+        customer_number = None
         if not customer:
             # Create temporary seven digit password
             temporary_pass = helper.create_user_password()
@@ -141,9 +141,6 @@ class CustomerOnBoarding(Resource):
                 # send activation email
                 self.send_activation_email(customer_details['email'], customer_id, temporary_pass)
 
-                # assign customer number to individual customer number
-                customer_acc_number = customer_number
-
         # create a new affiliation between the customer and broker/agent
         # each affiliation must only exist once in the db
         # we need to fetch the role of the agent/broker and associate it into the affiliation
@@ -156,25 +153,25 @@ class CustomerOnBoarding(Resource):
         if agent_broker:
             # the current user is not a staff member
             # we also need to ensure the affiliation created is not a duplicate one
-            if not self.is_affiliation_duplicate(role_name, agent_broker, customer_acc_number):
+            if not self.is_affiliation_duplicate(role_name, agent_broker, customer_number):
                 self.register_customer(
-                    role_name, customer_acc_number, agent_broker, uid)
+                    role_name, customer_number, agent_broker, uid)
             else:
                 response_msg = helper.make_rest_fail_response(
                     "This affiliation was already created")
                 return make_response(response_msg, 409)
         else:
             broker_agent_id = self.get_broker_agent_id(uid, role_name)
-            if not self.is_affiliation_duplicate(role_name, broker_agent_id, customer_acc_number):
+            if not self.is_affiliation_duplicate(role_name, broker_agent_id, customer_number):
                 self.register_customer(
-                    role_name, customer_acc_number, broker_agent_id)
+                    role_name, customer_number, broker_agent_id)
             else:
                 response_msg = helper.make_rest_fail_response(
                     "This affiliation was already created")
                 return make_response(response_msg, 409)
 
         response_msg = helper.make_rest_success_response(
-            "Customer has been on boarded successfully", {"customer_number": customer_acc_number})
+            "Customer has been onbarded successfully", {"customer_number": customer_number})
         return make_response(response_msg, 200)
 
     @jwt_required
