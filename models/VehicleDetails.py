@@ -24,7 +24,7 @@ class VehicleDetails(db.Model):
     modifications = db.relationship("VehicleModifications", backref="vehicle_details")
     child_policy = db.relationship("ChildPolicy", backref="vehicle_details")
 
-    def __init__(self, reg_number, model, color, body_type, sum_insured, origin, driver_id,
+    def __init__(self, reg_number, model, color, body_type, origin, sum_insured, driver_id,
                  no_of_seats, manufacture_year, engine_capacity):
         self.reg_number = reg_number
         self.model = model
