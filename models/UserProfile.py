@@ -35,7 +35,8 @@ class UserProfile(db.Model):
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
     created_on = db.Column(db.DateTime, default=db.func.now())
-    updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    updated_on = db.Column(
+        db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
     def __init__(self, user_id, first_name, last_name, phone, gender=None, avatar_url=None, occupation=None,
                  id_passport=None, kra_pin=None, birth_date=None, physical_address=None, postal_address=None,
@@ -122,4 +123,9 @@ class UserProfile(db.Model):
         if date is not None:
             format_str = '%d/%m/%Y'
             converted_date = datetime.strptime(date, format_str)
-            return converted_date.date() 
+            return converted_date.date()
+
+    @classmethod
+    def get_profile_by_phone_number(cls, phone):
+        profile = cls.query.filter_by(phone=phone).first()
+        return profile
