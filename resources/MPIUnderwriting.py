@@ -117,7 +117,7 @@ class MPIUnderwriting(Resource):
                     if time_difference > 1:
                         # revise the child policy with the a new premium amount
                         revised_policy = self.revise_child_policy(
-                            "END", endorsed_policy, policy_details)
+                            "END", endorsed_policy, policy_details, "benefit_added")
 
                         # append the new benefit to revised policy
                         child_controller = ChildController()
@@ -360,7 +360,8 @@ class MPIUnderwriting(Resource):
         # Finally create the child policy
         child_policy_id = child_controller.create_child_policy(
             child_policy_no,
-            policy_details["customer_number"],
+            # customer number
+            master_policy.customer,
             policy_details['rate'],
             # Set date expiry as the expiry date of the endorsed master policy
             master_policy.date_expiry,
@@ -368,7 +369,8 @@ class MPIUnderwriting(Resource):
             policy_details['transaction_type'],
             # id of the underwriting agency
             company_id,
-            policy_details['insurance_company'],
+            # insurance company
+            master_policy.insurance_company.id,
             policy_details['pricing_module'],
             # id of the endorsed policy id
             master_policy.id,
