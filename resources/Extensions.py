@@ -39,10 +39,10 @@ class ExtensionHandler(Resource):
         Store benefits offered by a particular company together with limit
         """
         # get the extension_id
-        extension_id = Extension.get_extension_id_by_name(extension_name)
+        extension = Extension.get_extension_id_by_name(extension_name)
 
         company_extension = ICExtensions(
-            company.id, extension_id, details['free_limit'], details['max_limit'], details['rate'])
+            company.id, extension.id, details['free_limit'], details['max_limit'], details['rate'])
         company_extension.save()
 
         """

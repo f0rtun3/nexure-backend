@@ -47,7 +47,8 @@ class MasterPolicy(db.Model):
             "date_expiry": self.date_expiry.strftime('%m/%d/%Y'),
             "status": self.status,
             "company": self.insurance_company.company_details.company_name,
-            "child_policies": [child_policy.serialize() for child_policy in self.child if child_policy.is_active in type]
+            "times_renewed": self.get_policy_count(),
+            "child_policies": [child_policy.serialize() for child_policy in self.child]
         }
 
     def save(self):
@@ -85,3 +86,10 @@ class MasterPolicy(db.Model):
             return policy_details.serialize()
 
         return None
+    
+    def get_policy_count(self):
+        # for the number of times it has been renewed
+        policies = self.query.filter_by(mp_number=self.mp_number).count()
+        # subtract the first original policy,
+        # to only get the number of times the policy has been renewed
+        return policies - 1
