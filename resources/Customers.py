@@ -79,6 +79,7 @@ class CustomerOnBoarding(Resource):
                     customer_details['postal_address'],
                     customer_details['postal_code'],
                     customer_details['postal_town'],
+                    customer_details['country'],
                     customer_details['county'],
                     customer_details['constituency'],
                     customer_details['ward'],
