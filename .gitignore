@@ -135,3 +135,6 @@ helpers/__pycache__/
 
 # documentation
 .md
+
+# migrations
+migrations/
