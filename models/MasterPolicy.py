@@ -46,6 +46,7 @@ class MasterPolicy(db.Model):
             "date_created": self.date_created.strftime('%m/%d/%Y'),
             "date_expiry": self.date_expiry.strftime('%m/%d/%Y'),
             "status": self.status,
+            "company_id": self.insurance_company.company_details.id,
             "company": self.insurance_company.company_details.company_name,
             "times_renewed": self.get_policy_count(),
             "child_policies": [child_policy.serialize() for child_policy in self.child]

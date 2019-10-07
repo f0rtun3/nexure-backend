@@ -22,13 +22,15 @@ class OrganizationCustomer(db.Model):
     constituency = db.Column(db.String(30))
     ward = db.Column(db.String(30))
     # organization contact person details
-    contact_person = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
+    contact_person = db.Column(db.Integer, db.ForeignKey(
+        'user.id', ondelete='CASCADE', onupdate='CASCADE'))
     # social media handles
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
     created_on = db.Column(db.DateTime, default=db.func.now())
-    updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    updated_on = db.Column(
+        db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
     def __init__(self, org_type, org_name, org_phone, org_email, org_reg_number, physical_address, postal_address,
                  postal_code, postal_town, county, constituency, ward, facebook, instagram, twitter, contact_person,
@@ -55,26 +57,26 @@ class OrganizationCustomer(db.Model):
         return f"{self.org_name}"
 
     def serialize(self):
-        return {
-            "organization": {
-                "org_type": self.org_type,
-                "org_name": self.org_name,
-                "org_phone": self.org_phone,
-                "customer_number": self.customer_number,
-                "org_email": self.email,
-                "org_registration_number": self.org_registration_number,
-                "physical_address": self.physical_address,
-                "postal_code": self.postal_code,
-                "postal_town": self.postal_town,
-                "county": self.county,
-                "constituency": self.constituency,
-                "ward": self.ward,
-                "facebook": self.facebook,
-                "instagram": self.instagram,
-                "twitter": self.twitter
-            },
-            "profile_details": self.user.serialize()
-        }
+
+        organization = {
+            "org_type": self.org_type,
+            "org_name": self.org_name,
+            "org_phone": self.org_phone,
+            "customer_number": self.customer_number,
+            "org_email": self.email,
+            "org_registration_number": self.org_registration_number,
+            "physical_address": self.physical_address,
+            "postal_code": self.postal_code,
+            "postal_town": self.postal_town,
+            "county": self.county,
+            "constituency": self.constituency,
+            "ward": self.ward,
+            "facebook": self.facebook,
+            "instagram": self.instagram,
+            "twitter": self.twitter
+        },
+        organization.update(self.user.serialize())
+        return organization
 
     def save(self):
         db.session.add(self)

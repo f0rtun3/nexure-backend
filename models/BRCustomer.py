@@ -1,7 +1,7 @@
 from database.db import db
+from helpers import helpers as helper
 from models.IndividualCustomer import IndividualCustomer
 from models.OrganizationCustomer import OrganizationCustomer
-from helpers import helpers as helper
 
 
 class BRCustomer(db.Model):
@@ -10,10 +10,13 @@ class BRCustomer(db.Model):
     """
     __tablename__ = 'br_customer'
 
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
+    id = db.Column(db.Integer, autoincrement=True,
+                   primary_key=True, nullable=False)
     customer_number = db.Column(db.String(50))
-    broker_id = db.Column(db.Integer, db.ForeignKey('broker.broker_id', onupdate='CASCADE', ondelete='CASCADE'))
-    staff_id = db.Column(db.Integer, db.ForeignKey('br_staff.id', onupdate='CASCADE'), nullable=True)
+    broker_id = db.Column(db.Integer, db.ForeignKey(
+        'broker.broker_id', onupdate='CASCADE', ondelete='CASCADE'))
+    staff_id = db.Column(db.Integer, db.ForeignKey(
+        'br_staff.id', onupdate='CASCADE'), nullable=True)
     date_affiliated = db.Column(db.DateTime, default=db.func.now())
     # we need to know whether the affiliation is active or not
     status = db.Column(db.Boolean, default=True)
@@ -55,15 +58,18 @@ class BRCustomer(db.Model):
         :param broker_id:
         :return:
         """
-        customer_numbers = [str(customer) for customer in cls.query.filter_by(broker_id=broker_id).all()]
+        customer_numbers = [str(customer.customer_number)
+                            for customer in cls.query.filter_by(broker_id=broker_id).all()]
         customer_data = []
         for customer_number in customer_numbers:
             customer_type = helper.get_customer_type(customer_number)
             if customer_type == 'IN':
-                detail = IndividualCustomer.query.filter_by(customer_number=customer_number).first()
+                detail = IndividualCustomer.query.filter_by(
+                    customer_number=customer_number).first()
                 customer_data.append(detail.serialize())
             else:
-                detail = OrganizationCustomer.query.filter_by(customer_number=customer_number).first()
+                detail = OrganizationCustomer.query.filter_by(
+                    customer_number=customer_number).first()
                 customer_data.append(detail.serialize())
 
         return customer_data

@@ -63,6 +63,7 @@ class ChildPolicy(db.Model):
         child_policy = {
             "vehicle": self.vehicle_details.serialize(),
             "cp_number": self.cp_number,
+            "company_id": self.insurance_company.company_details.id,
             "rate": self.rate,
             "date_expiry": self.date_expiry.strftime('%m/%d/%Y'),
             "premium_amount": self.premium_amount,

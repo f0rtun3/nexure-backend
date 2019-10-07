@@ -1,12 +1,15 @@
 """
 customer controller functions
 """
-from models.BRStaff import BRStaff
-from models.TAStaff import TAStaff
-from models.IAStaff import IAStaff
 from models.BRCustomer import BRCustomer
-from models.TACustomer import TACustomer
+from models.Broker import Broker
+from models.BRStaff import BRStaff
 from models.IACustomer import IACustomer
+from models.IAStaff import IAStaff
+from models.IndependentAgent import IndependentAgent
+from models.TACustomer import TACustomer
+from models.TAStaff import TAStaff
+from models.TiedAgent import TiedAgents
 
 
 def get_agent_id(user_role, user_id):
@@ -18,13 +21,13 @@ def get_agent_id(user_role, user_id):
     :return {number}:
     """
     if user_role == 'IA':
-        agency_id = IAStaff.query.filter_by(user_id=user_id).first().agent_id
+        agency_id = IndependentAgent.query.filter_by(user_id=user_id).first().agent_id
 
     elif user_role == 'BR':
-        agency_id = BRStaff.query.filter_by(user_id=user_id).first().broker_id
+        agency_id = Broker.query.filter_by(user_id=user_id).first().broker_id
 
     elif user_role == 'TA':
-        agency_id = TAStaff.query.filter_by(user_id=user_id).first().agent_id
+        agency_id = TiedAgents.query.filter_by(user_id=user_id).first().id
 
     else:
         return None

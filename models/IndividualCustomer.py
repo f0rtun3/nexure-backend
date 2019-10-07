@@ -26,10 +26,10 @@ class IndividualCustomer(db.Model):
     def serialize(self):
         customer_profile = {
             "customer_number": self.customer_number,
-            "salutaion": self.salutation
+            "salutation": self.salutation
         }
-        customer_profile.update(self.user.serailize())
-        return {"profile_details": customer_profile}
+        customer_profile.update(self.user.serialize())
+        return customer_profile
 
     def save(self):
         db.session.add(self)
