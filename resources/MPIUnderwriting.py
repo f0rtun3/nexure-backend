@@ -106,29 +106,29 @@ class MPIUnderwriting(Resource):
                         return make_response(response, 500)
 
                 if policy_details["child_policy_id"]:
-                    
+
                     # In this case we add a benefit to the child policy
                     endorsed_policy = ChildPolicy.get_child_by_id(
                         policy_details["child_policy_id"])
-                    
+
                     # Check whether the policy has expired.
                     time_difference = (
                         endorsed_policy.date_expiry - datetime.now()).days
                     if time_difference > 1:
                         # revise the child policy with the a new premium amount
                         revised_policy = self.revise_child_policy(
-                            "END", endorsed_policy, policy_details, "benefit_added")
+                            "END", endorsed_policy, policy_details, "benefit")
 
                         # append the new benefit to revised policy
                         child_controller = ChildController()
                         child_controller.add_benefits(
-                            revised_policy, policy_details['benefits'])
-                        
+                            policy_details['benefits'], revised_policy)
+
                         # endorsement successful
                         response = helper.make_rest_success_response(
                             "Endorsement successful", revised_policy)
                         return make_response(response, 200)
-                    
+
                     else:
                         response = helper.make_rest_fail_response(
                             "Failed! Policy expired. Kindly renew it then endorse.")
@@ -158,9 +158,9 @@ class MPIUnderwriting(Resource):
 
                     # append the new extension to revised policy
                     child_controller = ChildController()
-                    child_controller.add_benefits(
-                        revised_policy, policy_details["extensions"])
-                    
+                    child_controller.add_extensions(policy_details["extensions"],
+                                                    revised_policy)
+
                     return make_response(helper.make_rest_success_response("Policy extended successfully", revised_policy),
                                          200)
                 else:
@@ -198,7 +198,7 @@ class MPIUnderwriting(Resource):
                         child_policy.master_policy,
                         child_policy.subclass,
                         child_policy.vehicle,
-                        "sold"                        
+                        "sold"
                     )
 
                     # if the policy has lasted for less than thirty days refund full amount paid
@@ -219,16 +219,19 @@ class MPIUnderwriting(Resource):
                     child_policy.deactivate()
 
                     # create new transaction with the same child policy number and vehicle details
-                    revised_policy = self.revise_child_policy("REF", child_policy, policy_details, "benefit_removed")
+                    revised_policy = self.revise_child_policy(
+                        "REF", child_policy, policy_details, "benefit_removed")
 
                     # Append any remaining benefits
                     # first get the id of the cancelled benefit
                     cancelled_benefit = policy_details["benefit_id"]
                     # get remaining
-                    remaining_benefits = [i.serialize() for i in child_policy.benefits if i.id != cancelled_benefit]
+                    remaining_benefits = [
+                        i.serialize() for i in child_policy.benefits if i.id != cancelled_benefit]
 
                     # append them to the revised policy
-                    ChildController.add_benefits(remaining_benefits, revised_policy)
+                    ChildController.add_benefits(
+                        remaining_benefits, revised_policy)
 
                     # get refund amount based on the new recalculated premium amount
                     new_premium_amount = policy_details["premium_amount"]
@@ -425,9 +428,10 @@ class MPIUnderwriting(Resource):
             previous_policy.subclass,
             previous_policy.vehicle,
             reason,
-            
+
         )
         # TODO: Look at the dates in all policies and change them appropriately
         # activate the updated policy
-        revised_policy.activate()
+        updated_policy = ChildPolicy.get_child_by_id(
+            revised_policy, False).activate()
         return revised_policy

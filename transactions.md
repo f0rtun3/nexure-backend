@@ -39,3 +39,4 @@
 	"pricing_module": "RA",
 	"rate": 0.05
 }
+2. Endorsing a child policy 

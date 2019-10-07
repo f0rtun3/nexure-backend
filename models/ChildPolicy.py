@@ -13,7 +13,7 @@ class ChildPolicy(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     vehicle = db.Column(db.Integer, db.ForeignKey(
         'vehicle_details.id', ondelete='CASCADE', onupdate='CASCADE'))
-    cp_number = db.Column(db.String(22), nullable=False, unique=True)
+    cp_number = db.Column(db.String(22), nullable=False)
     customer_number = db.Column(db.String(50))
     rate = db.Column(db.Float, nullable=True)
     date_registered = db.Column(db.DateTime, default=db.func.now())
@@ -31,7 +31,7 @@ class ChildPolicy(db.Model):
         db.DateTime, default=db.func.now(), onupdate=db.func.now())
     is_active = db.Column(db.Boolean, default=False)
     subclass = db.Column(db.String(22), nullable=True)
-    reason = db.Column(db.String(10), nullable=True)
+    reason = db.Column(db.String(50), nullable=True)
     # links to the association table for benefits
     benefits = db.relationship("PolicyBenefits", backref="child_policy")
     # links to the association table for extensions
@@ -76,7 +76,8 @@ class ChildPolicy(db.Model):
         }
 
         if 'benefits' in types:
-            child_policy.update({'benefits': [benefit.serialize() for benefit in self.benefits if self.benefits]})
+            child_policy.update(
+                {'benefits': [benefit.serialize() for benefit in self.benefits if self.benefits]})
 
         if 'extensions' in types:
             child_policy.update({'extensions': [extension.serialize() for extension in self.extensions
@@ -96,7 +97,19 @@ class ChildPolicy(db.Model):
     def delete(self):
         db.session.remove(self)
         db.session.commit()
-    
+
+    def deactivate(self):
+        # deactivate previous child policy incase of refund, endorsement or extension
+        if self.is_active:
+            self.is_active = False
+        db.session.commit()
+
+    def activate(self):
+        # activate after payment
+        if not self.is_active:
+            self.is_active = True
+        db.session.commit()
+
     @classmethod
     def get_child_by_id(cls, child_id, status=None):
         if status is None:
