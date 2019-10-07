@@ -49,5 +49,5 @@ class PolicyBenefits(db.Model):
     
     @classmethod
     def get_policy_benefit_by_id(cls, id):
-        benefit = cls.query.filter_by(id=id)
+        benefit = cls.query.filter_by(id=id).first()
         return benefit
