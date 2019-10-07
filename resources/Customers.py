@@ -58,8 +58,8 @@ class CustomerOnBoarding(Resource):
                 temporary_pass
             )
             new_account.save()
-        
-            # if onboarding an individual customer
+
+            # if on boarding an individual customer
             if customer_details['type'] == 'Individual':
                 customer = User.get_user_by_email(customer_details['email'])
                 customer_id = new_account.id
@@ -99,17 +99,20 @@ class CustomerOnBoarding(Resource):
                 # send activation email
                 self.send_activation_email(customer_details['email'], customer_id, temporary_pass)
 
-            # if onboarding an organization
+                # assign customer number to individual customer number
+                customer_acc_number = customer_number
+
+            # if on boarding an organization
             elif customer_details['type'] == "Organization":
                 customer_id = new_account.id
                 customer_number = self.create_customer_number(customer_details['org_type'],
-                                                                customer_id, customer_details['country'])
+                                                              customer_id, customer_details['country'])
                 # Add contact person details
                 contact_person = UserProfile(
                     customer_id,
                     customer_details['first_name'],
                     customer_details['last_name'],
-                    customer_details["phone"]                
+                    customer_details["phone"]
                 )
                 contact_person.save()
 
@@ -226,7 +229,7 @@ class CustomerOnBoarding(Resource):
                                                                temporary_pass)
         subject = "Nexure Temporary Password"
         email_text = f"Follow {application.config['LOGIN_ENDPOINT']} to login and use {temporary_pass} " \
-            f"as your temporary password"
+                     f"as your temporary password"
         helper.send_email(
             email, subject, email_template, email_text)
 
@@ -237,7 +240,7 @@ class CustomerOnBoarding(Resource):
                                                                confirmation_code)
         subject = "Please confirm your account"
         email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
-            f" to confirm your account"
+                     f" to confirm your account"
         helper.send_email(
             email, subject, email_template, email_text)
 
@@ -354,6 +357,7 @@ class AgencyCustomers(Resource):
     """
     Handles agency customer details
     """
+
     @jwt_required
     def get(self):
         """
@@ -378,6 +382,7 @@ class CustomerPolicyHandler(Resource):
     """
     handles customer specific policies
     """
+
     @jwt_required
     def get(self, customer_number):
         """
@@ -390,6 +395,3 @@ class CustomerPolicyHandler(Resource):
             return make_response(helper.make_rest_success_response("success", customers), 200)
 
         return make_response(helper.make_rest_fail_response("No customer policies were found"), 404)
-
-
-
