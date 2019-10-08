@@ -37,7 +37,7 @@ class ChildPolicy(db.Model):
     # links to the association table for extensions
     extensions = db.relationship("PolicyExtensions", backref="child_policy")
     # links to the association table for payments
-    payments = db.relationship("PolicyTransactions", backref="child_policy")
+    payments = db.relationship("PolicyPayments", backref="child_policy")
 
     def __init__(self, cp_number, vehicle, customer_number, rate, date_expiry, premium_amount, transaction_type,
                  agency_id, company, pricing_model, master_policy, subclass, reason=None):

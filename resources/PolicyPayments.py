@@ -8,11 +8,12 @@ from models.PolicyPayments import PolicyPayments
 
 class PolicyPayments(Resource):
     """
-    Handles all the payments made by a customer for one child policy
+    Handles all the payments made for one child policy
     """
 
     @jwt_required
     def post(self):
         """
-        Request made for when a customer makes a payment
+        Request made for when an agency receives payment from a customer
         """
+        

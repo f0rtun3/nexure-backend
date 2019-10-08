@@ -106,14 +106,6 @@ class CustomerDetails(Resource):
         # get master policies with this customer number
         ms_policies = MasterPolicy.get_policy_by_customer_no(customer_number)
         for master in ms_policies:
-            # master_details = {
-            #     "id": master.id,
-            #     "mp_number": master.mp_number,
-            #     "date_created": master.date_created,
-            #     'active': master.status,
-            #     "expiry_date": master.date_expiry,
-            #     "company":
-            # }
             policy = master.serialize()
             policy.pop('child_policies')
             data.append(policy)
