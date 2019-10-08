@@ -21,13 +21,13 @@ def get_agent_id(user_role, user_id):
     :return {number}:
     """
     if user_role == 'IA':
-        agency_id = IndependentAgent.query.filter_by(user_id=user_id).first().agent_id
+        agency_id = IndependentAgent.query.filter_by(contact_person=user_id).first().agent_id
 
     elif user_role == 'BR':
-        agency_id = Broker.query.filter_by(user_id=user_id).first().broker_id
+        agency_id = Broker.query.filter_by(contact_person=user_id).first().broker_id
 
     elif user_role == 'TA':
-        agency_id = TiedAgents.query.filter_by(user_id=user_id).first().id
+        agency_id = TiedAgents.query.filter_by(contact_person=user_id).first().id
 
     else:
         return None
