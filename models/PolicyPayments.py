@@ -7,16 +7,16 @@ class PolicyPayments(db.Model):
     """
     __tablename__ = 'policy_transactions'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    # transaction type can either be mpesa, bankers cheque
+    # transaction type can either be mpesa, bankers cheque, refund
     transaction_type = db.Column(db.String(10))
     amount = db.Column(db.Float, nullable=False)
     customer_no = db.Column(db.String(50))
     child_policy = db.Column(db.Integer, db.ForeignKey(
         'child_policy.id', ondelete='CASCADE', onupdate='CASCADE'))
     next_date = db.Column(db.DateTime)
-    amount_due = db.Column(db.Float, nullable=False)
+    amount_due = db.Column(db.Float, nullable=False, default=0)
     # could be the mpesa code, or cheque number
-    key = db.Column(db.String(25))
+    transaction_code = db.Column(db.String(25))
     date_paid = db.Column(db.DateTime, default=db.func.now())
     is_paid = db.Column(db.Boolean, default=False)
 
@@ -27,7 +27,7 @@ class PolicyPayments(db.Model):
         self.child_policy = child_policy
         self.next_date = next_date
         self.amount_due = amount_due
-        self.key = key
+        self.transaction_code = transaction_type
 
     def save(self):
         db.session.add(self)

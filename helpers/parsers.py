@@ -424,3 +424,22 @@ policy_parser.add_argument(
     "ncd_rate",
     type=str
 )
+
+# Payments parser: Handles all payments attributes
+payments_parser = reqparse.RequestParser()
+payments_parser.add_argument(
+    "child_policy_id",
+    type=int
+)
+payments_parser.add_argument(
+    "amount",
+    type=float
+)
+payments_parser.add_argument(
+    "transaction_type",
+    type=str
+)
+payments_parser.add_argument(
+    "key",
+    type=str
+)

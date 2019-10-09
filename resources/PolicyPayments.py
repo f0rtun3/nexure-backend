@@ -4,7 +4,6 @@ Resource for policy payments
 from flask import make_response, jsonify
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
-from models.PolicyPayments import PolicyPayments
 
 class PolicyPayments(Resource):
     """
@@ -16,4 +15,4 @@ class PolicyPayments(Resource):
         """
         Request made for when an agency receives payment from a customer
         """
-        
+        pass
