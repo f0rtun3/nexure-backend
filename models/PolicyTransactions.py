@@ -50,4 +50,3 @@ class PolicyTransactions(db.Model):
         """In case of a refund, add the amount to be refunded to the policy transaction
             and extend the date due for the next payment"""
         pass
-            
