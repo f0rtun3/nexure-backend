@@ -43,7 +43,7 @@ class Broker(db.Model):
         return f"{self.broker_id}"
 
     def serialize(self):
-        return {
+        org_details = {
             "organization": {
                 "broker_id": self.broker_id,
                 "org_name": self.broker_name,
@@ -53,13 +53,15 @@ class Broker(db.Model):
                 "ira_registration_number": self.ira_registration_number,
                 "ira_license_number": self.ira_license_number,
                 "org_kra_pin": self.kra_pin,
-                "website": self.website,
-                "facebook": self.facebook,
-                "instagram": self.instagram,
-                "twitter": self.twitter,
-            },
-            "profile_details": self.user.serialize()
+                "website": self.website
+            }
         }
+        user_profile = self.user.serialize()
+        user_profile['social_media']['facebook'] = self.facebook
+        user_profile['social_media']['twitter'] = self.twitter
+        user_profile['social_media']['instagram'] = self.instagram
+        org_details.update(user_profile)
+        return org_details
 
     def save(self):
         db.session.add(self)

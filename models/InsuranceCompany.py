@@ -36,7 +36,6 @@ class InsuranceCompany(db.Model):
     def __init__(self, contact_person, associated_company, company_phone=None, ira_registration_number=None,
                  ira_licence_number=None, kra_pin=None, website=None, facebook=None, instagram=None, twitter=None,
                  mpesa_paybill=None, rate=None, ncd_rate=None):
-
         self.company_phone = company_phone
         self.contact_person = contact_person
         self.ira_registration_number = ira_registration_number
@@ -55,7 +54,7 @@ class InsuranceCompany(db.Model):
         return f"{self.id}"
 
     def serialize(self):
-        return{
+        org_details = {
             "organization": {
                 "id": self.id,
                 "org_name": self.company_details.company_name,
@@ -66,13 +65,15 @@ class InsuranceCompany(db.Model):
                 "mpesa_paybill": self.mpesa_paybill,
                 "ira_registration_number": self.ira_registration_number,
                 "ira_license_number": self.ira_license_number,
-                "facebook": self.facebook,
-                "website": self.website,
-                "instagram": self.instagram,
-                "twitter": self.twitter
-            },
-            "profile_details": self.user.serialize()
+                "website": self.website
+            }
         }
+        user_profile = self.user.serialize()
+        user_profile['social_media']['facebook'] = self.facebook
+        user_profile['social_media']['twitter'] = self.twitter
+        user_profile['social_media']['instagram'] = self.instagram
+        org_details.update(user_profile)
+        return org_details
 
     def save(self):
         db.session.add(self)

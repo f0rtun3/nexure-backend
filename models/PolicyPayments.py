@@ -54,5 +54,3 @@ class PolicyPayments(db.Model):
         """
         amounts = [t.amount for t in cls.query.filter_by(child_policy=child_id).all() if t.is_paid]
         return sum(amounts)
-    
-
