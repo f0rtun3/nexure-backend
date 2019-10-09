@@ -13,7 +13,7 @@ class IndividualCustomer(db.Model):
     customer_number = db.Column(db.String(50))
     user_id = db.Column(db.Integer, db.ForeignKey(
         'user.id', ondelete='CASCADE', onupdate='CASCADE'))
-    salutation = db.Column(db.String(4), nullable=False)
+    salutation = db.Column(db.String(10), nullable=False)
 
     def __repr__(self):
         return f"{self.user}"

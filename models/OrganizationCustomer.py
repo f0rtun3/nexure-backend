@@ -63,8 +63,8 @@ class OrganizationCustomer(db.Model):
             "org_name": self.org_name,
             "org_phone": self.org_phone,
             "customer_number": self.customer_number,
-            "org_email": self.email,
-            "org_registration_number": self.org_registration_number,
+            "org_email": self.org_email,
+            "org_registration_number": self.org_reg_number,
             "physical_address": self.physical_address,
             "postal_code": self.postal_code,
             "postal_town": self.postal_town,
@@ -74,7 +74,7 @@ class OrganizationCustomer(db.Model):
             "facebook": self.facebook,
             "instagram": self.instagram,
             "twitter": self.twitter
-        },
+        }
         organization.update(self.user.serialize())
         return organization
 

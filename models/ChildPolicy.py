@@ -63,6 +63,7 @@ class ChildPolicy(db.Model):
             types = ['benefits', 'extensions']
 
         child_policy = {
+            "id": self.id,
             "vehicle": self.vehicle_details.serialize(),
             "cp_number": self.cp_number,
             "company_id": self.insurance_company.company_details.id,

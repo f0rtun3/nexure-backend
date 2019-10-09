@@ -5,13 +5,13 @@ class PolicyPayments(db.Model):
     """
     Describes all the transactions for a particular child policy, for both credit(payments) and debit(refunds)
     """
-    __tablename__ = 'policy_transactions'
+    __tablename__ = 'policy_payments'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # transaction type can either be mpesa, bankers cheque, refund
     transaction_type = db.Column(db.String(10))
     amount = db.Column(db.Float, nullable=False)
     customer_no = db.Column(db.String(50))
-    child_policy = db.Column(db.Integer, db.ForeignKey(
+    child_policy_id = db.Column(db.Integer, db.ForeignKey(
         'child_policy.id', ondelete='CASCADE', onupdate='CASCADE'))
     next_date = db.Column(db.DateTime)
     amount_due = db.Column(db.Float, nullable=False, default=0)

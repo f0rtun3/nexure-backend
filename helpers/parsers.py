@@ -317,7 +317,7 @@ underwriting_parser.add_argument(
     type=str
 )
 underwriting_parser.add_argument(
-    "pricing_module",
+    "pricing_model",
     type=str
 )
 underwriting_parser.add_argument(

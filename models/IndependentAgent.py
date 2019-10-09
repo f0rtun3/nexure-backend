@@ -54,6 +54,7 @@ class IndependentAgent(db.Model):
                 "ira_registration_number": self.ira_registration_number,
                 "ira_license_number": self.ira_license_number,
                 "org_kra_pin": self.kra_pin,
+                "website": self.website
             }
         }
         user_profile = self.user.serialize()

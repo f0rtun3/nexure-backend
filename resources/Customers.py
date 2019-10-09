@@ -2,35 +2,37 @@
 Cusomer resources handler
 new customer onboarding
 """
+import json
+import uuid
+
 from flask import current_app as application
 from flask import make_response
+from flask_jwt_extended import get_jwt_claims, get_jwt_identity, jwt_required
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt_claims
+
+import helpers.tokens as token_handler
 from Controllers import customer
-from models.User import User
-from models.IndividualCustomer import IndividualCustomer
-from models.UserProfile import UserProfile
-from models.IndependentAgent import IndependentAgent
-from models.TiedAgent import TiedAgents
-from models.Broker import Broker
+from helpers import helpers as helper
+from helpers.CustomerNumber import CustomerNumber
+from helpers.parsers import customer_parser
 from models.BRCustomer import BRCustomer
-from models.TACustomer import TACustomer
-from models.IACustomer import IACustomer
+from models.Broker import Broker
 from models.BRStaff import BRStaff
-from models.TAStaff import TAStaff
-from models.IAStaff import IAStaff
-from models.Role import Role
-from models.UserRolePlacement import UserRolePlacement
-from models.InsuranceCompany import InsuranceCompany
 from models.ChildPolicy import ChildPolicy
+from models.IACustomer import IACustomer
+from models.IAStaff import IAStaff
+from models.IndependentAgent import IndependentAgent
+from models.IndividualCustomer import IndividualCustomer
+from models.InsuranceCompany import InsuranceCompany
 from models.OrganizationCustomer import OrganizationCustomer
 from models.OrganizationTypes import OrganizationTypes
-from helpers import helpers as helper
-from helpers.parsers import customer_parser
-from helpers.CustomerNumber import CustomerNumber
-import helpers.tokens as token_handler
-import uuid
-import json
+from models.Role import Role
+from models.TACustomer import TACustomer
+from models.TAStaff import TAStaff
+from models.TiedAgent import TiedAgents
+from models.User import User
+from models.UserProfile import UserProfile
+from models.UserRolePlacement import UserRolePlacement
 
 
 class CustomerOnBoarding(Resource):
@@ -52,17 +54,17 @@ class CustomerOnBoarding(Resource):
             # create a new user account if not existing
             user_id = uuid.uuid4()
             # create new user
-            new_account = User(
+            customer = User(
                 user_id,
                 customer_details['email'],
                 temporary_pass
             )
-            new_account.save()
+            customer.save()
 
             # if on boarding an individual customer
             if customer_details['type'] == 'Individual':
                 customer = User.get_user_by_email(customer_details['email'])
-                customer_id = new_account.id
+                customer_id = customer.id
                 # create individual customer's profile
                 new_individual_profile = UserProfile(
                     customer_id,
@@ -97,14 +99,12 @@ class CustomerOnBoarding(Resource):
                 self.role_placement(customer_id, "IND")
 
                 # send activation email
-                self.send_activation_email(customer_details['email'], customer_id, temporary_pass)
-
-                # assign customer number to individual customer number
-                customer_acc_number = customer_number
+                self.send_activation_email(
+                    customer_details['email'], customer_id, temporary_pass)
 
             # if on boarding an organization
             elif customer_details['type'] == "Organization":
-                customer_id = new_account.id
+                customer_id = customer.id
                 customer_number = self.create_customer_number(customer_details['org_type'],
                                                               customer_id, customer_details['country'])
                 # Add contact person details
@@ -139,7 +139,8 @@ class CustomerOnBoarding(Resource):
                 self.role_placement(customer_id, "ORG")
 
                 # send activation email
-                self.send_activation_email(customer_details['email'], customer_id, temporary_pass)
+                self.send_activation_email(
+                    customer_details['email'], customer_id, temporary_pass)
 
         # create a new affiliation between the customer and broker/agent
         # each affiliation must only exist once in the db
@@ -148,30 +149,36 @@ class CustomerOnBoarding(Resource):
         uid = get_jwt_identity()
         # we need to check whether the current user is a staff member or an agent/broker
         role_name = self.get_role_name(uid)
-        agent_broker = self.check_staff(uid, role_name)
+        agent_broker = self.check_staff(uid, role_name)        
 
         if agent_broker:
             # the current user is not a staff member
             # we also need to ensure the affiliation created is not a duplicate one
-            if not self.is_affiliation_duplicate(role_name, agent_broker, customer_number):
-                self.register_customer(
-                    role_name, customer_number, agent_broker, uid)
-            else:
+            if customer_number is None:
+                customer_number = self.fetch_customer_number(role_name, customer.id, agent_broker)
+
+            if self.is_affiliation_duplicate(role_name, agent_broker, customer_number):
                 response_msg = helper.make_rest_fail_response(
-                    "This affiliation was already created")
-                return make_response(response_msg, 409)
-        else:
-            broker_agent_id = self.get_broker_agent_id(uid, role_name)
-            if not self.is_affiliation_duplicate(role_name, broker_agent_id, customer_number):
-                self.register_customer(
-                    role_name, customer_number, broker_agent_id)
-            else:
-                response_msg = helper.make_rest_fail_response(
-                    "This affiliation was already created")
+                    "Customer already exists")
                 return make_response(response_msg, 409)
 
+            self.register_customer(
+                role_name, customer_number, agent_broker, uid)
+        else:
+            broker_agent_id = self.get_broker_agent_id(uid, role_name)
+            if customer_number is None:
+                customer_number = self.fetch_customer_number(role_name, customer.id, broker_agent_id, agent_broker)
+            if self.is_affiliation_duplicate(role_name, broker_agent_id, customer_number):
+
+                response_msg = helper.make_rest_fail_response(
+                    "Customer already exists")
+                return make_response(response_msg, 409)
+
+            self.register_customer(
+                role_name, customer_number, broker_agent_id)
+
         response_msg = helper.make_rest_success_response(
-            "Customer has been onbarded successfully", {"customer_number": customer_number})
+            "Customer has been onbOarded successfully", {"customer_number": customer_number})
         return make_response(response_msg, 200)
 
     @jwt_required
@@ -282,7 +289,7 @@ class CustomerOnBoarding(Resource):
             elif role_name == "IASTF":
                 return IAStaff.fetch_agent_by_staff(uid)
 
-        return
+        return None
 
     @staticmethod
     def register_customer(atype, customer_number, uid, staff_id=None):
@@ -304,9 +311,9 @@ class CustomerOnBoarding(Resource):
         if atype in ("BRSTF", "BR"):
             return BRCustomer.check_duplicate_affiliation(agent_broker_id, customer_number)
         elif atype in ("TASTF", "TA"):
-            return IACustomer.check_duplicate_affiliation(agent_broker_id, customer_number)
-        elif atype in ("IASTF", "TA"):
             return TACustomer.check_duplicate_affiliation(agent_broker_id, customer_number)
+        elif atype in ("IASTF", "IA"):
+            return IACustomer.check_duplicate_affiliation(agent_broker_id, customer_number)
 
     @staticmethod
     def role_placement(role_id, role):
@@ -338,6 +345,18 @@ class CustomerOnBoarding(Resource):
 
         return customer
 
+    @staticmethod
+    def fetch_customer_number(role, customer_id, agency_id=None, staff_id=None):
+        customer_number = None
+        if role in ("BR"):
+            customer = BRCustomer.get_number_by_customer_id(customer_id, agency_id, staff_id)
+        elif role in ("TA"):
+            customer = TACustomer.get_number_by_customer_id(customer_id, agency_id, staff_id)
+        elif role in ("IA"):
+            customer = IACustomer.get_number_by_customer_id(customer_id, agency_id, staff_id)
+        return customer
+        
+
     def delete_cust_agency_relationship(self, role, cust_no):
         customer = self.fetch_customer_by_relationship(role, cust_no)
         customer.delete()
@@ -346,10 +365,12 @@ class CustomerOnBoarding(Resource):
     def update_cust_details(cust_id, cust_no, cust_info):
         customer_type = helper.get_customer_type(cust_no)
         if customer_type == 'IN':
-            customer_details = IndividualCustomer.get_customer_by_user_id(cust_id)
+            customer_details = IndividualCustomer.get_customer_by_user_id(
+                cust_id)
             customer_details.update(cust_info)
         else:
-            customer_details = OrganizationCustomer.get_customer_by_contact(cust_id)
+            customer_details = OrganizationCustomer.get_customer_by_contact(
+                cust_id)
             customer_details.update(cust_info)
 
 
@@ -368,7 +389,8 @@ class AgencyCustomers(Resource):
         current_user_claims = get_jwt_claims()
         current_user_role = current_user_claims['role']
         agency_id = customer.get_agent_id(current_user_role, current_user)
-        agency_customers = customer.get_customer_details(current_user_role, agency_id)
+        agency_customers = customer.get_customer_details(
+            current_user_role, agency_id)
 
         if agency_customers:
             return make_response(helper.make_rest_success_response("Success", agency_customers),

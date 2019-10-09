@@ -374,7 +374,7 @@ class MPIUnderwriting(Resource):
             company_id,
             # insurance company
             master_policy.insurance_company.id,
-            policy_details['pricing_module'],
+            policy_details['pricing_model'],
             # id of the endorsed policy id
             master_policy.id,
             # subclass name

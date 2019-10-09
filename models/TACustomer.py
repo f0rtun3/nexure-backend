@@ -70,3 +70,10 @@ class TACustomer(db.Model):
                 customer_data.append(detail.serialize())
 
         return customer_data
+
+    @classmethod
+    def get_number_by_customer_id(cls, customer_id, agent_id=None, staff_id=None):
+        customer_numbers = [customer.customer_number for customer in cls.query.filter_by(agent_id=agent_id, staff_id=staff_id).all() if type(
+            customer.customer_number) is str and int(customer.customer_number.split("/")[2]) == customer_id]
+
+        return customer_numbers[0]

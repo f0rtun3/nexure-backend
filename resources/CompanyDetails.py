@@ -100,6 +100,7 @@ class CompanyDetailsHandler(Resource):
         # get the company linked to the associated company       
         company = InsuranceCompany.get_by_associated_company(company_id)
         # get the benefits, loadings and extensions
+
         benefits = ICBenefits.get_benefits_by_company_id(company.id)
         loadings = ICLoadings.get_loadings_by_company_id(company.id)
         extensions = ICExtensions.get_extensions_by_company_id(company.id)
