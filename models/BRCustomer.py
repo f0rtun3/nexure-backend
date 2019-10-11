@@ -60,17 +60,17 @@ class BRCustomer(db.Model):
         """
         customer_numbers = [str(customer.customer_number)
                             for customer in cls.query.filter_by(broker_id=broker_id).all()]
-        customer_data = []
+        customer_data = {'individual':[], 'organization':[]}
         for customer_number in customer_numbers:
             customer_type = helper.get_customer_type(customer_number)
             if customer_type == 'IN':
-                detail = IndividualCustomer.query.filter_by(
+                customer_details = IndividualCustomer.query.filter_by(
                     customer_number=customer_number).first()
-                customer_data.append(detail.serialize())
+                customer_data['individual'].append(customer_details.serialize())
             else:
-                detail = OrganizationCustomer.query.filter_by(
+                customer_details = OrganizationCustomer.query.filter_by(
                     customer_number=customer_number).first()
-                customer_data.append(detail.serialize())
+                customer_data['organization'].append(customer_details.serialize())
 
         return customer_data
 

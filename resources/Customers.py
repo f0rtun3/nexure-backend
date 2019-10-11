@@ -347,7 +347,7 @@ class CustomerOnBoarding(Resource):
 
     @staticmethod
     def fetch_customer_number(role, customer_id, agency_id=None, staff_id=None):
-        customer_number = None
+        customer = None
         if role in ("BR"):
             customer = BRCustomer.get_number_by_customer_id(customer_id, agency_id, staff_id)
         elif role in ("TA"):
