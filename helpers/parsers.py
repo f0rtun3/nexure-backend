@@ -440,6 +440,18 @@ payments_parser.add_argument(
     type=str
 )
 payments_parser.add_argument(
-    "key",
+    "customer_no",
+    type=str
+)
+payments_parser.add_argument(
+    "next_date",
+    type=str
+)
+payments_parser.add_argument(
+    "amount_due",
+    type=float
+)
+payments_parser.add_argument(
+    "transaction_code",
     type=str
 )

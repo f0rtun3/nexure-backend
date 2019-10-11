@@ -18,16 +18,15 @@ class PolicyPayments(db.Model):
     # could be the mpesa code, or cheque number
     transaction_code = db.Column(db.String(25))
     date_paid = db.Column(db.DateTime, default=db.func.now())
-    is_paid = db.Column(db.Boolean, default=False)
 
-    def __init__(self, transaction_type, amount, customer_no, child_policy, next_date, amount_due, key):
+    def __init__(self, transaction_type, amount, customer_no, child_policy_id, next_date, amount_due, transaction_code):
         self.transaction_type = transaction_type
         self.amount = amount
         self.customer_no = customer_no
-        self.child_policy = child_policy
+        self.child_policy_id = child_policy_id
         self.next_date = next_date
         self.amount_due = amount_due
-        self.transaction_code = transaction_type
+        self.transaction_code = transaction_code
 
     def save(self):
         db.session.add(self)
@@ -41,16 +40,15 @@ class PolicyPayments(db.Model):
     def delete(self):
         db.session.remove(self)
         db.session.commit()
-    
-    def set_paid(self):
-        if not self.is_paid:
-            self.is_paid = True
-        db.session.commit()
 
     @classmethod
     def total_amount_paid(cls, child_id):
         """
         Get total amount paid for a particular child policy
         """
-        amounts = [t.amount for t in cls.query.filter_by(child_policy=child_id).all() if t.is_paid]
+        amounts = [t.amount for t in cls.query.filter_by(child_policy=child_id).all()]
         return sum(amounts)
+
+    @classmethod
+    def get_payments_history(cls, child_id):
+        return [installment.serialize() for installment in cls.query.filter_by(child_id=child_id).all()]

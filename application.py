@@ -32,6 +32,8 @@ from resources.Location import Location
 from resources.CustomerDetails import CustomerDetails
 from resources.MasterDetails import MasterDetails
 from resources.ChildDetails import ChildDetails
+from resources.policy_payment_handler import PolicyPaymentsResource
+from resources.policy_payment_handler import PolicyPaymentsHandler
 
 """
 automatically set the application's os environment
@@ -114,6 +116,8 @@ API.add_resource(BenefitHandler, '/api/benefits')
 API.add_resource(LoadingsHandler, '/api/loadings')
 API.add_resource(ExtensionHandler, '/api/extensions')
 API.add_resource(Location, '/api/locations')
+API.add_resource(PolicyPaymentsResource, '/api/payments')
+API.add_resource(PolicyPaymentsHandler, '/api/payments/<int:child_policy_id>')
 
 if __name__ == '__main__':
     application.run(
