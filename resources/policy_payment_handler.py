@@ -7,6 +7,7 @@ from helpers.parsers import payments_parser
 
 
 class PolicyPaymentsResource(Resource):
+    @jwt_required
     def post(self):
         """
         make a new policy payment to the database
@@ -28,6 +29,7 @@ class PolicyPaymentsResource(Resource):
 
 
 class PolicyPaymentsHandler(Resource):
+    @jwt_required
     def get(self, child_policy_id):
         """
         get the transaction history of a particular policy
