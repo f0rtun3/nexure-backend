@@ -20,9 +20,9 @@ class Config(object):
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
     S3_BUCKET = os.environ['S3_BUCKET']
     S3_LOCATION = f"https://{os.environ['S3_BUCKET']}.s3.amazonaws.com/"
-    CONFIRMATION_ENDPOINT = 'https://nexure-plc.co.ke/confirm'
-    LOGIN_ENDPOINT = 'https://nexure-plc.co.ke/login'
-    ACCOUNT_RESET_ENDPOINT = 'https://nexure-plc.co.ke/reset'
+    CONFIRMATION_ENDPOINT = 'https://master.d2i6nspgk8q2x3.amplifyapp.com/confirm'
+    LOGIN_ENDPOINT = 'https://master.d2i6nspgk8q2x3.amplifyapp.com/login'
+    ACCOUNT_RESET_ENDPOINT = 'https://master.d2i6nspgk8q2x3.amplifyapp.com/reset'
 
 
 class Production(Config):
