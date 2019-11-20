@@ -178,7 +178,7 @@ class CustomerOnBoarding(Resource):
                 role_name, customer_number, broker_agent_id)
 
         response_msg = helper.make_rest_success_response(
-            "Customer has been onbOarded successfully", {"customer_number": customer_number})
+            "Customer has been on-boarded successfully", {"customer_number": customer_number})
         return make_response(response_msg, 200)
 
     @jwt_required
