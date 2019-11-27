@@ -124,24 +124,22 @@ class StaffRegistration(Resource):
 
             # update other details
             # get user profile
-            profile = UserProfile.get_profile_by_user_id(staff_id)
-            data = {
-                "first_name": staff_details['first_name'],
-                "last_name": staff_details['last_name'],
-                "phone": staff_details['mob']
-            }
-            if data:
-                profile.update(data)
-            # if update is successful
+            # profile = UserProfile.get_profile_by_user_id(staff_id)
+            # data = {
+            #     "first_name": staff_details['first_name'],
+            #     "last_name": staff_details['last_name'],
+            #     "phone": staff_details['mob']
+            # }
+            # if data:
+            #     profile.update(data)
+            #
+            # if staff_details['password']:
+            #     set new password
+            #     new_password = staff.generate_password_hash(
+            #         staff_details['password'])
+            #     staff.update_password(new_password)
 
-            if staff_details['password']:
-                # set new password
-                new_password = staff.generate_password_hash(
-                    staff_details['password'])
-                staff.update_password(new_password)
-
-            response_msg = helper.make_rest_success_response(
-                f"Update successful.")
+            response_msg = helper.make_rest_success_response("Update successful.")
             return make_response(response_msg, 200)
         else:
             # if staff does not exist
