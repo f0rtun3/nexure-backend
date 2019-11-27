@@ -1,5 +1,6 @@
 from database.db import db
 from datetime import datetime
+from sqlalchemy import or_
 
 
 class UserProfile(db.Model):
@@ -134,3 +135,12 @@ class UserProfile(db.Model):
     def get_profile_by_phone_number(cls, phone):
         profile = cls.query.filter_by(phone=phone).first()
         return profile
+
+    @classmethod
+    def check_account_duplicate(cls, user_email, user_phone, user_id_passport,
+                                user_kra_pin, user_facebook=None,
+                                user_instagram=None, user_twitter=None):
+        return cls.query.filter(or_(cls.email == user_email, cls.phone == user_phone,
+                                    cls.id_passport == user_id_passport,
+                                    cls.kra_pin == user_kra_pin, cls.facebook == user_facebook,
+                                    cls.instagram == user_instagram, cls.twitter == user_twitter)).first()

@@ -46,7 +46,14 @@ class CustomerOnBoarding(Resource):
     @jwt_required
     def post(self):
         customer_details = customer_parser.parse_args()
-        customer = User.get_user_by_email(customer_details['email'])
+        # we need to check for all the unique values to a user to ensure there is no duplicate
+        customer = UserProfile.check_account_duplicate( customer_details['email'], 
+                                                        customer_details['phone'],
+                                                        customer_details['id_passport'],
+                                                        customer_details['kra_pin'],
+                                                        customer_details['facebook'],
+                                                        customer_details['instagram'],
+                                                        customer_details['twitter'] )
         customer_number = None
         if not customer:
             # Create temporary seven digit password
@@ -149,13 +156,14 @@ class CustomerOnBoarding(Resource):
         uid = get_jwt_identity()
         # we need to check whether the current user is a staff member or an agent/broker
         role_name = self.get_role_name(uid)
-        agent_broker = self.check_staff(uid, role_name)        
+        agent_broker = self.check_staff(uid, role_name)
 
         if agent_broker:
             # the current user is not a staff member
             # we also need to ensure the affiliation created is not a duplicate one
             if customer_number is None:
-                customer_number = self.fetch_customer_number(role_name, customer.id, agent_broker)
+                customer_number = self.fetch_customer_number(
+                    role_name, customer.id, agent_broker)
 
             if self.is_affiliation_duplicate(role_name, agent_broker, customer_number):
                 response_msg = helper.make_rest_fail_response(
@@ -167,7 +175,8 @@ class CustomerOnBoarding(Resource):
         else:
             broker_agent_id = self.get_broker_agent_id(uid, role_name)
             if customer_number is None:
-                customer_number = self.fetch_customer_number(role_name, customer.id, broker_agent_id, agent_broker)
+                customer_number = self.fetch_customer_number(
+                    role_name, customer.id, broker_agent_id, agent_broker)
             if self.is_affiliation_duplicate(role_name, broker_agent_id, customer_number):
 
                 response_msg = helper.make_rest_fail_response(
@@ -349,13 +358,15 @@ class CustomerOnBoarding(Resource):
     def fetch_customer_number(role, customer_id, agency_id=None, staff_id=None):
         customer = None
         if role in ("BR"):
-            customer = BRCustomer.get_number_by_customer_id(customer_id, agency_id, staff_id)
+            customer = BRCustomer.get_number_by_customer_id(
+                customer_id, agency_id, staff_id)
         elif role in ("TA"):
-            customer = TACustomer.get_number_by_customer_id(customer_id, agency_id, staff_id)
+            customer = TACustomer.get_number_by_customer_id(
+                customer_id, agency_id, staff_id)
         elif role in ("IA"):
-            customer = IACustomer.get_number_by_customer_id(customer_id, agency_id, staff_id)
+            customer = IACustomer.get_number_by_customer_id(
+                customer_id, agency_id, staff_id)
         return customer
-        
 
     def delete_cust_agency_relationship(self, role, cust_no):
         customer = self.fetch_customer_by_relationship(role, cust_no)

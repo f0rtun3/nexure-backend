@@ -21,6 +21,7 @@ from models.UserPermissions import UserPermissions
 from models.UserProfile import UserProfile
 from models.UserRolePlacement import UserRolePlacement
 import Controllers.user_update as updateController
+from sqlalchemy import or_
 
 
 class UserRegister(Resource):
@@ -124,7 +125,7 @@ class UserRegister(Resource):
     @jwt_required
     def put(self):
         """
-        registration completion of a user
+        registration completion of a user and profile update
         :return:
         """
         # get user id

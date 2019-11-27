@@ -100,9 +100,8 @@ class StaffRegistration(Resource):
         staff_details = user_parser.parse_args()
         # check if staff exists
         staff = User.get_user_by_email(staff_details['email'])
-        staff_id = staff.id
-
         if staff:
+            staff_id = staff.id
             if staff_details['permissions']:
                 # get current permissions
                 current_permissions = list(UserPermissions.get_permission_by_user_id(
