@@ -134,6 +134,14 @@ class UserRegister(Resource):
         user_details = user_parser.parse_args()
         # check if the user exists
         user = User.get_user_by_id(user_id)
+
+        # if the user is an agent and is updating 
+        # details on behalf of a customer
+        # we can check whether the customer exists or not
+        if user_details['customer_id']:
+            user = User.get_user_by_id(user_details['customer_id'])
+        
+        
         # if user exists, then update their details
         if user:
             # get their role
