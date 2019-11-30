@@ -47,8 +47,7 @@ class CustomerOnBoarding(Resource):
     def post(self):
         customer_details = customer_parser.parse_args()
         # we need to check for all the unique values to a user to ensure there is no duplicate
-        customer = UserProfile.check_account_duplicate( customer_details['email'], 
-                                                        customer_details['phone'],
+        customer = UserProfile.check_account_duplicate( customer_details['phone'],
                                                         customer_details['id_passport'],
                                                         customer_details['kra_pin'],
                                                         customer_details['facebook'],
