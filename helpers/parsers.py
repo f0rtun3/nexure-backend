@@ -158,6 +158,15 @@ user_parser.add_argument(
     type=int
 )
 
+user_parser.add_argument(
+    "account_status",
+    type=bool
+)
+user_parser.add_argument(
+    "staff_id",
+    type=int
+)
+
 """Contains customer details"""
 customer_parser = reqparse.RequestParser()
 

@@ -18,6 +18,8 @@ from helpers.parsers import customer_parser
 from helpers.CustomerNumber import CustomerNumber
 from helpers.parsers import user_parser
 import helpers.tokens as token_handler
+import Controllers.staff as staff_handler
+from Controllers import user_update
 import uuid
 
 
@@ -62,7 +64,7 @@ class StaffRegistration(Resource):
         # role = 'BR'
 
         # get agency_id
-        agency_id = self.get_agency_id(role, uid)
+        agency_id = staff_handler.get_agency_id(role, uid)
 
         # Add staff to the appropriate table: i.e BRStaff, TRStaff, IAStaff
         # We also assign the staff roles at this stage,
@@ -77,8 +79,9 @@ class StaffRegistration(Resource):
         email_template = helper.generate_confirmation_template(application.config['CONFIRMATION_ENDPOINT'],
                                                                temporary_pass)
         subject = "Nexure Temporary Password"
-        email_text=f"Follow {application.config['LOGIN_ENDPOINT']} to login and use {temporary_pass} as your temporary password"
-        helper.send_email(user_details['email'], subject, email_template, email_text)
+        email_text = f"Follow {application.config['LOGIN_ENDPOINT']} to login and use {temporary_pass} as your temporary password"
+        helper.send_email(user_details['email'],
+                          subject, email_template, email_text)
 
         #  Generate a user account activation email
         confirmation_code = token_handler.user_account_confirmation_token(
@@ -96,56 +99,36 @@ class StaffRegistration(Resource):
 
     @jwt_required
     def put(self):
-        """Update staff details, mostly permissions."""
+        """
+        update staff details
+        may be user permissions or to block staff member account
+        """
         staff_details = user_parser.parse_args()
-        # check if staff exists
         staff = User.get_user_by_email(staff_details['email'])
-        if staff:
-            staff_id = staff.id
-            if staff_details['permissions']:
-                # get current permissions
-                current_permissions = list(UserPermissions.get_permission_by_user_id(
-                    staff_id))
-                received_permissions = list(staff_details['permissions'])
-                # get permissions to update
-                new_permissions = [
-                    x for x in received_permissions if x not in current_permissions]
-                old_permissions = [
-                    x for x in current_permissions if x not in received_permissions]
-                # delete old permissions and update with new ones
-                for i in old_permissions:
-                    permissions = UserPermissions.get_specific_permission(
-                        i, staff_id)
-                    permissions.delete()
-                # update with new ones
-                for i in new_permissions:
-                    user_permissions = UserPermissions(staff_id, i)
-                    user_permissions.save()
 
-            # update other details
-            # get user profile
-            # profile = UserProfile.get_profile_by_user_id(staff_id)
-            # data = {
-            #     "first_name": staff_details['first_name'],
-            #     "last_name": staff_details['last_name'],
-            #     "phone": staff_details['mob']
-            # }
-            # if data:
-            #     profile.update(data)
-            #
-            # if staff_details['password']:
-            #     set new password
-            #     new_password = staff.generate_password_hash(
-            #         staff_details['password'])
-            #     staff.update_password(new_password)
-
-            response_msg = helper.make_rest_success_response("Update successful.")
-            return make_response(response_msg, 200)
-        else:
-            # if staff does not exist
+        if staff_details['email'] and not staff:
             response_msg = helper.make_rest_fail_response(
                 "User does not exist")
             return make_response(response_msg, 404)
+
+        if staff_details['permissions']:
+            if user_update.update_staff_permissions(staff.id, staff_details['permissions']):
+                response_msg = helper.make_rest_success_response(
+                    "Update successful!")
+                return make_response(response_msg, 200)
+            else:
+                response_msg = helper.make_rest_success_response(
+                    "Failed to update staff permissions")
+                return make_response(response_msg, 500)
+
+        elif staff_details['account_status']:
+            # de/activate staff account
+            claims = get_jwt_claims()
+            role = claims['role']
+            staff_handler.update_account_status(
+                role, staff_details['staff_id'], staff_details['account_status'])
+            return make_response(helper.make_rest_success_response("Update successful"), 200)
+
 
     @jwt_required
     def get(self):
@@ -157,59 +140,13 @@ class StaffRegistration(Resource):
         claims = get_jwt_claims()
         role = claims['role']
         # get company_id
-        company_id = self.get_agency_id(role, uid)
+        company_id = staff_handler.get_agency_id(role, uid)
         # get list of staff associated with company
         company_staff = self.get_agency_staff(role, company_id)
 
         response = helper.make_rest_success_response(
             "Success", {"staff_list": company_staff})
         return make_response(response, 200)
-
-    @jwt_required
-    def delete(self):
-        staff_details = user_parser.parse_args()
-        # remove staff from agency
-        # deactivate the staff's affiliation
-        # get agent id and role so as to fetch the staff's affiliation
-        uid = get_jwt_identity()
-
-        # get user role so that you can use it to get the agency_id
-        claims = get_jwt_claims()
-        role = claims['role']
-        # role = 'BR'
-        # get company_id
-        company_id = self.get_agency_id(role, uid)
-
-        # deactivate staff instead of deleting
-        if role == "BR":
-            BRStaff.deactivate_staff(company_id, staff_details['staff_id'])
-        elif role == "TA":
-            TAStaff.deactivate_staff(company_id, staff_details['staff_id'])
-        elif role == "IA":
-            IAStaff.deactivate_staff(company_id, staff_details['staff_id'])
-
-        response = helper.make_rest_success_response(
-            "Staff deleted successfully")
-        return make_response(response, 200)
-
-    @staticmethod
-    def get_agency_id(role, uid):
-        """
-        Fetch the agent id depending the active user's role. Could be an independent agency, brokerage or tied agent
-        """
-        if role == "BR":
-            # get brokerage by contact person
-            broker = Broker.get_broker_by_contact_id(uid)
-            return broker.broker_id
-        elif role == "TA":
-            # get tied agency
-            tied_agent = TiedAgents.get_tied_agent_by_user_id(uid)
-            return tied_agent.id
-
-        elif role == "IA":
-            # get Independent agency by contact person
-            ind_agent = IndependentAgent.get_agency_by_contact_person(uid)
-            return ind_agent.id
 
     @staticmethod
     def add_staff(role, agency_id, staff_id):

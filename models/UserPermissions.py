@@ -40,3 +40,14 @@ class UserPermissions(db.Model):
         permission = cls.query.filter_by(
             user_id=user_id, permission_id=permission_id).first()
         return permission
+
+    @classmethod
+    def delete_user_permissions(cls, user_id, permissions):
+        """
+        delete user permissions where id matches in array
+        :param user_id {Int} user id whom we are deleting permissions
+        :param permissions {IntSet}
+        """
+        user_acc =  cls.query.filter(cls.permission_id.in_(permissions), cls.user_id==user_id)\
+                    .delete(synchronize_session='fetch')
+        db.session.commit()

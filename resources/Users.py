@@ -21,6 +21,7 @@ from models.UserPermissions import UserPermissions
 from models.UserProfile import UserProfile
 from models.UserRolePlacement import UserRolePlacement
 import Controllers.user_update as updateController
+import Controllers.staff as staff_handler
 from sqlalchemy import or_
 
 
@@ -77,7 +78,7 @@ class UserRegister(Resource):
             new_user_authentication.id)
         email_template = helper.generate_confirmation_template(application.config['CONFIRMATION_ENDPOINT'],
                                                                confirmation_code)
-        subject = "Please confirm your account"
+        subject = "Your account is inactive, please confirm account or check with your administrator"
         email_text = f"Use this link {application.config['CONFIRMATION_ENDPOINT']}/{confirmation_code}" \
                      f" to confirm your account"
 
@@ -313,6 +314,14 @@ class UserLogin(Resource):
                 # also return the user role as a token claim, we'll need that for subsequent
                 # requests from the client
                 role = self.get_user_role(user_db_row.id)
+                if role in ("IASTF", "BRSTF", "TASTF"):
+                    # if the user is a staff, 
+                    # we need to make sure that the account has not been deactivated
+                    # by their respective administrator
+                    if staff_handler.check_account_status(role, user_db_row.id) == False:
+                        msg = "Your account has been blocked by your administrator"
+                        return make_response(helper.make_rest_fail_response(msg), 400)
+
                 auth_tokens = token_handler.create_user_token(
                     user_db_row.id, role)
                 response_dict = {

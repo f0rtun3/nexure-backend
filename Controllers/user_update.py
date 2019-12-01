@@ -7,6 +7,7 @@ from models.UserProfile import UserProfile
 from models.IndependentAgent import IndependentAgent
 from models.InsuranceCompany import InsuranceCompany
 from models.Broker import Broker
+from models.UserPermissions import UserPermissions
 
 
 def update_personal_details(data, user_id):
@@ -139,3 +140,36 @@ def verify_updated_details(current_set_data, new_data=None):
         return current_set_data
 
     return new_data
+
+
+def block_user_account(account_id):
+    """
+    block the user account as requested.
+    accounts may be blocked by a broker or independent
+    agent or sys admin if:
+    1) Subscription fees is not duly paid
+    2) The agent/broker has willfully blocked a staff account
+    """
+    user_account = User.get_user_by_id(account_id)
+    if user_account:
+        deactivate_data = {"is_active": False}
+        user_account.update(deactivate_data)
+        return True
+    
+    return False
+
+def update_staff_permissions(staff_id, permissions):
+    """
+    :param staff_id staff user id
+    :param permissions set of user permissions
+    """
+    curr_permissions = set(UserPermissions.get_permission_by_user_id(staff_id))
+    new_permissions = permissions-curr_permissions
+    old_permissions = curr_permissions-permissions
+    if bool(old_permissions) == True:
+        UserPermissions.delete_user_permissions(staff_id, old_permissions)
+
+    for x in new_permissions:
+        new_permission = UserPermissions(staff_id, x)
+        new_permission.save()
+    return True

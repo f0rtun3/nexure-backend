@@ -24,17 +24,14 @@ class IAStaff(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def update(self):
+    def update(self, data):
+        for key, item in data.items():
+            setattr(self, key, item)
         db.session.commit()
 
     def delete(self):
         db.session.delete(self)
         db.session.commit()
-
-    def deactivate_staff(self, company_id, staff_id):
-        staff = self.query.filter_by(user_id=staff_id, agent_id=company_id)
-        staff.active = False
-        self.save()
 
     @classmethod
     def fetch_staff_by_id(cls, agent_id):
@@ -51,3 +48,14 @@ class IAStaff(db.Model):
     @classmethod
     def fetch_staff_by_agency_id(cls, agency_id):
         return [staff.serialize() for staff in cls.query.filter_by(agency_id).all()]
+    
+    @classmethod
+    def get_staff_by_user_id(cls, user_id):
+        return cls.query.filter_by(user_id=user_id).first()
+    
+    @classmethod
+    def check_account(cls, staff_id):
+        # fetch staff account by the staff account user id
+        # check if staff status is active
+        staff = cls.query.filter_by(user_id=staff_id).first()
+        return staff.active
