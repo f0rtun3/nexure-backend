@@ -469,3 +469,9 @@ payments_parser.add_argument(
     "transaction_code",
     type=str
 )
+
+# aws_parser = reqparse.RequestParser()
+# aws_parser.add_argument(
+#     "file_name",
+#     type=str
+# )

@@ -1,88 +1,50 @@
 """
 AWS Pre signed URL class handler
 """
-from flask import current_app as application
+from flask import current_app as app
+from helpers import aws_configs as aws_config
 import logging
 from botocore.exceptions import ClientError
-import application as app
 
-
-class S3FileHandler:
+def generate_presigned_url(bucket_name, object_name, expiration=3600):
+    """ 
+    Generate a presigned url for getting an object
+    :param bucket_name: string
+    :param object_name: string
+    :param expiration: Time in seconds for the presigned URL to remain valid
+    :return: Presigned URL as string. If error, returns None.
     """
-    s3 File handler class
-    describes the general way to generate pre-signed
-    urls for the request needed
-    :type method_name string   the s3 client method
-    :type method_parameters Object   the specific method parameters
-    :type expiration number   the expiration time of the pre-signed url
-    :type http_method string   the http method to use for the request
+    s3_client = aws_config.get_s3()
+    try:
+        url = s3_client.generate_presigned_url(
+                'get_object',
+                Params={'Bucket': bucket_name, 'Key': object_name},
+                ExpiresIn=expiration
+        )
+    except ClientError as e:
+        logging.error(e)
+        return None
+
+    return url
+
+
+def generate_presigned_post(bucket_name, object_name, expiration=3600):
+    """ 
+    Generate a presigned url to upload a new object
+    :param bucket_name: string
+    :param object_name: string
+    :param expiration: Time in seconds for the presigned URL to remain valid
+    :return: Presigned URL as string. If error, returns None.
     """
+    s3 = aws_config.get_s3()
+    try:
+        url = s3.generate_presigned_post(
+            Bucket=app.config['S3_BUCKET'],
+            Key=object_name,
+            ExpiresIn=expiration
+        )
+    except ClientError as error_msg:
+        logging.error(error_msg)
+        return None
 
-    def __init__(self, method_name, method_parameters=None, expiration=3600,
-                 http_method=None):
-        self.method_name = method_name
-        self.method_parameters = method_parameters
-        self.expiration = expiration
-        self.http_method = http_method
-        self.key = ""
-        self.fields = {}
-        self.conditions = []
-
-    def set_upload_key(self, key_name):
-        """
-        set the name of the file to upload to s3
-        :type key_name {string}
-        """
-        self.key = key_name
-
-    def set_upload_fields(self, fields):
-        """
-        set the fields to be used by client during the uplod
-        :type fields Object
-        """
-        self.fields = fields
-
-    def set_upload_conditions(self, conditions):
-        """
-        set the conditions to include in the policy when uploading an object
-        :type conditions: object
-        """
-        self.conditions = conditions
-
-    def create_pre_signed_url(self):
-        """
-        actual method to generate the pre-signed url
-        :return String
-        """
-        try:
-            response = app.application.s3.generate_presigned_url(
-                ClientMethod=self.method_name,
-                Params=self.method_parameters,
-                ExpiresIn=self.expiration,
-                HttpMethod=self.http_method
-            )
-
-        except ClientError as error_msg:
-            logging.error(error_msg)
-            return None
-
-        return response
-
-    def create_pre_signed_post(self):
-        """
-        generate a presigned url to upload a file to s3 bucket
-        :return object returns url and fields to pass during upload
-        """
-        try:
-            response = app.application.s3.generate_presigned_post(
-                Bucket=application.config['S3_BUCKET'],
-                Key=self.key,
-                Fields=self.fields,
-                Conditions=self.conditions,
-                ExpiresIn=self.expiration
-            )
-        except ClientError as error_msg:
-            logging.error(error_msg)
-            return None
-
-        return response
+    return url

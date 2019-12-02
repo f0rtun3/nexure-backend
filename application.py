@@ -5,8 +5,9 @@ from dotenv import load_dotenv
 from flask_migrate import Migrate
 from flask_restful import Api
 from database.db import db
-
+import logging
 import os
+import boto3
 
 from models import *
 from resources.Users import UserRegister
@@ -34,6 +35,8 @@ from resources.MasterDetails import MasterDetails
 from resources.ChildDetails import ChildDetails
 from resources.policy_payment_handler import PolicyPaymentsResource
 from resources.policy_payment_handler import PolicyPaymentsHandler
+from resources.AWSHandler import AWSPresignedURL
+from resources.AWSHandler import AWSPresignedExtended
 
 """
 automatically set the application's os environment
@@ -49,7 +52,7 @@ CORS(application, resources={
     r"/*": {"origins": application.config['ALLOWED_HOSTS']}})
 migrate = Migrate(application, db)
 jwt = JWTManager(application)
-
+# logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(asctime)s: %(message)s:')
 
 @jwt.expired_token_loader
 def expired_token_handler():
@@ -118,6 +121,8 @@ API.add_resource(ExtensionHandler, '/api/extensions')
 API.add_resource(Location, '/api/locations')
 API.add_resource(PolicyPaymentsResource, '/api/payments')
 API.add_resource(PolicyPaymentsHandler, '/api/payments/<int:child_policy_id>')
+API.add_resource(AWSPresignedURL, '/api/sign/get/<string:object_name>')
+API.add_resource(AWSPresignedExtended, '/api/sign/post/<string:object_name>')
 
 if __name__ == '__main__':
     application.run(
