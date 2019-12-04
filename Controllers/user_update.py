@@ -68,6 +68,35 @@ def complete_user_profile(data, user_id, role):
     user = User.get_user_by_id(user_id)
     user.update({'is_complete': True})
 
+def update_avatar_name(avatar_name, user_id, role):
+    """
+    image upload and update function
+    :param avatar_name {string} the resource name
+    :param user_id {int} the user account ID
+    :param role {string} the account role of the image uploader
+    """
+    if role in ('IA', 'BR'):
+        update_agency_avatar(avatar_name,role, user_id)
+    else:
+        user_acc = UserProfile.get_profile_by_user_id(user_id)
+        user_acc.update({'avatar_url': avatar_name})
+    return
+
+def update_agency_avatar(avatar_name, role, user_id):
+    """
+    each agency needs to have their own avatar
+    which is separate from the account_profile avatar
+    :param avatar_name {string} the resource name
+    :param user_id {int} the user account ID
+    :param role {string} the account role of the image uploader
+    """
+    if role == 'IA':
+        ia_account = IndependentAgent.get_agency_by_contact_person(user_id)
+        ia_account.update({'avatar_url': avatar_name})
+    elif role == 'BR':
+        br_account = Broker.get_broker_by_contact_id(user_id)
+        br_account.update({'avatar_url': avatar_name})
+    return
 
 def update_independent_agent(data, user_id):
     agency = IndependentAgent.get_agency_by_contact_person(user_id=user_id)
@@ -96,13 +125,16 @@ def update_social_profile(data, user_id, role):
         agency = InsuranceCompany.get_company_by_contact_person(user_id)
         return agency.update(social_data)
     elif role == 'IA':
+        social_data['avatar_url'] = data['avatar_url']
         agency = IndependentAgent.get_agency_by_contact_person(user_id)
         return agency.update(social_data)
     elif role == 'BR':
+        social_data['avatar_url'] = data['avatar_url']
         agency = Broker.get_broker_by_contact_id(user_id)
         return agency.update(social_data)
     elif role in ('TA', 'IND'):
-        user = User.get_user_by_id(user_id)
+        social_data['avatar_url'] = data['avatar_url']
+        user = UserProfile.get_profile_by_user_id(user_id)
         user.update(social_data)
 
 

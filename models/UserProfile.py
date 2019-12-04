@@ -1,7 +1,8 @@
+from flask import current_app as app
 from database.db import db
 from datetime import datetime
 from sqlalchemy import or_
-
+from helpers.file_handler import S3FileHandler
 
 class UserProfile(db.Model):
     __tablename__ = 'user_profile'
@@ -17,7 +18,7 @@ class UserProfile(db.Model):
     # we need to store the user mobile number
     # for subsequent communication
     phone = db.Column(db.BIGINT, unique=True)
-    avatar_url = db.Column(db.String(150))
+    avatar_url = db.Column(db.String(150), unique=True)
     occupation = db.Column(db.String(100))
     id_passport = db.Column(db.String(30), unique=True)
     kra_pin = db.Column(db.String(15), unique=True)
@@ -70,6 +71,8 @@ class UserProfile(db.Model):
         return f"{self.id_passport}"
 
     def serialize(self):
+        s3_handler = S3FileHandler(app.config['S3_BUCKET'], self.avatar_url)
+        avatar_url = s3_handler.generate_pre_signed_url()
         return {
             "profile_details": {
                 "user_id": self.user_id,
@@ -78,7 +81,7 @@ class UserProfile(db.Model):
                 "last_name": self.last_name,
                 "gender": self.gender,
                 "phone": self.phone,
-                "avatar_url": self.avatar_url,
+                "avatar_url": avatar_url if avatar_url is not None else self.avatar_url,
                 "occupation": self.occupation,
                 "id_passport": self.id_passport,
                 "kra_pin": self.kra_pin,

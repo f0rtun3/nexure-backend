@@ -1,4 +1,6 @@
+from flask import current_app as app
 from database.db import db
+from helpers.file_handler import S3FileHandler
 
 
 class IndependentAgent(db.Model):
@@ -22,7 +24,7 @@ class IndependentAgent(db.Model):
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
     website = db.Column(db.String(150), unique=True)
-    avatar_url = db.Column(db.String(150))
+    avatar_url = db.Column(db.String(150), unique=True)
     ia_customer = db.relationship("IACustomer", backref="ia_affiliation")
 
     def __repr__(self):
@@ -46,12 +48,15 @@ class IndependentAgent(db.Model):
         self.mpesa_paybill = mpesa_paybill
 
     def serialize(self):
+        s3_handler = S3FileHandler(app.config['S3_BUCKET'],self.avatar_url)
+        avatar_url = s3_handler.generate_pre_signed_url()
         org_details = {
             "organization": {
                 "org_name": self.agency_name,
                 "org_email": self.agency_email,
                 "org_phone": self.agency_phone,
                 "ira_registration_number": self.ira_registration_number,
+                "avatar_url": avatar_url if avatar_url is not None else self.avatar_url,
                 "ira_license_number": self.ira_license_number,
                 "org_kra_pin": self.kra_pin,
                 "website": self.website

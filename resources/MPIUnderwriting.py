@@ -348,7 +348,9 @@ class MPIUnderwriting(Resource):
                 vehicle["sum_insured"],
                 vehicle["no_of_seats"],
                 vehicle["manufacture_year"],
-                vehicle["engine"]
+                vehicle["engine"],
+                vehicle['national_id'],
+                vehicle['logbook']
             )
         # Add modifications
         modifications = policy_details['modifications']

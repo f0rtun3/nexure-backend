@@ -140,6 +140,10 @@ user_parser.add_argument(
     type=str
 )
 user_parser.add_argument(
+    "avatar_url",
+    type=str
+)
+user_parser.add_argument(
     "company_id",
     type=int
 )
@@ -386,6 +390,16 @@ underwriting_parser.add_argument(
 underwriting_parser.add_argument(
     "benefit_id",
     type=int
+)
+
+underwriting_parser.add_argument(
+    "national_id",
+    type=str
+)
+
+underwriting_parser.add_argument(
+    "logbook",
+    type=str
 )
 
 

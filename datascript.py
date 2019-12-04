@@ -26,7 +26,6 @@ def car_makes():
 def car_models():
     df = pd.read_csv("data/clean_car_models.csv")
     for row in df.itertuples():
-        # TODO: get car make by name
         car_make = CarMake.get_car_make_by_name(row.Make_Name)
         new_car_model = CarModel(row.Model_Name, row.Series, car_make)
         new_car_model.save()
@@ -108,7 +107,6 @@ def counties():
 def constituencies():
     df = pd.read_csv("data/Constituency_Insurance.csv")
     for row in df.itertuples():
-        # TODO: Create get county by name
         county = County.get_county_by_name(row.County_Name)
         new_constituency = Constituency(row.Constituency_Name, county)
         new_constituency.save()

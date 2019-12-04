@@ -1,5 +1,6 @@
+from flask import current_app as app
 from database.db import db
-
+from helpers.file_handler import S3FileHandler
 
 class Broker(db.Model):
     broker_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
@@ -18,7 +19,7 @@ class Broker(db.Model):
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
-    avatar_url = db.Column(db.String(150))
+    avatar_url = db.Column(db.String(150), unique=True)
     br_customer = db.relationship("BRCustomer", backref="br_affiliation")
     br_staff = db.relationship("BRStaff", backref="broker")
 
@@ -43,6 +44,8 @@ class Broker(db.Model):
         return f"{self.broker_id}"
 
     def serialize(self):
+        s3_handler = S3FileHandler(app.config['S3_BUCKET'],self.avatar_url)
+        avatar_url = s3_handler.generate_pre_signed_url()
         org_details = {
             "organization": {
                 "broker_id": self.broker_id,
@@ -53,6 +56,7 @@ class Broker(db.Model):
                 "ira_registration_number": self.ira_registration_number,
                 "ira_license_number": self.ira_license_number,
                 "org_kra_pin": self.kra_pin,
+                "avatar_url": avatar_url if avatar_url is not None else self.avatar_url,
                 "website": self.website
             }
         }

@@ -6,45 +6,55 @@ from helpers import aws_configs as aws_config
 import logging
 from botocore.exceptions import ClientError
 
-def generate_presigned_url(bucket_name, object_name, expiration=3600):
-    """ 
-    Generate a presigned url for getting an object
-    :param bucket_name: string
-    :param object_name: string
-    :param expiration: Time in seconds for the presigned URL to remain valid
-    :return: Presigned URL as string. If error, returns None.
-    """
-    s3_client = aws_config.get_s3()
-    try:
-        url = s3_client.generate_presigned_url(
+
+class S3FileHandler():
+    def __init__(self, bucket_name, object_name, expiration = 3600):
+        self.bucket_name = bucket_name
+        self.object_name = object_name
+        self.expiration = expiration
+        self.fields = {}
+        self.conditions = []
+        self.s3_client = aws_config.get_s3()
+    
+    def set_field_names(self, field_names):
+        self.fields = field_names
+    
+    def set_conditions(self, conditions):
+        self.conditions = conditions
+    
+    def generate_pre_signed_url(self):
+        """
+        generate a presigned url to fetch an object from s3 client
+        """
+        try:
+            url = self.s3_client.generate_presigned_url(
                 'get_object',
-                Params={'Bucket': bucket_name, 'Key': object_name},
-                ExpiresIn=expiration
-        )
-    except ClientError as e:
-        logging.error(e)
-        return None
+                Params={
+                    'Bucket': self.bucket_name,
+                    'Key': self.object_name},
+                ExpiresIn=self.expiration
+            )
+        except ClientError as e:
+            logging.error(e)
+            return None
+        
+        return url
+    
+    def generate_presigned_post(self):
+        """
+        generate a presigned post url to upload 
+        an object to s3 bucket
+        """
+        try:
+            url = self.s3_client.generate_presigned_post(
+                Bucket=app.config['S3_BUCKET'],
+                key=self.object_name,
+                Fields=self.fields,
+                Conditions=self.conditions,
+                ExpiresIn=self.expiration
+            )
+        except ClientError as e:
+            logging.error(e)
+            return None
 
-    return url
-
-
-def generate_presigned_post(bucket_name, object_name, expiration=3600):
-    """ 
-    Generate a presigned url to upload a new object
-    :param bucket_name: string
-    :param object_name: string
-    :param expiration: Time in seconds for the presigned URL to remain valid
-    :return: Presigned URL as string. If error, returns None.
-    """
-    s3 = aws_config.get_s3()
-    try:
-        url = s3.generate_presigned_post(
-            Bucket=app.config['S3_BUCKET'],
-            Key=object_name,
-            ExpiresIn=expiration
-        )
-    except ClientError as error_msg:
-        logging.error(error_msg)
-        return None
-
-    return url
+        return url

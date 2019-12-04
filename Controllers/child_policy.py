@@ -28,13 +28,14 @@ class ChildController:
         self.driver_id = driver.id
 
     def add_vehicle_details(self, reg_number, model, color, body_type, origin, sum_insured, no_of_seats,
-                            manufacture_year, engine_capacity):
+                            manufacture_year, engine_capacity, national_id, logbook):
         """
         Creates a vehicle object tied to a particular child policy.
         Uses the 'driver_id' to identify the vehicle driver
         """
         new_car = VehicleDetails(reg_number, model, color, body_type, origin, sum_insured,
-                                 self.driver_id, no_of_seats, manufacture_year, engine_capacity)
+                                 self.driver_id, no_of_seats, manufacture_year, engine_capacity,
+                                 national_id, logbook)
         new_car.save()
         self.vehicle_id = new_car.id
 

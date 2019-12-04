@@ -151,40 +151,43 @@ class UserRegister(Resource):
             if user_details['update_type'] == "password":
                 updateController.update_user_password(
                     user_details['new_password'], user_id)
-
+            
             elif user_details['update_type'] == "personal":
                 user_details.update(
                     {'birth_date': UserRegister.format_birth_date(str(user_details['birth_date']))})
                 updateController.update_personal_details(user_details, user_id)
-
+            
             elif user_details['update_type'] == "location":
                 updateController.update_location_details(user_details, user_id)
-
+            
             elif user_details['update_type'] == "agency":
                 updateController.update_agency_details(
                     user_details, role, user_id)
-
+            
             elif user_details['update_type'] == "complete_profile":
                 user_details['birth_date'] = UserRegister.format_birth_date(
                     user_details['birth_date'])
                 updateController.complete_user_profile(
                     user_details, user_id, role)
-
+            
             elif user_details['update_type'] == "social":
                 updateController.update_social_profile(
                     user_details, user_id, role)
-
+            
+            elif user_details['update_type'] == "image":
+                updateController.update_avatar_name(user_details['avatar_url'], user_id, role)
+        
         else:
             # if user does not exist
             response_msg = helper.make_rest_fail_response(
                 "User does not exist")
             return make_response(response_msg, 404)
-
+        
         # update was successful
         response_msg = helper.make_rest_success_response(
             f"Update successful.")
         return make_response(response_msg, 200)
-
+    
     @staticmethod
     def format_birth_date(date_str):
         b_day = datetime.strptime(date_str, '%d/%m/%Y')
