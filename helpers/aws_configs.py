@@ -15,7 +15,7 @@ def get_ses():
 def get_s3():
     s3 = boto3.client(
         "s3",
-        region_name=app.config['AWS_REGION'],
+        region_name=app.config['AWS_REGION_S3'],
         aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
         aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY']
     )

@@ -76,7 +76,7 @@ class StaffRegistration(Resource):
 
         # send email to with the activation details for the staff
         # Temporary password email
-        email_template = helper.generate_confirmation_template(application.config['CONFIRMATION_ENDPOINT'],
+        email_template = helper.generate_confirmation_template(application.config['LOGIN_ENDPOINT'],
                                                                temporary_pass)
         subject = "Nexure Temporary Password"
         email_text = f"Follow {application.config['LOGIN_ENDPOINT']} to login and use {temporary_pass} as your temporary password"
