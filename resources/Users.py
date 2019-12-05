@@ -339,7 +339,7 @@ class UserLogin(Resource):
                         user_db_row.id)
 
                 response_msg = helper.make_rest_success_response(
-                    "Successfully logged in", response_dict)
+                    "Welcome", response_dict)
                 return make_response(response_msg, 200)
             else:
                 response_msg = helper.make_rest_fail_response(
