@@ -44,8 +44,10 @@ class Broker(db.Model):
         return f"{self.broker_id}"
 
     def serialize(self):
-        s3_handler = S3FileHandler(app.config['S3_BUCKET'],self.avatar_url)
-        avatar_url = s3_handler.generate_pre_signed_url()
+        avatar_url = ""
+        if self.avatar_url is not None:
+            s3_handler = S3FileHandler(app.config['S3_BUCKET'], self.avatar_url)
+            avatar_url = s3_handler.generate_pre_signed_url()
         org_details = {
             "organization": {
                 "broker_id": self.broker_id,
@@ -56,7 +58,7 @@ class Broker(db.Model):
                 "ira_registration_number": self.ira_registration_number,
                 "ira_license_number": self.ira_license_number,
                 "org_kra_pin": self.kra_pin,
-                "avatar_url": avatar_url if avatar_url is not None else self.avatar_url,
+                "avatar_url": avatar_url,
                 "website": self.website
             }
         }

@@ -71,8 +71,10 @@ class UserProfile(db.Model):
         return f"{self.id_passport}"
 
     def serialize(self):
-        s3_handler = S3FileHandler(app.config['S3_BUCKET'], self.avatar_url)
-        avatar_url = s3_handler.generate_pre_signed_url()
+        avatar_url = ""
+        if self.avatar_url is not None:
+            s3_handler = S3FileHandler(app.config['S3_BUCKET'], self.avatar_url)
+            avatar_url = s3_handler.generate_pre_signed_url()
         return {
             "profile_details": {
                 "user_id": self.user_id,
@@ -81,7 +83,7 @@ class UserProfile(db.Model):
                 "last_name": self.last_name,
                 "gender": self.gender,
                 "phone": self.phone,
-                "avatar_url": avatar_url if avatar_url is not None else self.avatar_url,
+                "avatar_url": avatar_url,
                 "occupation": self.occupation,
                 "id_passport": self.id_passport,
                 "kra_pin": self.kra_pin,
