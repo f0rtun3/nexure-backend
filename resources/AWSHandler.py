@@ -7,7 +7,7 @@ from flask_restful import Resource
 
 
 class AWSPresignedURL(Resource):
-    #   @jwt_required
+    @jwt_required
     def get(self, object_name):
         """
         get the presigned url to fetch file from s3 resource

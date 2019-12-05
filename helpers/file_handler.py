@@ -48,7 +48,7 @@ class S3FileHandler():
         try:
             url = self.s3_client.generate_presigned_post(
                 Bucket=app.config['S3_BUCKET'],
-                key=self.object_name,
+                Key=self.object_name,
                 Fields=self.fields,
                 Conditions=self.conditions,
                 ExpiresIn=self.expiration
