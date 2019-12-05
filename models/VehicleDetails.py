@@ -43,10 +43,14 @@ class VehicleDetails(db.Model):
         self.logbook_file = logbook_file
 
     def serialize(self):
-        s3_handler_id = S3FileHandler(app.config['S3_BUCKET'], self.national_id_file)
-        s3_handler_logbook = S3FileHandler(app.config['S3_BUCKET'], self.logbook_file)
-        national_id = s3_handler_id.generate_pre_signed_url()
-        logbook = s3_handler_logbook.generate_pre_signed_url()
+        national_id = ""
+        logbook = ""
+        if self.national_id_file:
+            s3_handler_id = S3FileHandler(app.config['S3_BUCKET'], self.national_id_file)
+            national_id = s3_handler_id.generate_pre_signed_url()
+        if self.logbook_file:
+            s3_handler_logbook = S3FileHandler(app.config['S3_BUCKET'], self.logbook_file)
+            logbook = s3_handler_logbook.generate_pre_signed_url()
         return {
             "id": self.id,
             "reg_number": self.reg_number,
@@ -55,8 +59,8 @@ class VehicleDetails(db.Model):
             "body_type": self.body_type,
             "origin": self.origin,
             "sum_insured": self.sum_insured,
-            "national_id": national_id if national_id is not None else self.national_id_file,
-            "logbook": logbook if logbook is not None else self.logbook_file,
+            "national_id": national_id,
+            "logbook": logbook,
             "driver": self.driver.serialize(),
             "no_of_seats": self.no_of_seats,
             "manufacture_year": self.manufacture_year,
