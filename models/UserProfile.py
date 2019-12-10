@@ -142,10 +142,6 @@ class UserProfile(db.Model):
         return profile
 
     @classmethod
-    def check_account_duplicate(cls, user_phone, user_id_passport,
-                                user_kra_pin, user_facebook=None,
-                                user_instagram=None, user_twitter=None):
-        return cls.query.filter(or_(cls.phone == user_phone,
-                                    cls.id_passport == user_id_passport,
-                                    cls.kra_pin == user_kra_pin, cls.facebook == user_facebook,
-                                    cls.instagram == user_instagram, cls.twitter == user_twitter)).first()
+    def check_account_duplicate(cls, user_phone, user_id_passport, user_kra_pin):
+        return cls.query.filter(or_(cls.phone == user_phone, cls.id_passport == user_id_passport,
+                                    cls.kra_pin == user_kra_pin)).first()
