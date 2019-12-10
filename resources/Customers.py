@@ -49,10 +49,7 @@ class CustomerOnBoarding(Resource):
         # we need to check for all the unique values to a user to ensure there is no duplicate
         customer = UserProfile.check_account_duplicate( customer_details['phone'],
                                                         customer_details['id_passport'],
-                                                        customer_details['kra_pin'],
-                                                        customer_details['facebook'],
-                                                        customer_details['instagram'],
-                                                        customer_details['twitter'] )
+                                                        customer_details['kra_pin'])
         customer_number = None
         if not customer:
             # Create temporary seven digit password
