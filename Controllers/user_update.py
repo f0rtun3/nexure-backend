@@ -196,9 +196,10 @@ def update_staff_permissions(staff_id, permissions):
     :param staff_id staff user id
     :param permissions set of user permissions
     """
+    permissions_set = set(permissions)
     curr_permissions = set(UserPermissions.get_permission_by_user_id(staff_id))
-    new_permissions = permissions-curr_permissions
-    old_permissions = curr_permissions-permissions
+    new_permissions = permissions_set-curr_permissions
+    old_permissions = curr_permissions-permissions_set
     if bool(old_permissions) == True:
         UserPermissions.delete_user_permissions(staff_id, old_permissions)
 
