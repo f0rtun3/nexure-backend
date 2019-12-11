@@ -76,7 +76,7 @@ class StaffRegistration(Resource):
 
         # send email to with the activation details for the staff
         # Temporary password email
-        email_template = helper.generate_confirmation_template(application.config['LOGIN_ENDPOINT'],
+        email_template = helper.generate_temporary_password_template(application.config['LOGIN_ENDPOINT'],
                                                                temporary_pass)
         subject = "Nexure Temporary Password"
         email_text = f"Follow {application.config['LOGIN_ENDPOINT']} to login and use {temporary_pass} as your temporary password"
@@ -225,6 +225,8 @@ class StaffRegistration(Resource):
     def get_staff_details(role, user_id):
         # We want to fetch staff details based on their user id: first_name, last_name, phone, email, permissions
         data = {}
+        ia_data = {}
+        br_data = {}
         user = User.get_user_by_id(user_id)
         data.update({'id': user_id})
         # get email
@@ -237,11 +239,12 @@ class StaffRegistration(Resource):
         # get permissions
         user_permissions = UserPermissions.get_permission_by_user_id(user_id)
         data.update({"permissions": user_permissions})
+        
         if role == 'IA':
             ia_data = IAStaff.get_staff_by_user_id(user_id)
             data.update({"is_active": ia_data.active})
         elif role == 'BR':
             br_data = BRStaff.get_staff_by_user_id(user_id)
-            data.update({"is_active": ia_data.active})
+            data.update({"is_active": br_data.active})
         # return dict containing all data for a particular staff member
         return data
