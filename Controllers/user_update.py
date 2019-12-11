@@ -24,7 +24,8 @@ def update_personal_details(data, user_id):
     }
     user_auth_detail = User.get_user_by_id(user_id)
     contact_email = {"email": verify_updated_details(user_auth_detail.email, data['email'])}
-    return profile_row.update(personal_data) and user_auth_detail.update(contact_email)
+    user_auth_detail.update(contact_email)
+    return profile_row.update(personal_data)
 
 
 def update_location_details(data, user_id):
