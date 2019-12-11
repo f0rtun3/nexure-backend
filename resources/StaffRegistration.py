@@ -197,7 +197,7 @@ class StaffRegistration(Resource):
             # Get all staff properties
             staff_list = []
             for i in staff_ids:
-                staff = self.get_staff_details(i)
+                staff = self.get_staff_details(role, i)
                 staff_list.append(staff)
             return staff_list
 
@@ -206,7 +206,7 @@ class StaffRegistration(Resource):
             # get all staff details
             staff_list = []
             for i in staff_ids:
-                staff = self.get_staff_details(i)
+                staff = self.get_staff_details(role, i)
                 staff_list.append(staff)
             return staff_list
 
@@ -216,12 +216,13 @@ class StaffRegistration(Resource):
             # dictionary to store staff details
             staff_list = []
             for i in staff_ids:
-                staff = self.get_staff_details(i)
+                staff = self.get_staff_details(role, i)
                 staff_list.append(staff)
             return staff_list
+            
 
     @staticmethod
-    def get_staff_details(user_id):
+    def get_staff_details(role, user_id):
         # We want to fetch staff details based on their user id: first_name, last_name, phone, email, permissions
         data = {}
         user = User.get_user_by_id(user_id)
@@ -236,5 +237,11 @@ class StaffRegistration(Resource):
         # get permissions
         user_permissions = UserPermissions.get_permission_by_user_id(user_id)
         data.update({"permissions": user_permissions})
+        if role == 'IA':
+            ia_data = IAStaff.get_staff_by_user_id(user_id)
+            data.update({"is_active": ia_data.active})
+        elif role == 'BR':
+            br_data = BRStaff.get_staff_by_user_id(user_id)
+            data.update({"is_active": ia_data.active})
         # return dict containing all data for a particular staff member
         return data

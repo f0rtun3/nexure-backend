@@ -42,9 +42,9 @@ class User(db.Model):
     # define the relationship to the broker
     broker = db.relationship("Broker", backref="user")
     # define the relationship to broker staff members
-    br_staff = db.relationship("BRStaff", backref="br_staff_member")
-    ta_staff = db.relationship("TAStaff", backref="ta_staff_member")
-    ia_staff = db.relationship("IAStaff", backref="ia_staff_member")
+    br_staff = db.relationship("BRStaff", backref="user")
+    ta_staff = db.relationship("TAStaff", backref="user")
+    ia_staff = db.relationship("IAStaff", backref="user")
 
     def __init__(self, user_id, email, password):
         self.user_id = user_id

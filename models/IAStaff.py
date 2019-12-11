@@ -18,7 +18,9 @@ class IAStaff(db.Model):
         self.agent_id = agent_id
 
     def serialize(self):
-        return self.user.serialize()
+        result = self.user.serialize()
+        result['is_active'] = self.active
+        return result
 
     def save(self):
         db.session.add(self)
@@ -47,7 +49,7 @@ class IAStaff(db.Model):
 
     @classmethod
     def fetch_staff_by_agency_id(cls, agency_id):
-        return [staff.serialize() for staff in cls.query.filter_by(agency_id).all()]
+        return [staff.serialize() for staff in cls.query.filter_by(agent_id=agency_id).all()]
     
     @classmethod
     def get_staff_by_user_id(cls, user_id):

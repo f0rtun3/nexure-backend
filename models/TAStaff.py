@@ -18,7 +18,9 @@ class TAStaff(db.Model):
         self.agent_id = agent_id
 
     def serialize(self):
-        return self.user.serialize()
+        result = self.user.serialize()
+        result['is_active'] = self.active
+        return result
 
     def save(self):
         db.session.add(self)
