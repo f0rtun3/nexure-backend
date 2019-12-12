@@ -26,8 +26,9 @@ class AWSPresignedExtended(Resource):
     @jwt_required
     def get(self, object_name):
         bucket_name = app.config['S3_BUCKET']
+        client_method = "put_object"
         s3_handler = S3FileHandler(bucket_name, object_name)
-        response = s3_handler.generate_presigned_post()
+        response = s3_handler.generate_pre_signed_url(client_method)
         if response:
             return make_response(helper.make_rest_success_response("Success", response), 200)
         

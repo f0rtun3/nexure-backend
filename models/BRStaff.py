@@ -18,7 +18,9 @@ class BRStaff(db.Model):
         self.broker_id = broker_id
 
     def serialize(self):
-        return self.user.serialize()
+        result = self.user.serialize()
+        result['is_active'] = self.active
+        return result
 
     def save(self):
         db.session.add(self)

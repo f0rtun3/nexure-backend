@@ -22,13 +22,13 @@ class S3FileHandler():
     def set_conditions(self, conditions):
         self.conditions = conditions
     
-    def generate_pre_signed_url(self):
+    def generate_pre_signed_url(self, client_method="get_object"):
         """
         generate a presigned url to fetch an object from s3 client
         """
         try:
             url = self.s3_client.generate_presigned_url(
-                'get_object',
+                client_method,
                 Params={
                     'Bucket': self.bucket_name,
                     'Key': self.object_name},

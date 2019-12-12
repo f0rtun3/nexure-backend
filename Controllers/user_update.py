@@ -24,7 +24,8 @@ def update_personal_details(data, user_id):
     }
     user_auth_detail = User.get_user_by_id(user_id)
     contact_email = {"email": verify_updated_details(user_auth_detail.email, data['email'])}
-    return profile_row.update(personal_data) and user_auth_detail.update(contact_email)
+    user_auth_detail.update(contact_email)
+    return profile_row.update(personal_data)
 
 
 def update_location_details(data, user_id):
@@ -195,9 +196,10 @@ def update_staff_permissions(staff_id, permissions):
     :param staff_id staff user id
     :param permissions set of user permissions
     """
+    permissions_set = set(permissions)
     curr_permissions = set(UserPermissions.get_permission_by_user_id(staff_id))
-    new_permissions = permissions-curr_permissions
-    old_permissions = curr_permissions-permissions
+    new_permissions = permissions_set-curr_permissions
+    old_permissions = curr_permissions-permissions_set
     if bool(old_permissions) == True:
         UserPermissions.delete_user_permissions(staff_id, old_permissions)
 
