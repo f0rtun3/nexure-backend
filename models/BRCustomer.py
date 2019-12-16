@@ -43,9 +43,8 @@ class BRCustomer(db.Model):
 
     @classmethod
     def check_duplicate_affiliation(cls, broker_id, customer_number):
-        if cls.query.filter_by(broker_id=broker_id, customer_number=customer_number).first():
-            return True
-        return False
+        result = cls.query.filter_by(broker_id=broker_id, customer_number=customer_number).first()
+        return result
 
     @classmethod
     def get_affiliation_by_customer(cls, cust_no):

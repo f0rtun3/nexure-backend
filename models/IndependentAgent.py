@@ -23,7 +23,7 @@ class IndependentAgent(db.Model):
     facebook = db.Column(db.String(150))
     instagram = db.Column(db.String(150))
     twitter = db.Column(db.String(150))
-    website = db.Column(db.String(150), unique=True)
+    website = db.Column(db.String(150))
     avatar_url = db.Column(db.String(150), unique=True)
     ia_customer = db.relationship("IACustomer", backref="ia_affiliation")
 

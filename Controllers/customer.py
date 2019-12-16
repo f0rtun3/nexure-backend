@@ -27,7 +27,7 @@ def get_agent_id(user_role, user_id):
         agency_id = Broker.query.filter_by(contact_person=user_id).first().broker_id
 
     elif user_role == 'TA':
-        agency_id = TiedAgents.query.filter_by(contact_person=user_id).first().id
+        agency_id = TiedAgents.query.filter_by(user_id=user_id).first().id
 
     else:
         return None
