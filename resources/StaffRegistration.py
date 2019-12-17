@@ -121,13 +121,15 @@ class StaffRegistration(Resource):
                     "Failed to update staff permissions")
                 return make_response(response_msg, 500)
 
-        elif staff_details['account_status']:
+        if type(staff_details['is_active']) == bool:
             # de/activate staff account
             claims = get_jwt_claims()
             role = claims['role']
-            staff_handler.update_account_status(
-                role, staff_details['staff_id'], staff_details['account_status'])
-            return make_response(helper.make_rest_success_response("Update successful"), 200)
+            if staff_handler.update_account_status(role, staff_details['staff_id'], staff_details['is_active']):
+                return make_response(helper.make_rest_success_response("Update successful"), 200)
+            else:
+                return make_response(helper.make_rest_fail_response(staff_details['is_active']), 500)
+            
 
 
     @jwt_required
@@ -193,58 +195,11 @@ class StaffRegistration(Resource):
     def get_agency_staff(self, role, agency_id):
         # get list depending on role i.e either BRSTF, TASTF, IASTF
         if role == "BR":
-            staff_ids = BRStaff.fetch_all_staff_ids(agency_id)
-            # Get all staff properties
-            staff_list = []
-            for i in staff_ids:
-                staff = self.get_staff_details(role, i)
-                staff_list.append(staff)
-            return staff_list
+            return BRStaff.fetch_staff_by_agency_id(agency_id)
 
         elif role == "TA":
-            staff_ids = TAStaff.fetch_all_staff_ids(agency_id)
-            # get all staff details
-            staff_list = []
-            for i in staff_ids:
-                staff = self.get_staff_details(role, i)
-                staff_list.append(staff)
-            return staff_list
+            return TAStaff.fetch_staff_by_agency_id(agency_id)
 
         elif role == "IA":
-            # get staff details
-            staff_ids = IAStaff.fetch_all_staff_ids(agency_id)
-            # dictionary to store staff details
-            staff_list = []
-            for i in staff_ids:
-                staff = self.get_staff_details(role, i)
-                staff_list.append(staff)
-            return staff_list
-            
-
-    @staticmethod
-    def get_staff_details(role, user_id):
-        # We want to fetch staff details based on their user id: first_name, last_name, phone, email, permissions
-        data = {}
-        ia_data = {}
-        br_data = {}
-        user = User.get_user_by_id(user_id)
-        data.update({'id': user_id})
-        # get email
-        data.update({'email': user.email})
-        # get profile details
-        user_profile = UserProfile.get_profile_by_user_id(user_id)
-        data.update({'first_name': user_profile.first_name})
-        data.update({"last_name": user_profile.last_name})
-        data.update({"phone": user_profile.phone})
-        # get permissions
-        user_permissions = UserPermissions.get_permission_by_user_id(user_id)
-        data.update({"permissions": user_permissions})
-        
-        if role == 'IA':
-            ia_data = IAStaff.get_staff_by_user_id(user_id)
-            data.update({"is_active": ia_data.active})
-        elif role == 'BR':
-            br_data = BRStaff.get_staff_by_user_id(user_id)
-            data.update({"is_active": br_data.active})
-        # return dict containing all data for a particular staff member
-        return data
+            return IAStaff.fetch_staff_by_agency_id(agency_id)
+    

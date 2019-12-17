@@ -163,9 +163,10 @@ user_parser.add_argument(
 )
 
 user_parser.add_argument(
-    "account_status",
+    "is_active",
     type=bool
 )
+
 user_parser.add_argument(
     "staff_id",
     type=int
