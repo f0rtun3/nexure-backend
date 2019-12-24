@@ -133,14 +133,14 @@ class UserRegister(Resource):
         user_id = get_jwt_identity()
         # get the user details from the request sent by the client
         user_details = user_parser.parse_args()
+        if user_details['customer_id']:
+            user_id = user_details['customer_id']
         # check if the user exists
         user = User.get_user_by_id(user_id)
 
         # if the user is an agent and is updating 
         # details on behalf of a customer
         # we can check whether the customer exists or not
-        if user_details['customer_id']:
-            user = User.get_user_by_id(user_details['customer_id'])
         
         
         # if user exists, then update their details
@@ -148,6 +148,9 @@ class UserRegister(Resource):
             # get their role
             claims = get_jwt_claims()
             role = claims['role']
+            if user_details['customer_id']:
+                user = User.get_user_by_id(user_details['customer_id'])
+                role = 'IND'
             if user_details['update_type'] == "password":
                 updateController.update_user_password(
                     user_details['new_password'], user_id)
