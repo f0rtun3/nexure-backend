@@ -50,7 +50,7 @@ class StaffRegistration(Resource):
             new_user.id,
             user_details['first_name'],
             user_details['last_name'],
-            user_details['mob']
+            user_details['phone']
         )
         new_user_profile.save()
 

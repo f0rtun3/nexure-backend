@@ -16,7 +16,7 @@ user_parser.add_argument(
     type=str
 )
 user_parser.add_argument(
-    "mob",
+    "phone",
     type=int
 )
 user_parser.add_argument(
@@ -185,6 +185,22 @@ customer_parser.add_argument(
     "org_type",
     type=str
 )
+
+customer_parser.add_argument(
+    "phone_2",
+    type=int
+)
+
+customer_parser.add_argument(
+    "email_2",
+    type=str
+)
+
+customer_parser.add_argument(
+    "customer_id",
+    type=int
+)
+
 # For individuals
 customer_parser.add_argument(
     "first_name",

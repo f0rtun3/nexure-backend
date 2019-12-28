@@ -4,6 +4,8 @@ handles complete profile and profile update
 """
 from models.User import User
 from models.UserProfile import UserProfile
+from models.IndividualCustomer import IndividualCustomer
+from models.OrganizationCustomer import OrganizationCustomer
 from models.IndependentAgent import IndependentAgent
 from models.InsuranceCompany import InsuranceCompany
 from models.Broker import Broker
@@ -19,7 +21,7 @@ def update_personal_details(data, user_id):
         "occupation": data['occupation'],
         "id_passport": data['id_passport'],
         "kra_pin": data['kra_pin'],
-        "phone": verify_updated_details(profile_row.phone, data['mob']),
+        "phone": verify_updated_details(profile_row.phone, data['phone']),
         "birth_date": data['birth_date']
     }
     user_auth_detail = User.get_user_by_id(user_id)
@@ -151,6 +153,22 @@ def update_broker_agent(data, user_id):
         "kra_pin": data['org_kra_pin']
     }
     return agency.update(agency_data)
+
+
+def update_extra_info(customer_info):
+    customer_type = customer_info['type']
+    customer_id = customer_info['customer_id']
+    email_2 = customer_info['email_2']
+    phone_2 = customer_info['phone_2']
+    customer_details = {"phone_2": phone_2, "email_2": email_2}
+
+    if customer_type == 'individual':
+        customer_row = IndividualCustomer.get_customer_by_user_id(customer_id)
+        customer_row.update(customer_details)
+    else:
+        customer_row = OrganizationCustomer.get_customer_by_contact(customer_id)
+        customer_row.update(customer_details)
+
 
 
 def update_insurance_company(data, user_id):

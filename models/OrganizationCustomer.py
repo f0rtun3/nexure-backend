@@ -13,6 +13,8 @@ class OrganizationCustomer(db.Model):
     org_name = db.Column(db.String(100), unique=True)
     org_phone = db.Column(db.BIGINT)
     org_email = db.Column(db.String(100))
+    phone_2 = db.Column(db.BIGINT, unique=True)
+    email_2 = db.Column(db.String(100), unique=True)
     org_reg_number = db.Column(db.String(50))
     physical_address = db.Column(db.String(150))
     postal_address = db.Column(db.String(100))
@@ -34,10 +36,12 @@ class OrganizationCustomer(db.Model):
 
     def __init__(self, org_type, org_name, org_phone, org_email, org_reg_number, physical_address, postal_address,
                  postal_code, postal_town, county, constituency, ward, facebook, instagram, twitter, contact_person,
-                 customer_number):
+                 customer_number, email_2 = None, phone_2 = None):
         self.org_type = org_type
         self.org_name = org_name
         self.org_phone = org_phone
+        self.phone_2 = phone_2
+        self.email_2 = email_2
         self.org_email = org_email
         self.org_reg_number = org_reg_number
         self.physical_address = physical_address
@@ -64,6 +68,8 @@ class OrganizationCustomer(db.Model):
             "org_phone": self.org_phone,
             "customer_number": self.customer_number,
             "org_email": self.org_email,
+            "phone_2": self.phone_2,
+            "email_2": self.email_2,
             "org_registration_number": self.org_reg_number,
             "physical_address": self.physical_address,
             "postal_code": self.postal_code,
