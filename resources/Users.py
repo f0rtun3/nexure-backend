@@ -11,6 +11,7 @@ import helpers.tokens as token_handler
 #   from models.IndividualCustomer import IndividualCustomer
 from helpers import helpers as helper
 from helpers.parsers import user_parser
+from helpers.parsers import customer_parser
 from models.Broker import Broker
 from models.IndependentAgent import IndependentAgent
 from models.InsuranceCompany import InsuranceCompany
@@ -38,9 +39,9 @@ class UserRegister(Resource):
 
         # check if user phone number exists
         phone_number = UserProfile.get_profile_by_phone_number(
-            user_details["mob"])
+            user_details["phone"])
         if phone_number:
-            err_msg = f"{user_details['mob']} already exists"
+            err_msg = f"{user_details['phone']} already exists"
             response_msg = helper.make_rest_fail_response(err_msg)
             return make_response(response_msg, 409)
 
@@ -58,7 +59,7 @@ class UserRegister(Resource):
             new_user_authentication.id,
             user_details['first_name'],
             user_details['last_name'],
-            user_details['mob']
+            user_details['phone']
         )
         new_user_profile.save()
 
@@ -133,14 +134,15 @@ class UserRegister(Resource):
         user_id = get_jwt_identity()
         # get the user details from the request sent by the client
         user_details = user_parser.parse_args()
+        customer_details = customer_parser.parse_args()
+        if user_details['customer_id']:
+            user_id = user_details['customer_id']
         # check if the user exists
         user = User.get_user_by_id(user_id)
 
         # if the user is an agent and is updating 
         # details on behalf of a customer
         # we can check whether the customer exists or not
-        if user_details['customer_id']:
-            user = User.get_user_by_id(user_details['customer_id'])
         
         
         # if user exists, then update their details
@@ -148,6 +150,9 @@ class UserRegister(Resource):
             # get their role
             claims = get_jwt_claims()
             role = claims['role']
+            if user_details['customer_id']:
+                user = User.get_user_by_id(user_details['customer_id'])
+                role = 'IND'
             if user_details['update_type'] == "password":
                 updateController.update_user_password(
                     user_details['new_password'], user_id)
@@ -176,6 +181,9 @@ class UserRegister(Resource):
             
             elif user_details['update_type'] == "image":
                 updateController.update_avatar_name(user_details['avatar_url'], user_id, role)
+            
+            elif user_details['update_type'] == "extra_info":
+                updateController.update_extra_info(customer_details)
         
         else:
             # if user does not exist

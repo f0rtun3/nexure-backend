@@ -12,7 +12,7 @@ class Broker(db.Model):
     ira_registration_number = db.Column(db.String(15), unique=True)
     ira_license_number = db.Column(db.String(15), unique=True)
     kra_pin = db.Column(db.String(15), unique=True)
-    website = db.Column(db.String(150), unique=True)
+    website = db.Column(db.String(150))
     mpesa_paybill = db.Column(db.BIGINT, nullable=True)
 
     # social media handles

@@ -1,5 +1,5 @@
 from database.db import db
-
+from models.UserPermissions import UserPermissions
 
 class BRStaff(db.Model):
     __tablename__ = 'br_staff'
@@ -19,8 +19,15 @@ class BRStaff(db.Model):
 
     def serialize(self):
         result = self.user.serialize()
-        result['is_active'] = self.active
-        return result
+        return {
+            "id": self.user_id,
+            "first_name": result['profile_details']['first_name'],
+            "last_name": result['profile_details']['last_name'],
+            "email": result['profile_details']['email'],
+            "phone": result['profile_details']['phone'],
+            "is_active": self.active,
+            "permissions": UserPermissions.get_permission_by_user_id(self.user_id)
+        }
 
     def save(self):
         db.session.add(self)
@@ -38,6 +45,10 @@ class BRStaff(db.Model):
     @classmethod
     def fetch_staff_by_id(cls, broker_id):
         return cls.query.filter_by(broker_id=broker_id, active=True).first()
+
+    @classmethod
+    def fetch_staff_by_agency_id(cls, broker_id):
+        return [staff.serialize() for staff in cls.query.filter_by(broker_id=broker_id).all()]
 
     @classmethod
     def fetch_broker_by_staff(cls, staff_id):

@@ -299,11 +299,8 @@ class CustomerOnBoarding(Resource):
     @staticmethod
     def register_customer(atype, customer_number, uid, staff_id=None):
         if atype in ("BRSTF", "BR"):
-            if BRCustomer.check_duplicate_affiliation(uid, customer_number):
-                new_customer = BRCustomer(customer_number, uid, staff_id)
-                new_customer.save()
-            else:
-                return False
+            new_customer = BRCustomer(customer_number, uid, staff_id)
+            new_customer.save()
         elif atype in ("TASTF", "TA"):
             new_customer = TACustomer(customer_number, uid, staff_id)
             new_customer.save()

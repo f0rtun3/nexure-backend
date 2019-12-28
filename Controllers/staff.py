@@ -10,12 +10,17 @@ def update_account_status(role, staff_id, status):
     if role == "BR":
         staff_acc = BRStaff.get_staff_by_user_id(staff_id)
         staff_acc.update({"active": status})
+        return True
     elif role == "TA":
         staff_acc = TAStaff.get_staff_by_user_id(staff_id)
         staff_acc.update({"active": status})
+        return True
     elif role == "IA":
         staff_acc = IAStaff.get_staff_by_user_id(staff_id) 
         staff_acc.update({"active": status})
+        return True
+    
+    return False
 
 def get_agency_id(role, uid):
     """

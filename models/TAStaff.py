@@ -1,5 +1,5 @@
 from database.db import db
-
+from models.UserPermissions import UserPermissions
 
 class TAStaff(db.Model):
     __tablename__ = 'ta_staff'
@@ -19,8 +19,15 @@ class TAStaff(db.Model):
 
     def serialize(self):
         result = self.user.serialize()
-        result['is_active'] = self.active
-        return result
+        return {
+            "id": self.user_id,
+            "first_name": result['profile_details']['first_name'],
+            "last_name": result['profile_details']['last_name'],
+            "email": result['profile_details']['email'],
+            "phone": result['profile_details']['phone'],
+            "is_active": self.active,
+            "permissions": UserPermissions.get_permission_by_user_id(self.user_id)
+        }
 
     def save(self):
         db.session.add(self)
