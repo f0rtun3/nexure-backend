@@ -163,7 +163,7 @@ def update_extra_info(customer_info):
     customer_details = {"phone_2": phone_2, "email_2": email_2}
 
     if customer_type == 'individual':
-        customer_row = IndividualCustomer.get_customer_by_user_id(customer_id)
+        customer_row = UserProfile.get_profile_by_user_id(customer_id)
         customer_row.update(customer_details)
     else:
         customer_row = OrganizationCustomer.get_customer_by_contact(customer_id)

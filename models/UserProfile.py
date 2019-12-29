@@ -18,6 +18,8 @@ class UserProfile(db.Model):
     # we need to store the user mobile number
     # for subsequent communication
     phone = db.Column(db.BIGINT, unique=True)
+    phone_2 = db.Column(db.BIGINT, unique=True)
+    email_2 = db.Column(db.String(100), unique=True)
     avatar_url = db.Column(db.String(150), unique=True)
     occupation = db.Column(db.String(100))
     id_passport = db.Column(db.String(30), unique=True)
@@ -44,7 +46,7 @@ class UserProfile(db.Model):
                  id_passport=None, kra_pin=None, birth_date=None, physical_address=None, postal_address=None,
                  postal_code=None, postal_town=None, country=None, county=None, constituency=None, ward=None,
                  facebook=None,
-                 twitter=None, instagram=None):
+                 twitter=None, instagram=None, phone_2=None, email_2=None):
         self.user_id = user_id
         self.first_name = first_name
         self.last_name = last_name
@@ -66,6 +68,8 @@ class UserProfile(db.Model):
         self.facebook = facebook
         self.twitter = twitter
         self.instagram = instagram
+        self.phone_2 = phone_2
+        self.email_2 = email_2
 
     def __repr__(self):
         return f"{self.id_passport}"
@@ -83,6 +87,8 @@ class UserProfile(db.Model):
                 "last_name": self.last_name,
                 "gender": self.gender,
                 "phone": self.phone,
+                "phone_2": self.phone_2,
+                "email_2": self.email_2,
                 "avatar_url": avatar_url,
                 "occupation": self.occupation,
                 "id_passport": self.id_passport,

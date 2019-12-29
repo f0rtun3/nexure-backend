@@ -230,8 +230,10 @@ class CustomerOnBoarding(Resource):
 
         # update the respective organization or individual details
         self.update_cust_details(cust_id, cust_no, cust_info)
-        self.update_cust_agency_relationship(
-            role, cust_no, cust_info['status'])
+        if isinstance(cust_info['status'], bool):
+            self.update_cust_agency_relationship(
+                role, cust_no, cust_info['status'])
+        
         response = helper.make_rest_success_response("Update was successful")
         return make_response(response, 200)
 
@@ -369,8 +371,7 @@ class CustomerOnBoarding(Resource):
     def update_cust_details(cust_id, cust_no, cust_info):
         customer_type = helper.get_customer_type(cust_no)
         if customer_type == 'IN':
-            customer_details = IndividualCustomer.get_customer_by_user_id(
-                cust_id)
+            customer_details = UserProfile.get_profile_by_user_id(cust_id)
             customer_details.update(cust_info)
         else:
             customer_details = OrganizationCustomer.get_customer_by_contact(
