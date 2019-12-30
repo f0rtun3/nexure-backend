@@ -14,6 +14,7 @@ from helpers.parsers import user_parser
 from helpers.parsers import customer_parser
 from models.Broker import Broker
 from models.IndependentAgent import IndependentAgent
+from models.OrganizationCustomer import OrganizationCustomer
 from models.InsuranceCompany import InsuranceCompany
 from models.Role import Role
 from models.TiedAgent import TiedAgents
@@ -120,8 +121,12 @@ class UserRegister(Resource):
         elif role == 'IC':
             profile_data = InsuranceCompany.get_company_by_contact_person(
                 user_id).serialize()
+        elif role == 'ORG':
+            profile_data = OrganizationCustomer.get_customer_by_contact(user_id
+            ).serialize()
         else:
-            return None
+            return
+        
         return profile_data
 
     @jwt_required
@@ -163,7 +168,7 @@ class UserRegister(Resource):
                 updateController.update_personal_details(user_details, user_id)
             
             elif user_details['update_type'] == "location":
-                updateController.update_location_details(user_details, user_id)
+                updateController.update_location_details(user_details, role, user_id)
             
             elif user_details['update_type'] == "agency":
                 updateController.update_agency_details(

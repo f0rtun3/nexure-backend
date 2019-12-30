@@ -61,25 +61,26 @@ class OrganizationCustomer(db.Model):
         return f"{self.org_name}"
 
     def serialize(self):
-
         organization = {
-            "org_type": self.org_type,
-            "org_name": self.org_name,
-            "org_phone": self.org_phone,
-            "customer_number": self.customer_number,
-            "org_email": self.org_email,
-            "phone_2": self.phone_2,
-            "email_2": self.email_2,
-            "org_registration_number": self.org_reg_number,
-            "physical_address": self.physical_address,
-            "postal_code": self.postal_code,
-            "postal_town": self.postal_town,
-            "county": self.county,
-            "constituency": self.constituency,
-            "ward": self.ward,
-            "facebook": self.facebook,
-            "instagram": self.instagram,
-            "twitter": self.twitter
+            "organization": {
+                "org_type": self.org_type,
+                "org_name": self.org_name,
+                "org_phone": self.org_phone,
+                "customer_number": self.customer_number,
+                "org_email": self.org_email,
+                "phone_2": self.phone_2,
+                "email_2": self.email_2,
+                "org_registration_number": self.org_reg_number,
+                "physical_address": self.physical_address,
+                "postal_code": self.postal_code,
+                "postal_town": self.postal_town,
+                "county": self.county,
+                "constituency": self.constituency,
+                "ward": self.ward,
+                "facebook": self.facebook,
+                "instagram": self.instagram,
+                "twitter": self.twitter
+            }
         }
         organization.update(self.user.serialize())
         return organization

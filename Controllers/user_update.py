@@ -30,8 +30,15 @@ def update_personal_details(data, user_id):
     return profile_row.update(personal_data)
 
 
-def update_location_details(data, user_id):
+def update_location_details(data, role, user_id):
     profile_row = UserProfile.get_profile_by_user_id(user_id)
+    if role == 'ORG':
+        """
+        for organization customer, the location details are updated
+        at organization table
+        """
+        profile_row = OrganizationCustomer.get_customer_by_contact(user_id)
+    
     location_data = {
         "physical_address": data['physical_address'],
         "postal_address": data['postal_address'],
