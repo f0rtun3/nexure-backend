@@ -162,14 +162,12 @@ def update_broker_agent(data, user_id):
     return agency.update(agency_data)
 
 
-def update_extra_info(customer_info):
-    customer_type = customer_info['type']
-    customer_id = customer_info['customer_id']
+def update_extra_info(customer_type, customer_id, customer_info):
     email_2 = customer_info['email_2']
     phone_2 = customer_info['phone_2']
     customer_details = {"phone_2": phone_2, "email_2": email_2}
 
-    if customer_type == 'individual':
+    if customer_type == 'IND':
         customer_row = UserProfile.get_profile_by_user_id(customer_id)
         customer_row.update(customer_details)
     else:
@@ -232,3 +230,13 @@ def update_staff_permissions(staff_id, permissions):
         new_permission = UserPermissions(staff_id, x)
         new_permission.save()
     return True
+
+
+def update_organization_details(uid, customer_details):
+    organization_row = OrganizationCustomer.get_customer_by_contact(uid)
+    organization_row.update({
+        "org_name": customer_details['org_name'],
+        "org_phone": customer_details['org_phone'],
+        "org_email": customer_details['org_email'],
+        "org_reg_number": customer_details['org_reg_number']
+    })

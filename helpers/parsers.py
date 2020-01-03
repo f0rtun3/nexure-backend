@@ -176,6 +176,14 @@ user_parser.add_argument(
 customer_parser = reqparse.RequestParser()
 
 customer_parser.add_argument(
+    # the organization details
+    # must have an update type
+    # to distinguish which details we are supposed to be
+    # updating; organization or contact_person
+    "update_type",
+    type=str
+)
+customer_parser.add_argument(
     # Individual or organization
     "type",
     type=str
@@ -293,7 +301,7 @@ customer_parser.add_argument(
     type=str
 )
 customer_parser.add_argument(
-    "reg_number",
+    "org_reg_number",
     type=str
 )
 customer_parser.add_argument(

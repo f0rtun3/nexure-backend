@@ -149,7 +149,7 @@ class UserRegister(Resource):
         # details on behalf of a customer
         # we can check whether the customer exists or not
         
-        
+
         # if user exists, then update their details
         if user:
             # get their role
@@ -188,7 +188,7 @@ class UserRegister(Resource):
                 updateController.update_avatar_name(user_details['avatar_url'], user_id, role)
             
             elif user_details['update_type'] == "extra_info":
-                updateController.update_extra_info(customer_details)
+                updateController.update_extra_info(role, user_id, customer_details)
         
         else:
             # if user does not exist

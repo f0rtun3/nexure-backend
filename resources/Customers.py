@@ -4,6 +4,7 @@ new customer onboarding
 """
 import json
 import uuid
+from datetime import datetime
 
 from flask import current_app as application
 from flask import make_response
@@ -33,6 +34,7 @@ from models.TiedAgent import TiedAgents
 from models.User import User
 from models.UserProfile import UserProfile
 from models.UserRolePlacement import UserRolePlacement
+import Controllers.user_update as updateController
 
 
 class CustomerOnBoarding(Resource):
@@ -220,20 +222,17 @@ class CustomerOnBoarding(Resource):
         activate or deactivate customer permissions
         """
         role = get_jwt_claims()['role']
-        cust_info = customer_parser.parse_args()
-        cust_no = cust_info['cust_no']
-        cust_id = helper.get_customer_id(cust_no)
-        cust_profile = UserProfile.get_profile_by_user_id(cust_id)
-        cust_auth = User.get_user_by_id(cust_id)
-        cust_profile.update(cust_info)
-        cust_auth.update(cust_info)
+        cdata = customer_parser.parse_args()
+        cust_no = cdata['cust_no']
+        ctype = helper.get_customer_type(cust_no)
+        uid = helper.get_customer_id(cust_no)
+        update_type = cdata['update_type']
 
-        # update the respective organization or individual details
-        self.update_cust_details(cust_id, cust_no, cust_info)
-        if isinstance(cust_info['status'], bool):
-            self.update_cust_agency_relationship(
-                role, cust_no, cust_info['status'])
-        
+        if update_type == 'status':
+            self.update_cust_agency_relationship(role, cust_no, cdata['status'])
+        else:
+            self.update_cust_details(update_type, uid, cdata, ctype)
+
         response = helper.make_rest_success_response("Update was successful")
         return make_response(response, 200)
 
@@ -368,15 +367,31 @@ class CustomerOnBoarding(Resource):
         customer.delete()
 
     @staticmethod
-    def update_cust_details(cust_id, cust_no, cust_info):
-        customer_type = helper.get_customer_type(cust_no)
-        if customer_type == 'IN':
-            customer_details = UserProfile.get_profile_by_user_id(cust_id)
-            customer_details.update(cust_info)
-        else:
-            customer_details = OrganizationCustomer.get_customer_by_contact(
-                cust_id)
-            customer_details.update(cust_info)
+    def update_cust_details(update_type, uid, cdata, ctype):
+        if update_type == 'personal':
+            # reformat birth date
+            cdata.update(
+                {'birth_date': CustomerOnBoarding.format_birth_date(str(cdata['birth_date']))}
+            )
+            updateController.update_personal_details(cdata, uid)
+        elif update_type == 'location':
+            if ctype == 'IN':
+                updateController.update_location_details(cdata, None, uid)
+            else:
+                updateController.update_location_details(cdata, 'ORG', uid)
+        elif update_type == 'extra_info':
+            if ctype == 'IN':
+                updateController.update_extra_info('IND', uid, cdata)
+            else:
+                updateController.update_extra_info('ORG', uid, cdata)
+        elif update_type == 'organization':
+            updateController.update_organization_details(uid, cdata)
+
+
+    @staticmethod
+    def format_birth_date(date_str):
+        b_day = datetime.strptime(date_str, '%d/%m/%Y')
+        return b_day.date()
 
 
 class AgencyCustomers(Resource):

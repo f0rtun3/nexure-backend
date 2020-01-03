@@ -31,7 +31,8 @@ class S3FileHandler():
                 client_method,
                 Params={
                     'Bucket': self.bucket_name,
-                    'Key': self.object_name},
+                    'Key': self.object_name
+                },
                 ExpiresIn=self.expiration
             )
         except ClientError as e:
