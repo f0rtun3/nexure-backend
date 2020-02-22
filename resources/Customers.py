@@ -370,9 +370,9 @@ class CustomerOnBoarding(Resource):
     def update_cust_details(update_type, uid, cdata, ctype):
         if update_type == 'personal':
             # reformat birth date
-            cdata.update(
-                {'birth_date': CustomerOnBoarding.format_birth_date(str(cdata['birth_date']))}
-            )
+            cdata.update({
+                'birth_date': CustomerOnBoarding.format_birth_date(str(cdata['birth_date']))
+            })
             updateController.update_personal_details(cdata, uid)
         elif update_type == 'location':
             if ctype == 'IN':
